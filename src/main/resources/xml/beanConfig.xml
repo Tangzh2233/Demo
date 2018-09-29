@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="host" value="${jedis.host}" />
+        <constructor-arg name="port" value="${jedis.port}" />
+    </bean>
+    <bean id="JedisClient" class="com.edu.util.redisUtil.impl.JedisClientSingleImpl" />
+
+    <!--初始化javaMailSender-->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" scope="singleton">
+        <property name="host" value="smtp.163.com" />
+        <property name="port" value="25" />
+        <property name="protocol" value="smtp" />
+        <property name="defaultEncoding" value="utf-8" />
+        <property name="username" value="17010206231@163.com" />
+        <property name="password" value="Tzh123456789" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtps.auth">true</prop>
+                <prop key="mail.transport.protocol">smtp</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

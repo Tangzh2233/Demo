@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-body>
+    <html>
+        <body>
+            <table border="1px" width="400px" height="150px" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>项目名</th>
+                    <th>Transaction</th>
+                    <th>Event</th>
+                    <th>Metric</th>
+                    <th>总计</th>
+                </tr>
+                <tr>
+                    <td align="center">Nasdaq</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td align="center">报警指标</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            </table>
+        </body>
+    </html>
+</xml-body>

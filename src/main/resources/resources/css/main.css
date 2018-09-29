@@ -1,0 +1,108 @@
+/*毕业设计主页css*/
+
+	.*{
+		margin: 0px;
+		padding: 0px;
+	}
+	.mylog{
+		color: white;
+		font-family: '楷体';
+		font-size: 25px;
+		position: relative;
+	    display: inline-block;
+	    vertical-align: middle;
+	    line-height: 60px;
+	    margin-right: 80px;
+	    
+	}
+	.texiao{
+		border-top: solid grey 4px;
+	}
+	.Tag-container{
+		padding: 1%;
+		margin: 1%;
+	}
+	.Tag-home-tips{
+		height: 30px;
+		width: 95%;
+		min-width: 950px;
+		background:#FFFFFF;
+		margin: auto;
+	}
+	.Tag-home-tips>i{
+		margin-left: 5px;
+	}
+	.Tag-home-tips-container{
+		line-height: 30px;
+		height: 30px;
+		margin-left: 30px;
+		overflow: hidden;
+	}
+	.Tag-home-tips-container span{
+		font-family: '楷体';
+		font-weight: 500;
+		display: block;
+	}
+	.Tag-body-main{
+		width: 95%;
+		min-width: 950px;
+		margin: auto;
+	}
+	.Tag-body-main.body-left{
+
+	}
+	.Tag-body-main.body-right{
+		
+	}
+	.article{
+		margin-top: 20px;
+	}
+	.article-img{
+		max-width: 180px;
+	}
+	.article-footer{
+		margin-top: 10px;
+		height: 20px;
+	}
+	.article-footer>a{
+	
+	}
+	.article-viewinfo{
+		display: inline-block;
+		float: right;
+		margin-right: 20px;
+	}
+	.article-author{
+		margin-left: 20px;
+	}
+	.article-footer>span{
+		color: grey;
+	}
+	
+	/*container右边*/
+	.body-right-info{
+		position: absolute;
+		background: white;
+		height: 320px;
+		width: 18%;
+		min-width: 190px;
+		margin-top: 20px;
+		text-align: center;
+	}
+	
+	.body-right-info p{
+		font-family: '楷体';
+		margin: auto;
+		margin-top: 10px;
+	}
+	.tag-contact{
+		margin-left: 5px;
+	}
+	/*动画*/
+	.article:hover{
+		border-left: 3px solid green;
+	}
+	.article a:hover{
+		cursor: pointer;
+		color:lightgreen;
+	}

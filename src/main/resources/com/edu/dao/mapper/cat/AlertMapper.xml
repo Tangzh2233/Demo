@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.mapper.cat.AlertMapper">
+    <resultMap id="alert" type="com.edu.dao.domain.Alert">
+        <id property="id" column="id"/>
+        <result property="domain" column="domain"/>
+        <result property="alertTime" column="alert_time"/>
+        <result property="category" column="category"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="metric" column="metric"/>
+    </resultMap>
+    <resultMap id="Category" type="com.edu.dao.domain.CategoryDto">
+        <result property="category" column="category" />
+        <result property="count" column="count" />
+    </resultMap>
+    <sql id="field">
+        id,domain,alert_time,category,type,metric
+    </sql>
+    <select id="selectAlertByDomainAndDate" resultMap="alert">
+        SELECT <include refid="field" /> FROM alert
+        where domain = #{domain} and alert_time like CONCAT(#{alertTime},'%')
+    </select>
+    <select id="selectDomainByAlertTime" resultType="java.lang.String">
+        SELECT DISTINCT domain FROM  alert
+        where alert_time like CONCAT(#{alertTime},'%')
+    </select>
+    <select id="countAlertByDomainAndDate" resultType="java.lang.Integer">
+        SELECT COUNT(content) FROM alert
+        where domain = #{domain} and alert_time like CONCAT(#{alertTime},'%')
+    </select>
+    <select id="getCategory" resultMap="Category">
+        select category,count(category) count from alert
+        where domain = #{domain} and alert_time like CONCAT(#{alertTime},'%') group by category
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.mapper.cat.ProjectMapper">
+    <resultMap id="Project" type="com.edu.dao.domain.Project">
+        <id property="id" column="id" />
+        <result property="domain" column="domain" />
+        <result property="cmdbDomain" column="cmdb_domain" />
+        <result property="level" column="level" />
+        <result property="bu" column="bu" />
+        <result property="cmdbProductline" column="cmdb_productline" />
+        <result property="owner" column="owner" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+    </resultMap>
+    <sql id="field">
+        id,domain,cmdb_domain,level,bu,cmdb_productline,owner,email,phone
+    </sql>
+
+    <select id="selectEmailByDomain" resultMap="Project">
+        select <include refid="field" /> from project WHERE domain = #{domain}
+    </select>
+</mapper>
