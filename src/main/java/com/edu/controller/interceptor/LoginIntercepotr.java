@@ -45,9 +45,8 @@ public class LoginIntercepotr implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        System.out.println("进入loginInterceptor");
         StringBuffer url = request.getRequestURL();
-        System.out.println("In Intercepor-+-+-+-"+url.toString());
+        System.out.println("LoginIntercepor-+-+-+-"+url.toString());
         String token = CookieUtils.getCookieValue(request, "USER_TOKEN");
         if(StringUtils.isBlank(token)){
             response.sendRedirect("login.html");

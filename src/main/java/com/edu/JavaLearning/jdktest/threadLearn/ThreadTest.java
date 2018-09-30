@@ -23,7 +23,7 @@ public class ThreadTest {
             };
             thread1.setName("a");
             thread1.start();
-            thread1.sleep(2000);
+            Thread.sleep(2000);
         //    thread1.resume();
 
             Thread thread2 = new Thread(){

@@ -53,7 +53,7 @@ public class TheThread implements Runnable {
     public void maipiao1() throws InterruptedException {
         if (lock.tryLock()) {
             System.out.println(Thread.currentThread().getName() + "获取锁");
-            Thread.currentThread().sleep(10);
+            Thread.sleep(10);
             try {
                 if (ticket > 0) {
                     ticket--;

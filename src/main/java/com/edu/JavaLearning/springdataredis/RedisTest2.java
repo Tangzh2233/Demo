@@ -45,6 +45,7 @@ public class RedisTest2 {
         }
         public void quit(){quit = false;}
 
+        @Override
         public void run(){
             while(!quit){
                 long size = jedis.zcard("recent:");

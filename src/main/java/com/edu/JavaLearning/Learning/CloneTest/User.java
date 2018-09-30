@@ -10,7 +10,7 @@ public class User implements Cloneable{
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        User user = null;
+        User user;
         user = (User) super.clone();
         user.name = new StringBuffer(name);
         user.password = password.clone();

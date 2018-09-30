@@ -28,7 +28,7 @@ public class MyCatFilter extends CatTransactionFilter{
             double amount = 0.0;
             Cat.logEvent("","");
             Cat.logMetricForCount(invocation.getAttachment("amount"));
-            Cat.logMetricForDuration(invocation.getAttachment("amount"),1l);
+            Cat.logMetricForDuration(invocation.getAttachment("amount"), 1L);
             Cat.logMetricForSum(invocation.getAttachment("amount"),amount);
         }else if("ManhatanApi.daiKou".equals(methodName)){
 

@@ -5,6 +5,7 @@ package com.edu.JavaLearning.设计模式.FactoryAndStrategy;
  */
 public class OperateSub extends  Operate{
 
+    @Override
     public double getResult(){
         double result = 0;
         result = getNumber_a()-getNumber_b();

@@ -15,9 +15,11 @@ public abstract class AbstractActionParser implements ActionParser{
 
     abstract void methodB(String str1);
 
+    @Override
     public void mehtodA(String str){}
 
     //泛型的使用
+    @Override
     public <E> List<E> query(){
         return null;
     }

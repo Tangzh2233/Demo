@@ -89,7 +89,7 @@ public class LoginServiceImpl implements ILoginService{
                 t.addChild(event);
             }*/
             Cat.logMetricForCount(name);
-            Cat.logMetricForDuration("11",78l);
+            Cat.logMetricForDuration("11", 78L);
             Cat.logMetricForSum("登录金额",account);
             if("exception".equals(name)){
                 throw new NullPointerException();

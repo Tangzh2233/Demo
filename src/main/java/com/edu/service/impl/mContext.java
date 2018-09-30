@@ -15,10 +15,12 @@ public class mContext implements Cat.Context,Serializable {
 
     private Map<String,String> properties = new HashMap<>();
 
-    public void addProperty(String key,String value){
+    @Override
+    public void addProperty(String key, String value){
         this.properties.put(key,value);
     }
 
+    @Override
     public String getProperty(String key){
         return this.properties.get(key);
     }

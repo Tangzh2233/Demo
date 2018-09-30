@@ -59,7 +59,7 @@ public class ExecutorInit {
             //试图取消任务
             future.cancel(true);
             //在一定时间内尝试获取执行结果
-            Object obj = future.get(2000l, TimeUnit.SECONDS);
+            Object obj = future.get(2000L, TimeUnit.SECONDS);
         }
         fixedPool.shutdown();
     }

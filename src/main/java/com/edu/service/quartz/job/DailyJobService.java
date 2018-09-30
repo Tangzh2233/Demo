@@ -5,14 +5,15 @@ import com.edu.dao.mapper.cat.AlertMapper;
 import com.edu.dao.mapper.cat.ProjectMapper;
 import com.edu.service.quartz.job.Thread.ReqAlarmThread;
 import com.edu.util.DateUtil;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author Tangzhihao
@@ -35,7 +36,7 @@ public class DailyJobService {
         channels.add("SMS");
     }
 
-    public void DailJobExecute(){
+    public void dailJobExecute(){
 
         String strDate = DateUtil.forMatDate(new Date(),"yyyy-MM-dd");
         //strDate = "2018-04-03";
@@ -58,7 +59,7 @@ public class DailyJobService {
     private void sendAction(Set<String> domains,String strDate){
         logger.info("进入sendAction方法，参数: "+domains +"+"+ strDate);
         if(executorService==null){
-            executorService = Executors.newFixedThreadPool(10);
+            executorService = createThreadPool(10);
         }
         for (String domain:domains){
             try {
@@ -73,6 +74,10 @@ public class DailyJobService {
         /*for (String domain:domains){
             executorService.execute(new ReqAlarmThread(domain,strDate, EWarnChannel.E_WEIXIN.getCode(),alertMapper,projectMapper));
         }*/
+    }
+    private ExecutorService createThreadPool(int size){
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
+        return new ThreadPoolExecutor(size,size,0L, TimeUnit.MILLISECONDS,new LinkedBlockingDeque<>(1024),threadFactory,new ThreadPoolExecutor.AbortPolicy());
     }
 
 }

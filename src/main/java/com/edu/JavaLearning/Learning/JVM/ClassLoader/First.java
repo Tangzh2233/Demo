@@ -20,6 +20,7 @@ class Second extends First{
     public Second(){
         sout();
     }
+    @Override
     public void sout(){
         System.out.println("second");
     }

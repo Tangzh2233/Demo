@@ -28,7 +28,7 @@ public class CatUtil {
         Cat.logMetricForCount(metric);
     }
     public static void logMetricDuration(String metric){
-        Cat.logMetricForDuration(metric,1l);
+        Cat.logMetricForDuration(metric, 1L);
     }
     public static void logMetricSum(String name,double metric){
         Cat.logMetricForSum(name,metric);

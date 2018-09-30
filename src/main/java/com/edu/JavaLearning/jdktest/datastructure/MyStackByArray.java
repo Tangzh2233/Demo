@@ -40,7 +40,8 @@ public class MyStackByArray {
 		return obj[top--];
 	}
 	
-	public String toString(){
+	@Override
+    public String toString(){
 		StringBuffer sb = new StringBuffer();
 		for(int i=0;i<size;i++){
 			sb.append(obj[i]+" ");

@@ -14,6 +14,7 @@ public class Decorator extends Person{
     public void decorator(Person component){
         this.component = component;
     }
+    @Override
     public void show(){
         if(component!=null){
             component.show();

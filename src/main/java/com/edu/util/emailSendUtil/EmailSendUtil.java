@@ -47,6 +47,7 @@ public class EmailSendUtil {
 
         // 根据邮件会话属性和密码验证器构造一个发送邮件的session[验证账号和密码]
         Session session = Session.getInstance(p, new Authenticator(){
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(p.getProperty("mail.smtp.user"),p.getProperty("mail.smtp.pass"));
             }

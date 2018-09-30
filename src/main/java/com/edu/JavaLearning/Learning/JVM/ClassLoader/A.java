@@ -20,6 +20,7 @@ class B extends A{
         return "B&B";
     }
 
+    @Override
     public String show(A obj) {
         return "B&A";
     }

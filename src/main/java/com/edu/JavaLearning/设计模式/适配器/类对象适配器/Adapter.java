@@ -13,14 +13,17 @@ public class Adapter implements TargetV{
         this.targetV = targetV;
     }
 
+    @Override
     public int outputV() {
         int src = targetV.outputV();
         int dst = 0;
         System.out.println("开始适配电压");
-        if(src==110)
+        if(src==110) {
             dst = src-105;
-        if(src==220)
+        }
+        if(src==220) {
             dst = src/44;
+        }
         System.out.println("适配完成，电压输出"+dst);
         return dst;
     }
