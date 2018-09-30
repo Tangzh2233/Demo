@@ -1,5 +1,6 @@
 package com.edu.controller.login;
 
+import com.edu.common.Constants;
 import com.edu.common.result.ResultData;
 import com.edu.dao.domain.User;
 
@@ -52,14 +53,14 @@ public class LoginController {
         System.out.println(usr.getUsername()+usr.getPassword());
         System.out.println("========"+request.getParameter("username"));
         System.out.println("========"+username);
-        System.out.println("====IP2==="+IpUtil.getRemoteIp(request));
+        System.out.println("====IP2==="+IpUtil.getRequestClientIp(request));
         System.out.println("===LocalIp==="+ IpUtil.getLocalIpV4Addr());
 //        System.out.println(params.get("username"));
         try {
             return userService.userLogin(usr.getUsername(),usr.getPassword(),request,response);
         }catch (Exception e){
             logger.error("Service Exception",e);
-            return ResultData.isFail("01","Service Exception");
+            return ResultData.isFail("01", Constants.SYSEXCEPTION);
         }
     }
 

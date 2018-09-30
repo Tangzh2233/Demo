@@ -204,11 +204,11 @@
                 async:true,
                 //contentTyle:"application/json; charset=utf-8",
                 success:function(data){
-                    if("00" == data.status){
+                    if("00" == data.rspCode){
                         save();
                         window.location.href = "main.html";
                     }else{
-                        alert(data.msg);
+                        alert(data.rspMessage);
                         window.location.href = "login.html";
                     }
                 }

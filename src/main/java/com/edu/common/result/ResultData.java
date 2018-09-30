@@ -1,5 +1,7 @@
 package com.edu.common.result;
 
+import com.edu.common.Constants;
+
 import java.io.Serializable;
 
 public class ResultData<T> implements Serializable {
@@ -29,7 +31,7 @@ public class ResultData<T> implements Serializable {
     }
 
     public static ResultData defaultSuccess(){
-        return new ResultData("00","处理成功");
+        return new ResultData(Constants.SUCCESS_CODE,"处理成功");
     }
     public static ResultData isFail(String code,String msg){
         return new ResultData(code,msg);

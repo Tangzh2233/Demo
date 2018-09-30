@@ -1,9 +1,8 @@
 package com.edu.controller.filter;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSON;
+import com.edu.common.Constants;
 import com.edu.common.UUIDUtil;
 import com.edu.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Tangzhihao
@@ -27,9 +25,9 @@ public class TraceFilter implements Filter{
         String interfaceName = invoker.getInterface().getName();
         String methodName = invocation.getMethodName();
         String reqUrl = invoker.getUrl().getIp()+ ":" + invoker.getUrl().getHost() + " " +interfaceName+methodName;
-        String traceId = MDC.get("traceId");
+        String traceId = MDC.get(Constants.TRACE_ID);
         if(StringUtils.isBlank(traceId)){
-            traceId = RpcContext.getContext().getAttachment("traceId");
+            traceId = RpcContext.getContext().getAttachment(Constants.TRACE_ID);
         }
         if(StringUtils.isBlank(traceId)){
             traceId = UUIDUtil.getUUID();
@@ -39,7 +37,7 @@ public class TraceFilter implements Filter{
         Object[] ojs = invocation.getArguments();
         logger.info("发起时间[{}] traceId[{}] reqUrl[{}] 请求报文[{}]", DateUtil.getCurDateForHour(),traceId,reqUrl,JSON.toJSONString(ojs));
         //设置traceId
-        RpcContext.getContext().setAttachment("traceId",traceId);
+        RpcContext.getContext().setAttachment(Constants.TRACE_ID,traceId);
         try {
             Result result = invoker.invoke(invocation);
             String rspTime = DateUtil.getCurDateForHour();

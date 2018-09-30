@@ -18,7 +18,7 @@ public class IpUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(IpUtil.class);
 
-    public static String getRemoteIp(HttpServletRequest request){
+    public static String getRequestClientIp(HttpServletRequest request){
         String ip = null;
         //X-Forwarded-For：Squid 服务代理
         String ipAddresses = request.getHeader("X-Forwarded-For");

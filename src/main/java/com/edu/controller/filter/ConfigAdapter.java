@@ -1,6 +1,7 @@
 package com.edu.controller.filter;
 
-import com.dianping.cat.servlet.CatFilter;
+import com.edu.controller.interceptor.LoginIntercepotr;
+import com.edu.controller.interceptor.TraceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -15,9 +16,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class ConfigAdapter extends WebMvcConfigurerAdapter{
 
+
     @Bean
     LoginIntercepotr loginIntercepotr(){
         return new LoginIntercepotr();
+    }
+    @Bean
+    TraceInterceptor traceInterceptor(){
+        return new TraceInterceptor();
     }
 
     @Override
@@ -27,8 +33,11 @@ public class ConfigAdapter extends WebMvcConfigurerAdapter{
         super.addResourceHandlers(registry);
      }
 
+//    先执行LoginInterceptor再执行TraceInterceptor
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(traceInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/page/**","/error","/myspringboot/exit.do");
         registry.addInterceptor(loginIntercepotr()).addPathPatterns("/**")
                 .excludePathPatterns("/page/login.html","/myspringboot/login.do","/error","/myspringboot/httpPost.do","/page/register.html","/myspringboot/register.do");
         super.addInterceptors(registry);
