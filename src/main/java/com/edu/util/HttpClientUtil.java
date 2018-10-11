@@ -117,7 +117,7 @@ public class HttpClientUtil {
     }
 
     public static List<NameValuePair> mapToNameValuePair(Map<String,String> map) {
-        List<NameValuePair> pairs = new ArrayList();
+        List<NameValuePair> pairs = new ArrayList<>();
         Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry<String, String> next = iterator.next();

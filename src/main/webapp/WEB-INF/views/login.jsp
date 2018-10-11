@@ -195,7 +195,9 @@
         }
         function login(){
             debugger;
-            var json = {"username":"tang","password":"123"};
+            var name = $("#username").val();
+            var password = $("#password").val();
+            var json = {"username":name,"password":password};
             $.ajax({
                 type:"post",
                 url:"/myspringboot/login.do",

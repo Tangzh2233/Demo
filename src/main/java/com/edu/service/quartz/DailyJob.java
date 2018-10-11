@@ -28,7 +28,7 @@ public class DailyJob {
     public void execute(){
         logger.info("开始日报发送任务");
         try {
-            dailyJobService.DailJobExecute();
+            dailyJobService.dailJobExecute();
         }catch (Exception e){
             logger.info("日报发送异常");
         }

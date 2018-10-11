@@ -3,6 +3,7 @@ package com.edu.JavaLearning.Learning.Executor框架;
 import jdk.nashorn.internal.codegen.CompilerConstants;
 
 import java.text.DecimalFormat;
+import java.util.TimerTask;
 import java.util.concurrent.*;
 
 /**
@@ -33,13 +34,28 @@ public class ExecutorInit {
         ExecutorInit init = new ExecutorInit();
     //    init.initFixedPool();
 
-        //--1--运行Callable线程，和获取返回结果
-        FutureTask<String> task = new FutureTask<>(new MyCallableTask());
-        new Thread(task).start();
-        System.out.println(task.isDone());
-        System.out.println(task.get());
 
-        System.out.println(new DecimalFormat("_0000").format(222));
+        //--1--运行Callable线程，和获取返回结果
+//        FutureTask<String> task = new FutureTask<>(new MyCallableTask());
+//        new Thread(task).start();
+//        System.out.println(task.isDone());
+//        System.out.println(task.get());
+//
+//        System.out.println(new DecimalFormat("_0000").format(222));
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+        executor.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        },3600,TimeUnit.SECONDS);
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        };
 
     }
 

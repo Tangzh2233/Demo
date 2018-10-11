@@ -2,6 +2,7 @@ package com.edu.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -118,18 +119,18 @@ public class LoginServiceImpl implements ILoginService{
         return dlogMapper.addDlog(dlog,String.valueOf(tableName%2));
     }
 
-    public static void main(String[] args) {
-        Transaction t = Cat.getProducer().newTransaction("Cross", "ABC");
-        Cat.logEvent("Cross","main","0","");
-        User user = new User();
-        try {
-            t.setStatus(Transaction.SUCCESS);
-        }catch (Exception e){
-            t.setStatus(e);
-        }finally {
-            t.complete();
-        }
-    }
+//    public static void main(String[] args) {
+//        Transaction t = Cat.getProducer().newTransaction("Cross", "ABC");
+//        Cat.logEvent("Cross","main","0","");
+//        User user = new User();
+//        try {
+//            t.setStatus(Transaction.SUCCESS);
+//        }catch (Exception e){
+//            t.setStatus(e);
+//        }finally {
+//            t.complete();
+//        }
+//    }
     /*private void test(){
         LoginServiceImpl loginService = new LoginServiceImpl();
     }*/
@@ -171,19 +172,29 @@ public class LoginServiceImpl implements ILoginService{
     public ResultData userLogin(String name, String pwd, HttpServletRequest request, HttpServletResponse response){
         User user = userMapper.getUserByName(name);
 
-        if(user==null){
-            return ResultData.isFail("01","用户信息有误!");
-        }
-        if(!DigestUtils.md5DigestAsHex(pwd.getBytes()).equals(user.getPassword())){
-            return ResultData.isFail("01","用户信息有误!");
-        }
+        Transaction t = Cat.getProducer().newTransaction("Demo","登录");
+        try {
+            if(user==null){
+                CatUtil.buildEvent(t,name+"|用户登录","用户不存在","1");
+                return ResultData.isFail("01","用户信息有误!");
+            }
+            if(!DigestUtils.md5DigestAsHex(pwd.getBytes()).equals(user.getPassword())){
+                CatUtil.buildEvent(t,name+"|用户登录","密码错误","1");
+                return ResultData.isFail("01","用户信息有误!");
+            }
 
-        String token = UUIDUtil.getUUID().substring(10);
-        user.setPassword(null);
-        RedisUtil.set(user_session_key+":"+token, JSON.toJSONString(user));
-        RedisUtil.expire(user_session_key+":"+token,key_expire_time);
-        CookieUtils.setCookie(request,response,"USER_TOKEN",token);
-        return ResultData.defaultSuccess();
+            String token = UUIDUtil.getUUID().substring(10);
+            user.setPassword(null);
+            RedisUtil.set(user_session_key+":"+token, JSON.toJSONString(user));
+            RedisUtil.expire(user_session_key+":"+token,key_expire_time);
+            CookieUtils.setCookie(request,response,"USER_TOKEN",token);
+            CatUtil.buildEvent(t,name+"|用户登录","登录成功","0");
+            Cat.logMetricForCount("用户登录");
+            return ResultData.defaultSuccess();
+        } finally {
+            t.setStatus(Transaction.SUCCESS);
+            t.complete();
+        }
     }
 
     @Override
@@ -233,4 +244,5 @@ public class LoginServiceImpl implements ILoginService{
         RedisUtil.expire(user_session_key+":"+token,key_expire_time);
         return ResultData.isSuccess("",JSON.parseObject(json,User.class));
     }
+
 }
