@@ -49,8 +49,7 @@ public class SendMqMessageImpl {
 
     public SendResult sendMessage(Message message){
         try {
-            SendResult sendResult = this.producer.send(message);
-            return sendResult;
+            return this.producer.send(message);
         } catch (Exception e) {
             e.printStackTrace();
         }

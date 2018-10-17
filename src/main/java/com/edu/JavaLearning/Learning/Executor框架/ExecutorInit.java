@@ -1,15 +1,17 @@
 package com.edu.JavaLearning.Learning.Executor框架;
 
-import jdk.nashorn.internal.codegen.CompilerConstants;
 
-import java.text.DecimalFormat;
 import java.util.TimerTask;
 import java.util.concurrent.*;
 
 /**
  * @author Tangzhihao
  * @date 2018/3/1
- * description Executos Learning
+ *
+ * 参考资料：
+ * https://mp.weixin.qq.com/s/buR4X94v1xSpkVXA5N9s1g
+ * https://www.jianshu.com/p/ae67972d1156
+ *
  */
 
 public class ExecutorInit {
@@ -109,5 +111,33 @@ public class ExecutorInit {
             }
             return "Thread is end";
         }
+    }
+
+    /**
+      * corePoolSize:核心线程数
+      * maximumPoolSize:最大线程数
+      * keepAlivetime:非核心线程,闲置时长
+      * TimeUnit:闲置时长单位
+      * BlockingQueue<>:Task的等待队列
+      * ThreadFactory:
+      * RejectedExecutionHandler:
+    **/
+
+    /**
+     * 当一个任务被添加进线程池时，执行策略：
+     * 1.线程数量未达到corePoolSize，则新建一个线程(核心线程)执行任务
+     * 2.线程数量达到了corePools，则将任务移入队列等待
+     * 3.队列已满，新建线程(非核心线程)执行任务
+     * 4.队列已满，总线程数又达到了maximumPoolSize，就会由(RejectedExecutionHandler)抛出异常
+    **/
+    public static ThreadPoolExecutor myThreadPoolExecutor(){
+        return new ThreadPoolExecutor(
+                5,
+                10,
+                1000,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(1024),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy());
     }
 }
