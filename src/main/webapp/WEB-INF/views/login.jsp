@@ -203,7 +203,7 @@
                 url:"/myspringboot/login.do",
                 data:json,
                 datatype:"json",
-                async:true,
+                async:false,
                 //contentTyle:"application/json; charset=utf-8",
                 success:function(data){
                     if("00" == data.rspCode){

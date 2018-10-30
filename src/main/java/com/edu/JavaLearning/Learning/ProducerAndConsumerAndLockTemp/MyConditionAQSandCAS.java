@@ -1,9 +1,13 @@
-package com.edu.JavaLearning.Learning.ProducerAndConsumer;
+package com.edu.JavaLearning.Learning.ProducerAndConsumerAndLockTemp;
 
-import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleMultiInsertStatement;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,11 +30,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * CAS[CompareAndSwap(V,E,N)]比较替换
  *
  * cas的意思是：在线程一操作此变量的时候，此变量应该没被其他线程更改过，即V==E 否则就不做任何操作。
+ * compare step1从内存中取的值与step2从内存中取的值是否一致。volatile修饰的值从主存中取值
  * public final int getAndAddInt(Object var1, long var2, int var4) {
  *     int var5;
  *     do {
+ *         //step1
  *         var5 = this.getIntVolatile(var1, var2);//从主存中拿到变量当前值
- *     } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
+ *     } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));//step2
  *     return var5;
  * }
  * 假设线程A和线程B同时执行getAndAdd操作（分别跑在不同CPU上）：
@@ -52,12 +58,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MyConditionAQSandCAS {
     private int size = 10;
     private ArrayBlockingQueue queue = new ArrayBlockingQueue(size);
-    private Lock lock = new ReentrantLock();
-    private Condition isP = lock.newCondition();
-    private Condition isC = lock.newCondition();
+    private static Lock lock = new ReentrantLock();
+    private Mutex mutex = new Mutex();
+    private static Condition isP = lock.newCondition();
+    private static Condition isC = lock.newCondition();
     private static AtomicInteger atomicInteger = new AtomicInteger();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IllegalAccessException, InstantiationException, InvocationTargetException, ClassNotFoundException {
         MyConditionAQSandCAS condition = new MyConditionAQSandCAS();
         Producer producer = condition.new Producer();
         Consumer consumer = condition.new Consumer();
@@ -68,12 +75,11 @@ public class MyConditionAQSandCAS {
         c1.start();
         c2.start();p1.start();p2.start();
         Thread.sleep(2);
-        p1.interrupt();
-        p2.interrupt();
-        c1.interrupt();
-        c2.interrupt();
+//        p1.interrupt();
+//        p2.interrupt();
+//        c1.interrupt();
+//        c2.interrupt();
         System.out.println(atomicInteger);
-
     }
 
     class Producer implements Runnable{
@@ -81,6 +87,7 @@ public class MyConditionAQSandCAS {
         @Override
         public void run() {
             atomicInteger.getAndAdd(1);
+            lock.lock();
             int i = 0;
             try {
                 while(flag){
@@ -92,7 +99,7 @@ public class MyConditionAQSandCAS {
                     queue.put(1);
                     isC.signal();//唤醒consumer
                     i++;
-                    System.out.println("producer 产生第"+i+"个数据!");
+                    System.out.println(Thread.currentThread().getName()+"产生第"+i+"个数据!");
                 }
             } catch (InterruptedException e) {
                 flag = false;
@@ -118,13 +125,32 @@ public class MyConditionAQSandCAS {
                     queue.poll();
                     isP.signal();//唤醒producer
                     i++;
-                    System.out.println("consumer 消费第"+i+"个数据!");
+                    System.out.println(Thread.currentThread().getName()+"消费第"+i+"个数据!");
                 }
             } catch (InterruptedException e) {
                 flag = false;
             } finally {
-           //     lock.unlock();
+                lock.unlock();
             }
         }
     }
+
+    /**
+      * @description:获取Unsafe实例
+    **/
+    public static Unsafe getUnSafe(){
+        Class<?> aClass;
+        Unsafe instance = null;
+        try {
+            aClass = Class.forName("sun.misc.Unsafe");
+            Constructor constructor = aClass.getDeclaredConstructor((Class<?>) null);
+            //忽略修饰符，暴力访问
+            constructor.setAccessible(true);
+            instance = (Unsafe) constructor.newInstance((Object) null);
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return instance;
+    }
+
 }

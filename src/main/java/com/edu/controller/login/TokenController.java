@@ -1,6 +1,6 @@
 package com.edu.controller.login;
 
-import com.edu.controller.common.DemoResult;
+import com.edu.common.DemoResult;
 import com.edu.service.ILoginService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.converter.json.MappingJacksonValue;

@@ -10,6 +10,8 @@ package com.edu.JavaLearning.Learning.JVM.ClassLoader;
  * ClassLoader.loadClass()：只干一件事情，就是将.class文件加载到jvm中，不会执行static中的内容,只有在newInstance才会去执行static块。
  * 注：Class.forName(name, initialize, loader)带参函数也可控制是否加载static块。
  * 并且只有调用了newInstance()方法采用调用构造函数，创建类的对象 。
+ *
+ * 注意：因为一个类中static只加载一次，所以本例的测试顺序需要注意。否则得不到想要的结果
  */
 
 public class ClassForName {
@@ -23,10 +25,12 @@ public class ClassForName {
 
 class LoaderTest{
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        ClassLoader loader = ClassForName.class.getClassLoader();
+        ClassLoader loader = ClassLoader.getSystemClassLoader();
         System.out.println(loader);
-    //    loader.loadClass("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName").newInstance();
-    //    Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName");
-    //    Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName",false,loader).newInstance();
+        Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName");
+        System.out.println("===========");
+        loader.loadClass("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName").newInstance();
+        System.out.println("===========");
+        Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName",false,loader);
     }
 }

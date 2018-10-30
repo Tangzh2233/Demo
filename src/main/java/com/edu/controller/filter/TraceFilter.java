@@ -38,18 +38,15 @@ public class TraceFilter implements Filter{
         logger.info("发起时间[{}] traceId[{}] reqUrl[{}] 请求报文[{}]", DateUtil.getCurDateForHour(),traceId,reqUrl,JSON.toJSONString(ojs));
         //设置traceId
         RpcContext.getContext().setAttachment(Constants.TRACE_ID,traceId);
+        Result result = null;
         try {
-            Result result = invoker.invoke(invocation);
+            result = invoker.invoke(invocation);
             String rspTime = DateUtil.getCurDateForHour();
             logger.info("返回时间[{}] traceId[{}] rspUrl[{}] 返回报文[{}] 耗时[{}]",rspTime,traceId,reqUrl,JSON.toJSONString(result.getValue()),System.currentTimeMillis()-reqTime);
         }catch (Exception e){
             logger.error("dubbo调用异常{}",e);
         }
 
-        return null;
-    }
-
-    public void myFilter(Result result){
-        //todo
+        return result;
     }
 }

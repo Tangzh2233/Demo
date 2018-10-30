@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scanPeriod="60 seconds" debug="false">
     <property resource="application.properties" />
-    <property name="logging.path" value="${logging.path}" />
+    <property name="logging.path" value="/data/logs" />
     <!-- 控制台输出 -->
     <appender name="console-appender" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -22,7 +22,7 @@
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
         </encoder>
     </appender>
 
@@ -40,7 +40,7 @@
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
         </encoder>
     </appender>
     <appender name="service-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -55,7 +55,7 @@
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
         </encoder>
     </appender>
 
@@ -71,7 +71,7 @@
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
         </encoder>
     </appender>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -93,7 +93,7 @@
             <maxHistory>3</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%d] [%p] [%C{0}.%M{0}] - %m%n</pattern>
+            <pattern>[%d] [%mdc{traceId}] [%p] [%mdc{reqUrl}] - %m%n</pattern>
         </encoder>
     </appender>
 

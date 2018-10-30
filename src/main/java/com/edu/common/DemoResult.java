@@ -1,7 +1,6 @@
-package com.edu.controller.common;
+package com.edu.common;
 
 import com.alibaba.fastjson.JSON;
-import lombok.Data;
 
 /**
  * @author Tangzhihao

@@ -1,10 +1,8 @@
 package com.edu.service;
 
 import com.edu.common.result.ResultData;
-import com.edu.controller.common.DemoResult;
 import com.edu.dao.domain.Dlog;
 import com.edu.dao.domain.User;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

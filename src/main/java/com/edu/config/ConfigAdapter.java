@@ -1,4 +1,4 @@
-package com.edu.controller.filter;
+package com.edu.config;
 
 import com.edu.controller.interceptor.LoginIntercepotr;
 import com.edu.controller.interceptor.TraceInterceptor;

@@ -1,5 +1,6 @@
 package com.edu.util;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +18,13 @@ import java.util.Properties;
 public class OpenConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenConfig.class);
-    public static final String FILE_NAME = "config";
+    private static final String RESOURCES = "config.properties";
     public static Properties properties;
 
     static {
         try {
             properties = new Properties();
-            InputStream in = OpenConfig.class.getClassLoader().getResourceAsStream("config.properties");
+            InputStream in = OpenConfig.class.getClassLoader().getResourceAsStream(RESOURCES);
             properties.load(in);
         } catch (IOException e) {
             logger.info("配置文件加载失败",e);
@@ -38,7 +39,7 @@ public class OpenConfig {
             }
             throw new Exception("配置文件获取失败");
         } catch (Exception e) {
-            String message = "不能在"+FILE_NAME+"中发现参数:"+key;
+            String message = "不能在"+ RESOURCES +"中发现参数:"+key;
             throw new RuntimeException(message);
         }
     }
