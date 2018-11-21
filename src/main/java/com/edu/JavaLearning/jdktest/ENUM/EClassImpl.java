@@ -11,14 +11,14 @@ public enum EClassImpl implements InterfaceA{
 
     MemberA{
         @Override
-        public void execute() {
-            System.out.println("Member A");
+        public void execute(Object o) {
+
         }
     },
 
     MemberB{
         @Override
-        public void execute() {
+        public void execute(Object o) {
             System.out.println("Member B");
         }
     }

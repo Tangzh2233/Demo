@@ -5,7 +5,7 @@ package com.edu.JavaLearning.jdktest.ENUM;
  * @date 2018/3/1
  */
 
-public interface InterfaceA {
+public interface InterfaceA<T> {
 
-    void execute();
+    void execute(T t);
 }

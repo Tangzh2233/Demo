@@ -27,6 +27,7 @@ public class test {
     }*/
     public static void main(String[] st) {
 
+
         String str = "http://127.0.0.1:8848/page/main.html";
         System.out.println(str.toLowerCase());
         str = str.substring(7);
