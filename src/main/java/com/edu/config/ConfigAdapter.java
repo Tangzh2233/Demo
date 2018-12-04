@@ -37,9 +37,9 @@ public class ConfigAdapter extends WebMvcConfigurerAdapter{
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(traceInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/page/**","/error","/myspringboot/exit.do");
+                .excludePathPatterns("/page/**","/error","/myspringboot/exit.do","/myspringboot/addUsers.do");
         registry.addInterceptor(loginIntercepotr()).addPathPatterns("/**")
-                .excludePathPatterns("/page/login.html","/myspringboot/login.do","/error","/myspringboot/httpPost.do","/page/register.html","/myspringboot/register.do");
+                .excludePathPatterns("/page/login.html","/myspringboot/login.do","/error","/myspringboot/httpPost.do","/page/register.html","/myspringboot/register.do","/myspringboot/addUsers.do");
         super.addInterceptors(registry);
     }
 

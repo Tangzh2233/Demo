@@ -14,6 +14,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Tangzhihao
@@ -74,4 +75,5 @@ public class MyTransactionTemplate {
         });
         return  user1;
     }
+
 }

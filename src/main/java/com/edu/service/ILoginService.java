@@ -6,6 +6,7 @@ import com.edu.dao.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/9/14.
@@ -18,4 +19,5 @@ public interface ILoginService {
     <T> T select(T t);
     int addDlog(Dlog dlog);
     ResultData checkToken(String token);
+    int inserListUsers();
 }

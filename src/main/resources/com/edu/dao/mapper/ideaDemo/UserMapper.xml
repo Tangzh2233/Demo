@@ -16,14 +16,14 @@
         select <include refid="column_list" /> from users where username = #{name}
     </select>
     
-    <insert id="insertUserList">
-        INSERT INTO users(username,password)
-        VALUES
-        <foreach collection="pojos" item="pojo" index="index" separator=",">
-            (
-            #{pojo.username},
-            #{pojo.password}
-            )
+    <insert id="insertUserList" parameterType="java.util.List">
+        insert into users(username,password)
+        values
+        <foreach collection="pojos" item="pojo" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="pojo.username!=null">#{pojo.username,jdbcType=VARCHAR},</if>
+                <if test="pojo.password!=null">#{pojo.password,jdbcType=VARCHAR}</if>
+            </trim>
         </foreach>
 
     </insert>

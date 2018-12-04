@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * ArrayList、Vector:源码实现基本一致。
- * 底层默认为Object[10] | Itr迭代器 | ListItr增强迭代器，可以向前迭代.
+ * 底层默认为Object[10] | Itr迭代器 | ListItr迭代器增强版，可以向前迭代.
  * SubList返回Object[]的子集 | ArrayListSpliterator平分迭代器，多线程同时迭代一个Object[]
  * 不同：1 后者通过synchronized保证线程安全同时效率降低
  *      2 前者默认初始化为{},第一次add时进行初始内存分配。后者默认初始化为Object[10]

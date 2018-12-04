@@ -33,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/9/14.
@@ -243,6 +244,16 @@ public class LoginServiceImpl implements ILoginService{
         //更新redis key 时间
         RedisUtil.expire(user_session_key+":"+token,key_expire_time);
         return ResultData.isSuccess("",JSON.parseObject(json,User.class));
+    }
+
+    @Override
+    public int inserListUsers() {
+        List<User> datas = new ArrayList<>();
+        for (int i=0;i<10;i++){
+            User data = new User("tang", String.valueOf(i));
+            datas.add(data);
+        }
+        return userMapper.insertUserList(datas);
     }
 
 }

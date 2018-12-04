@@ -42,6 +42,7 @@ public class TestController {
         return "main";
     }
 
+
     @ResponseBody
     @RequestMapping("/httpPost.do")
     public HttpResponse httpTest(User user){
@@ -63,6 +64,12 @@ public class TestController {
     @RequestMapping("/sendEmail.do")
     private String sendEmail(){
         dailyJob.execute();
+        return "main";
+    }
+
+    @RequestMapping("/addUsers.do")
+    public String addUsers(){
+        loginService.inserListUsers();
         return "main";
     }
 }
