@@ -114,7 +114,8 @@
         <appender-ref ref="dao-appender"/>
     </logger>
 
-    <!--appender没设置自己的level时，继承root的level级别，此处表示level>=info，才可以写入一下appender。-->
+    <!--logger没设置自己的level时，继承root的level级别，此处表示level>=info，才可以写入root中的appender。-->
+    <!--logger没有level,且additivity(是否向上级传递打印信息,此处的上级为root节点)不为fasle时，继承root的level和appender-->
     <root level="INFO">
         <appender-ref ref="ERROR" />
     </root>

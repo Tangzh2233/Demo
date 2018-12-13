@@ -1,5 +1,11 @@
 package com.edu.Java基础重温.集合;
 
+import sun.misc.Unsafe;
+import java.lang.ref.PhantomReference;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -107,55 +113,82 @@ import java.util.concurrent.ConcurrentHashMap;
  *        WeakHashMap.size()==0,其中元素将被gc。若想让元素不被gc,key即"id"需被显示引用。eg:
  *        String key="id",WeakHashMap(key,"001")。如此不会被gc。
  *
+ *  2.实现原理:"WeakHashMap的key为弱引用,当key被gc后，将放进队列queue中(垃圾回收的一种通知机制),
+ *            下次操作WeakHashMao之前都会遍历一下queue,若存在相关的key,则poll,然后删除Map中的相关key-value"。
+ *  3.HashIterator 迭代器的实现可以看下，涉及遍历过程中key被gc的一个情况。
+ *
+ * =======================ThreadLocal<T>.ThreadLocalMap========================
+ *
+ * [JDK1.8]
+ * static class ThreadLocalMap{
+ *   static class Entry extends WeakReference<ThreadLocal<?>> {
+ *        Object value;
+ *        Entry(ThreadLocal<?> k, Object v) {
+ *            super(k);
+ *            value = v;
+ *       }
+ *   }
+ * }实际存储容器为Entry[16]默认大小为16的Entry数组。Entry中的key为ThreadLocal本身，value为输入数据
+ *  1.public void set(T value){
+ *      Thread t = Thread.currentThread();
+ *      ThreadLocalMap map = getMap(t);
+ *      if (map != null)
+ *         map.set(this, value);
+ *      else
+ *      createMap(t, value);
+ *  }注:为数组，不存在链表结构，出现table[i]!=null的时后i+1以此类推。具体参看ThreadLocal.ThreadMap.set(..)+nextIndex(..)方法。
+ *  每一个线程拥有一个类型为ThreadLocal.ThreadLocalMap的threadLocals变量。
+ *  ThreadLocal.set(V v)就是往当前线程的threadLocals变量中添加key=this,value=v的数据。
+ *
+ * *********使用ThreadLocal时要注意内存溢出问题**********
+ *
+ * =============================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+ *     implements ConcurrentMap<K,V>, Serializable=====================================
+ *
+ *
+ *
  * @Author: tangzh
  * @Date: 2018/11/16$ 下午5:18$
  **/
 public class MapLearning {
     private static HashMap hashMap = new HashMap(19) ;
+    private HashMap unsafeMap = new HashMap();
     private static Hashtable hashtable = new Hashtable();
     private static LinkedHashMap linkedHashMap = new LinkedHashMap();
     private static HashSet hashSet = new HashSet();
     private static WeakHashMap weakHashMap = new WeakHashMap();
-    private static ThreadLocal<String> context = new ThreadLocal<>();
-    private static ConcurrentHashMap concurrentHashMap;
+    private static ThreadLocal<Map> context = new ThreadLocal<>();
+    private static ThreadLocal<String> context1 = new ThreadLocal<>();
+    private static ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(8);
 
-    public static void main(String[] args) {
-        hashMap.put(null,null);
-        hashMap.put("id","5201314");
-        hashMap.put("di","ah2345");
-        hashMap.put("name","hahahah");
-        hashMap.put("pwd","1234");
-        hashMap.put("ordNo","a132123");
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args) throws NoSuchFieldException {
+        hashMap.put(null,null);hashMap.put("id","5201314");
+        hashMap.put("di","ah2345");hashMap.put("name","hahahah");
+        hashMap.put("pwd","1234");hashMap.put("ordNo","a132123");
         hashMap.put("amt","32.12");
 //      ==================================
-        hashtable.put("id","001");
-        hashtable.put("name","tang");
-        hashtable.put("pwd","qwer1234");
-        hashtable.put("age",18);
+        hashtable.put("id","001");hashtable.put("name","tang");
+        hashtable.put("pwd","qwer1234");hashtable.put("age",18);
 //      ===================================
-        linkedHashMap.put("id",002);
-        linkedHashMap.put("name","zhi");
-        linkedHashMap.put("pwd","qwer1234");
-        linkedHashMap.put("age",18);
+        linkedHashMap.put("id",002);linkedHashMap.put("name","zhi");
+        linkedHashMap.put("pwd","qwer1234");linkedHashMap.put("age",18);
 //      ===================================
-        weakHashMap.put("id",003);
-        weakHashMap.put("name","1234");
-
+        weakHashMap.put("id",003);weakHashMap.put("name","1234");
+//      ===================================
+        context.set(hashMap);context1.set("ThreadLocal");
 //      ==============WeakHashMap测试区===================
-        context.set("ContextData");
-        context.set("ResetData");
-
         LocalContextCache<String,String> cache = new LocalContextCache<>(100);
-        String key1;
         cache.put(new String("key1"),"value1");
         cache.put("key2","value2");
         cache.put("key3","value3");
         System.out.println(cache.size());
         System.gc();
         System.out.println(cache.size());
-//      ===================================
+//      ================ConcurrentHashMap===================
+        concurrentHashMap.put("id","001");
 
-
+//      ====================================================
         System.out.println(context.get());
         Iterator iterator2 = linkedHashMap.keySet().iterator();
         while (iterator2.hasNext()){
@@ -174,6 +207,51 @@ public class MapLearning {
         while (iterator.hasNext()){
             System.out.print(hashMap.get(iterator.next())+",");
         }
+
+        //Unsafe测试
+        MapLearning mapInstance = new MapLearning();
+        mapInstance.UnsafeTest();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void UnsafeTest(){
+        Map map = (Map)unsafe.getObject(this, HASHMAP_OFFSET);
+        map.put("unsafe","unsafe");
+        System.out.println(map.toString());
+    }
+    private static Unsafe unsafe;
+    private static final long HASHMAP_OFFSET;
+    //初始化unsafeMap在MapLearning.class的偏移量
+    static {
+        try {
+            unsafe = getUnsafeInstance();
+            Class a = MapLearning.class;
+            HASHMAP_OFFSET = unsafe.objectFieldOffset(a.getDeclaredField("unsafeMap"));
+        } catch (NoSuchFieldException e) {
+            throw new Error(e);
+            //此处throw的原因：
+            //final a = 2;此时final变量在类加载的准备阶段就已经完成赋值;
+            //但是若 final b;这种情况下b的赋值必须在Construct或静态块中完成;
+            //否则就会报错。当static块中使用try{}catch{}时,若不抛出异常则程序
+            //可以继续运行,这是不被允许的,因为它不能确定final一定被赋值了。
+        }
+
+    }
+
+    /**
+      * @description:获取Unsafe实例
+    **/
+    private static Unsafe getUnsafeInstance(){
+        Unsafe unsafe = null;
+        try {
+            Class<?> aClass = Class.forName("sun.misc.Unsafe");
+            Constructor<?> constructor = aClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            unsafe = (Unsafe)constructor.newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return unsafe;
     }
 
 }
@@ -184,6 +262,9 @@ public class MapLearning {
 **/
 class LocalContextCache<K,V>{
     private int size;
+    private SoftReference<String> soft;
+    private WeakReference<String> weak;
+    private PhantomReference<String> phantom;
     private WeakHashMap<K,V> context;
 
     LocalContextCache(int size){

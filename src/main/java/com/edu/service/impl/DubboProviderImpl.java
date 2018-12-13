@@ -1,6 +1,5 @@
 package com.edu.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.edu.Api.DubboProviderApi;
 
 /**
