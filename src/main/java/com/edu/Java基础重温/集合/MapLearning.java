@@ -10,11 +10,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * [HashMap,LinkedHashMap,WeakHashMap,HashTable,ConcurrentMap,HashSet]
+ * [HashMap,HashTable,LinkedHashMap,WeakHashMap,ConcurrentHashMap,HashSet,TreeMap]
+ *
+ * 【HashMap、LinkedHashMap、TreeMap的使用场景】https://www.jianshu.com/p/dd746074f390
  *
  * ================HashMap extends AbstractMap<K,V>
  *                         implements Map<K,V>, Cloneable, Serializable=============
- *(Mark:对红黑树部分没有很理解)
+ *(Mark:对红黑树部分理解的很浅)
  *
  * HashMap【JDK1.8】:底层实现Node<K,V>[] 数组+链表(单向)+红黑树即 Object[Node<K,V>]。
  *  Node<K,V> implement Map.Entry<K,V>{
@@ -57,10 +59,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *      8.5:for循环oldTab. e=table[j]!=null&&e.next==null 则newTab[e.hash&(newCap-1)]=e;
  *      8.6:else if(e instanceof TreeNode):红黑树的环节
  *      8.7:if(e.hash&oldCap==0)newTab[j] else: newTab[j+oldCap]
- * ============树的左旋右旋============
- * 对X节点左旋-->>将X的右孩子Y置为X的父节点,同时保证树的特性
- * 对X节点右旋-->>将X的左孩子Z置为X的父节点,同时保证树的特性
- * https://www.cnblogs.com/skywang12345/p/3245399.html#a3
  *
  * ===============HashTable extends Dictionary<K,V>
  *                          implements Map<K,V>, Cloneable, java.io.Serializable ==============
@@ -87,7 +85,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *     Entry<K,V> next;
  *     Entry<K,V> before;
  *     Entry<K,V> after;
- * }
+ * }数据结构：数组+单向链表的基础上,维持一个保存元素插入顺序的链路
  *  1.LinkedHashMap出现的作用:保存数据的插入顺序.就是在HashMap.Entry<K,V>的基础上添加两个befor和after节点,类变量保存tail和head节点。
  *  2.LinkedHashMap因为继承HashMap,所以初始化的和HashMap流程基本一致;
  *  3.继承HashMap重写部分方法，达到想要的效果。put操作中重写了newNode(hash,k,v,entry)+afterNodeAccess(entry)+afterNodeInsertion(boolean)
@@ -142,9 +140,137 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * *********使用ThreadLocal时要注意内存溢出问题**********
  *
- * =============================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
- *     implements ConcurrentMap<K,V>, Serializable=====================================
+ * =========================TreeMap extends AbstractMap<K,V>
+ *                          implements NavigableMap<K,V>, Cloneable=======================
+ * 树节点结构
+ * !!!!!!!!=====树的左旋右旋=====!!!!!!!
+ *  对X节点左旋:
+ *      -->>将X的右孩子Y置为X的父节点;
+ *      -->>将Y的左孩子置为X的右孩子;
+ *      -->>将X的父节点置为Y的父节点;
+ *      同时保证树的特性
+ *  对X节点右旋:
+ *      -->>将X的左孩子Z置为X的父节点;
+ *      -->>将Z的右孩子置为X的左孩子;
+ *      -->>将X的父节点置为Z的的父节点
+ *      同时保证树的特性
+ *https://www.cnblogs.com/skywang12345/p/3245399.html#a3
  *
+ * static final class Entry<K,V> implements Map.Entry<K,V> {
+ *         K key;
+ *         V value;
+ *         Entry<K,V> left;
+ *         Entry<K,V> right;
+ *         Entry<K,V> parent;
+ *         boolean color = BLACK;
+ * }就是一个典型的红黑树结构,对于红黑树的学习非常有帮助。
+ * !!!========put是正常操作。重要的是新节点添加以后红黑书树的修正操作======!!!
+ * 1.fixAfterInsertion(e) 默认新节点color=red
+ *   case1:(e==null||e==root||e.parent.color!=red)-->> 直接添加,root.color==black;
+ *   case2:!(case1)
+ *      -->>(parentof(e)==leftof(parentof(parentof(e)))):当前节点的父节点为祖父节点的左孩子
+ *          -->>2.1获取当前节点的叔叔节点 Entry<K,V> y = rightOf(parentOf(parentOf(e)));
+ *              -->> 类似如下:只是左右操作是相反的
+ *      -->>parentof(e)==rightof(parentof(parentof(e))):当前节点的父节点为祖父节点的右孩子
+ *          -->> 获取当前节点的叔叔节点  Entry<K,V> y = leftOf(parentOf(parentOf(e)));
+ *              -->>if(color(y)==red) 叔叔是红节点
+ *                  -->>
+ *                      setColor(parentOf(e), BLACK);       设置当前节点父节点为黑节点
+ *                      setColor(y, BLACK);                 设置当前节点叔叔节点为黑节点
+ *                      setColor(parentOf(parentOf(e)),RED);设置当前节点祖父节点为红节点
+ *                      e = parentOf(parentOf(e));          将当前节点设置为原当前节点的祖父节点
+ *              -->>else 叔叔是黑节点
+ *                  -->>if(e == leftOf(parentOf(e))){       当前节点是左孩子[多做如下操作,当前节点变更为父节点，并进行右旋]
+ *                          e = parentOf(e);                将当前节点设置为原当前节点的父节点
+ *                          rotateRight(e);                 右旋当前当前节点
+ *                       }
+ *                      setColor(parentOf(e), BLACK);       设置当前节点为黑节点
+ *                      setColor(parentOf(parentOf(e)),RED);设置当前节点的祖父节点为红节点
+ *                      rotateLeft(parentOf(parentOf(e)));  左旋当前节点的祖父节点
+ * ==============这一坨操作为啥要这样做,是需要考虑的事情=================
+ *
+ *
+ *
+ * 【JDK1.7】=====================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+ *                      implements ConcurrentMap<K,V>, Serializable=======================
+ * 与HashTable的锁住这个表相比，1.7的ConcurrentHashMap采用分段锁设计，分段数量即Segment[]对象数组的大小
+ * 默认设置简化版数据结构：
+ *   class ConcurrentHashMap ...{
+ *      Segment[16] segments;
+ *      class Segment extends  ReentrantLock ...{
+ *          transient int count;
+ *          transient int modcount;
+ *          transient int threshold;
+ *          final float loadFactor;
+ *          HashEntry<K,V>[2] table;
+ *      }
+ *      class HashEntry<K,V>{
+ *          final int hash;
+ *          final K k;
+ *          volatile V v;
+ *          volatile HashEntry<K,V> next;
+ *
+ *      }
+ *   }
+ *   1.默认初始化Segments.length=16;table.length=2;
+ *     注：默认初始化时只会实例化一个segment和与之对应的HashEntry,即延迟初始化。
+ *     put,get基本流程,先确认位于哪个Segment[?],再在segment中确定table[?]进行再table的链表put,get操作
+ *   2.put操作简析
+ *      2.1:依据key的hashcode计算出hash,然后计算出key应该在哪个segment[?]。
+ *      2.2:使用unsafe根据偏移量直接判断segment[?]是否为null。
+ *        2.2.1:不为null,则在此segment上进行put的相关操作
+ *        2.2.2:为null则ensureSegment(?)进行对应segment初始化,初始化完成以后再进行put操作。
+ *   3.ensureSegment(?)初始化指定位置"?"segment简析
+ *      3.1:计算下标为?的segment偏移量,获取segments实例。long u = (k << SSHIFT) + SBASE;
+ *          SSHIFT=(一通操作没看懂);SBASE=UNSAFE.arrayBaseOffset(tc)返回数组类型的第一个元素的偏移地址;
+ *      3.2:使用unsafe(ss,u)判断此segment是否为空(即是否已经被其他线程实例化)
+ *        3.2.1:为null。从segment[0](segment[0]是在map初始化的时候实例化的)中获取初始化new segment所需的参数-->>new HashEntry[2]
+ *        3.2.2:recheck Segment[?]是否为空。new Segment();while(seg[?]==null){
+ *              丧心病狂的走一步判断一次                        if (UNSAFE.compareAndSwapObject(ss, u, null, seg = s))
+ *                                                          break;
+ *                                                      }
+ *   4.Segment实例化完成之后,进行实际的put操作。
+ *      4.1:tryLock()->>获取segment中table,index=(table.length-1)&hash
+ *           ->>通过unsafe获取table[index]的首元素-->>进行类似HashMap的链表put操作
+ *           ->>若存在相同的key则进行value替换,不存在则new HashEntry(hash,k,v,first);
+ *           -->>setEntryAt(tab, index, node)通过unsafe设置table[index]。
+ *   5.rehash(HashEntry<K,V> node) 是对segment中的table进行*2扩容。因为在rehash是在segment中，已经保证了线程安全。
+ *   6.remove(Object k,int hash,Object value)。类似HashMap,使用证线程安全使用tryLock()来保证。
+ *   7.size()
+ *      7.1:尝试两次将每个segment中的count进行累加,如果两次size没有改变则返回sum(count)。否则则锁住全表ensureSegment(j).lock()再进行sum(count)
+ *      7.2:通过sum(modCount)来判断两次sum(count)有没有进行put,remove,clean操作。
+ *
+ *   ===================HashIterator 迭代器的实现[类似实现不难,看看源码debug一下就明白了]=================
+ *   abstract class HashIterator {
+ *         int nextSegmentIndex;
+ *         int nextTableIndex;
+ *         HashEntry<K,V>[] currentTable;
+ *         HashEntry<K, V> nextEntry;
+ *         HashEntry<K, V> lastReturned;
+ *
+ *         HashIterator() {
+ *             nextSegmentIndex = segments.length - 1;
+ *             nextTableIndex = -1;
+ *             advance();
+ *         }
+ *     //advanced从segment从后向前查询到第一个不为空到元素,类变量保存相关的值
+    *      final void advance() {
+*             for (;;) {
+*                 if (nextTableIndex >= 0) {
+*                     if ((nextEntry = entryAt(currentTable,nextTableIndex--)) != null)
+*                         break;
+*                 }
+*                 else if (nextSegmentIndex >= 0) {
+*                     Segment<K,V> seg = segmentAt(segments, nextSegmentIndex--);
+*                     if (seg != null && (currentTable = seg.table) != null)
+*                         nextTableIndex = currentTable.length - 1;
+*                 }
+*                 else
+*                     break;
+*             }
+    *      }
+ *  【jdk1.8】===================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+ *                         implements ConcurrentMap<K,V>====================================
  *
  *
  * @Author: tangzh
@@ -160,6 +286,7 @@ public class MapLearning {
     private static ThreadLocal<Map> context = new ThreadLocal<>();
     private static ThreadLocal<String> context1 = new ThreadLocal<>();
     private static ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(8);
+    private static TreeMap treeMap = new TreeMap();
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws NoSuchFieldException {
@@ -185,9 +312,15 @@ public class MapLearning {
         System.out.println(cache.size());
         System.gc();
         System.out.println(cache.size());
+//      ===================TreeMap===================
+        treeMap.put("1","1");treeMap.put("2","2");
+        treeMap.put("3","3");
+        treeMap.put("4","4");treeMap.put("5","5");treeMap.put("6","6");
+        treeMap.put("7","7");treeMap.put("8","8");treeMap.put("9","9");
+        treeMap.put("10","10");
+        treeMap.put("11","11");
 //      ================ConcurrentHashMap===================
         concurrentHashMap.put("id","001");
-
 //      ====================================================
         System.out.println(context.get());
         Iterator iterator2 = linkedHashMap.keySet().iterator();
