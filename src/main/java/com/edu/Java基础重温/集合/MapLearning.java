@@ -313,12 +313,11 @@ public class MapLearning {
         System.gc();
         System.out.println(cache.size());
 //      ===================TreeMap===================
-        treeMap.put("1","1");treeMap.put("2","2");
-        treeMap.put("3","3");
-        treeMap.put("4","4");treeMap.put("5","5");treeMap.put("6","6");
-        treeMap.put("7","7");treeMap.put("8","8");treeMap.put("9","9");
-        treeMap.put("10","10");
-        treeMap.put("11","11");
+        ValueCompator<String, String> valueCompator = new ValueCompator<String, String>(treeMap);
+        treeMap.put("1","9");treeMap.put("2","8");
+        treeMap.put("3","7");
+        treeMap.put("4","6");treeMap.put("5","5");treeMap.put("6","4");
+        treeMap.put("7","3");treeMap.put("8","2");treeMap.put("9","1");
 //      ================ConcurrentHashMap===================
         concurrentHashMap.put("id","001");
 //      ====================================================
@@ -422,5 +421,24 @@ class LocalContextCache<K,V>{
         return this.context.size();
     }
 
+}
+class ValueCompator<K,V> implements Comparator<K>{
+
+    private Map<K,V> map;
+
+    ValueCompator(Map<K,V> map){
+        this.map = map;
+    }
+
+    @Override
+    public int compare(K o1, K o2) {
+        if(map==null){
+            return 0;
+        }
+        V value1 = map.get(o1);
+        V value2 = map.get(o2);
+        Comparable<? super V> v = (Comparable<? super V>) value1;
+        return v.compareTo(value2);
+    }
 }
 
