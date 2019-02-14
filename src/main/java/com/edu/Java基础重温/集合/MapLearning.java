@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * ================HashMap extends AbstractMap<K,V>
  *                         implements Map<K,V>, Cloneable, Serializable=============
- *(Mark:对红黑树部分没有很理解)
+ *(Mark:对红黑树部分理解的很浅)
  *
  * HashMap【JDK1.8】:底层实现Node<K,V>[] 数组+链表(单向)+红黑树即 Object[Node<K,V>]。
  *  Node<K,V> implement Map.Entry<K,V>{
@@ -87,7 +87,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *     Entry<K,V> next;
  *     Entry<K,V> before;
  *     Entry<K,V> after;
- * }
+ * }数据结构：数组+单向链表的基础上,维持一个保存元素插入顺序的链路
  *  1.LinkedHashMap出现的作用:保存数据的插入顺序.就是在HashMap.Entry<K,V>的基础上添加两个befor和after节点,类变量保存tail和head节点。
  *  2.LinkedHashMap因为继承HashMap,所以初始化的和HashMap流程基本一致;
  *  3.继承HashMap重写部分方法，达到想要的效果。put操作中重写了newNode(hash,k,v,entry)+afterNodeAccess(entry)+afterNodeInsertion(boolean)
@@ -142,9 +142,86 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * *********使用ThreadLocal时要注意内存溢出问题**********
  *
- * =============================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
- *     implements ConcurrentMap<K,V>, Serializable=====================================
+ * 【JDK1.7】=====================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+ *                      implements ConcurrentMap<K,V>, Serializable=======================
+ * 与HashTable的锁住这个表相比，1.7的ConcurrentHashMap采用分段锁设计，分段数量即Segment[]对象数组的大小
+ * 默认设置简化版数据结构：
+ *   class ConcurrentHashMap ...{
+ *      Segment[16] segments;
+ *      class Segment extends  ReentrantLock ...{
+ *          transient int count;
+ *          transient int modcount;
+ *          transient int threshold;
+ *          final float loadFactor;
+ *          HashEntry<K,V>[2] table;
+ *      }
+ *      class HashEntry<K,V>{
+ *          final int hash;
+ *          final K k;
+ *          volatile V v;
+ *          volatile HashEntry<K,V> next;
  *
+ *      }
+ *   }
+ *   1.默认初始化Segments.length=16;table.length=2;
+ *     注：默认初始化时只会实例化一个segment和与之对应的HashEntry,即延迟初始化。
+ *     put,get基本流程,先确认位于哪个Segment[?],再在segment中确定table[?]进行再table的链表put,get操作
+ *   2.put操作简析
+ *      2.1:依据key的hashcode计算出hash,然后计算出key应该在哪个segment[?]。
+ *      2.2:使用unsafe根据偏移量直接判断segment[?]是否为null。
+ *        2.2.1:不为null,则在此segment上进行put的相关操作
+ *        2.2.2:为null则ensureSegment(?)进行对应segment初始化,初始化完成以后再进行put操作。
+ *   3.ensureSegment(?)初始化指定位置"?"segment简析
+ *      3.1:计算下标为?的segment偏移量,获取segments实例。long u = (k << SSHIFT) + SBASE;
+ *          SSHIFT=(一通操作没看懂);SBASE=UNSAFE.arrayBaseOffset(tc)返回数组类型的第一个元素的偏移地址;
+ *      3.2:使用unsafe(ss,u)判断此segment是否为空(即是否已经被其他线程实例化)
+ *        3.2.1:为null。从segment[0](segment[0]是在map初始化的时候实例化的)中获取初始化new segment所需的参数-->>new HashEntry[2]
+ *        3.2.2:recheck Segment[?]是否为空。new Segment();while(seg[?]==null){
+ *              丧心病狂的走一步判断一次                        if (UNSAFE.compareAndSwapObject(ss, u, null, seg = s))
+ *                                                          break;
+ *                                                      }
+ *   4.Segment实例化完成之后,进行实际的put操作。
+ *      4.1:tryLock()->>获取segment中table,index=(table.length-1)&hash
+ *           ->>通过unsafe获取table[index]的首元素-->>进行类似HashMap的链表put操作
+ *           ->>若存在相同的key则进行value替换,不存在则new HashEntry(hash,k,v,first);
+ *           -->>setEntryAt(tab, index, node)通过unsafe设置table[index]。
+ *   5.rehash(HashEntry<K,V> node) 是对segment中的table进行*2扩容。因为在rehash是在segment中，已经保证了线程安全。
+ *   6.remove(Object k,int hash,Object value)。类似HashMap,使用证线程安全使用tryLock()来保证。
+ *   7.size()
+ *      7.1:尝试两次将每个segment中的count进行累加,如果两次size没有改变则返回sum(count)。否则则锁住全表ensureSegment(j).lock()再进行sum(count)
+ *      7.2:通过sum(modCount)来判断两次sum(count)有没有进行put,remove,clean操作。
+ *
+ *   ===================HashIterator 迭代器的实现[类似实现不难,看看源码debug一下就明白了]=================
+ *   abstract class HashIterator {
+ *         int nextSegmentIndex;
+ *         int nextTableIndex;
+ *         HashEntry<K,V>[] currentTable;
+ *         HashEntry<K, V> nextEntry;
+ *         HashEntry<K, V> lastReturned;
+ *
+ *         HashIterator() {
+ *             nextSegmentIndex = segments.length - 1;
+ *             nextTableIndex = -1;
+ *             advance();
+ *         }
+ *     //advanced从segment从后向前查询到第一个不为空到元素,类变量保存相关的值
+    *      final void advance() {
+*             for (;;) {
+*                 if (nextTableIndex >= 0) {
+*                     if ((nextEntry = entryAt(currentTable,nextTableIndex--)) != null)
+*                         break;
+*                 }
+*                 else if (nextSegmentIndex >= 0) {
+*                     Segment<K,V> seg = segmentAt(segments, nextSegmentIndex--);
+*                     if (seg != null && (currentTable = seg.table) != null)
+*                         nextTableIndex = currentTable.length - 1;
+*                 }
+*                 else
+*                     break;
+*             }
+    *      }
+ *  【jdk1.8】===================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+ *                         implements ConcurrentMap<K,V>====================================
  *
  *
  * @Author: tangzh

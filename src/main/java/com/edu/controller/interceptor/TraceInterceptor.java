@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 public class TraceInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        System.out.println("进入traceInterceptor");
         MDC.put(Constants.REQ_TIME, DateUtil.getCurDateForHour());
         MDC.put(Constants.REQ_URL,request.getRequestURI());
         MDC.put(Constants.TRACE_ID, UUIDUtil.getUUID());

@@ -64,7 +64,7 @@ public class MyConditionAQSandCAS {
     private static Condition isC = lock.newCondition();
     private static AtomicInteger atomicInteger = new AtomicInteger();
 
-    public static void main(String[] args) throws InterruptedException, IllegalAccessException, InstantiationException, InvocationTargetException, ClassNotFoundException {
+    public static void main(String[] args) throws InterruptedException{
         MyConditionAQSandCAS condition = new MyConditionAQSandCAS();
         Producer producer = condition.new Producer();
         Consumer consumer = condition.new Consumer();
@@ -75,10 +75,10 @@ public class MyConditionAQSandCAS {
         c1.start();
         c2.start();p1.start();p2.start();
         Thread.sleep(2);
-//        p1.interrupt();
-//        p2.interrupt();
-//        c1.interrupt();
-//        c2.interrupt();
+        p1.interrupt();
+        p2.interrupt();
+        c1.interrupt();
+        c2.interrupt();
         System.out.println(atomicInteger);
     }
 

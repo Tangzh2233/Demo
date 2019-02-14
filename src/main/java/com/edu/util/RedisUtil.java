@@ -117,10 +117,56 @@ public class RedisUtil {
         }
     }
 
-    private static void close(Jedis jedis){
+    public static long setnx(String key,String value){
+        Assert.isEmpty(key,"key must is not null");
+        Assert.isEmpty(value,"value must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.setnx(key, value);
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static long getRedisTime(){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return Long.parseLong(jedis.time().get(0));
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static String getSet(String key,String value){
+        Assert.isEmpty(key,"key must is not null");
+        Assert.isEmpty(value,"value must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.getSet(key, value);
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static long ttl(String key){
+        Assert.isEmpty(key,"key must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.ttl(key);
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static void close(Jedis jedis){
         if(jedis!=null){
             jedis.close();
         }
     }
+
 
 }

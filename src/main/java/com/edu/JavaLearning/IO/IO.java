@@ -13,20 +13,22 @@ import java.nio.charset.Charset;
 
 public class IO {
     public static void main(String[] args) throws IOException {
-    //    BaseInPutStreamOfByteArray();
+//        BaseInPutStreamOfByteArray();
     //    BaseInPutStreamOfStringBuffer();
-    //    BaseInPutStreamOfFile();
+        BaseInPutStreamOfFile();
     //    BaseRandomAccessFile();
     //    NioOfCaseDoCopy();
-        NioOfCaseDoRead();
+//        NioOfCaseDoRead();
     }
 
 
     public static void BaseInPutStreamOfByteArray() throws IOException {
         byte[] bytes = new byte[]{1,0,0,1,2,0};
+        byte[] context = new byte[bytes.length];
         //byte数组作为数据源,读入流中
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         int num;
+        bais.read(context);
         while ((num = bais.read())!=-1){
             System.out.println(num);
         }
@@ -41,10 +43,10 @@ public class IO {
         System.out.println("bytes"+new String(chars));
     }
     public static void BaseInPutStreamOfFile() throws IOException {
-        File file = new File("D:\\GZip.txt");
+        File file = new File("/data/GZip.txt");
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        FileOutputStream fos = new FileOutputStream(new File("D:\\GZip-1.txt"),true);
+        FileOutputStream fos = new FileOutputStream(new File("/data/GZip-1.txt"),true);
         byte[] bytes = new byte[1024];
         int read = bis.read(bytes);
         fos.write(bytes,0,read);
