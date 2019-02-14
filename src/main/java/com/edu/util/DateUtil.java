@@ -23,7 +23,7 @@ public class DateUtil {
         return forMatDate(new Date(),YYYYMMDD);
     }
     public static String getCurDateForHour(){
-        return forMatDate(new Date(),YYYYMMDDHHSS);
+        return forMatDate(new Date(),YYYYMMDDHHMMSS);
     }
 
     //格式化日期

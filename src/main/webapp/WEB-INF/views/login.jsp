@@ -17,6 +17,9 @@
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/resources/css/htmleaf-demo.css">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/resources/css/htmleaf-demo.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/verify.css">
     <style type="text/css">
         .form-bg{
             background: #00b4ef;
@@ -151,6 +154,9 @@
     <![endif]-->
     <script type="text/javascript" src="/resources/js/jquery-1.7.2.min.js" ></script>
     <script type="text/javascript" src="/resources/js/jquery.cookie.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+    <script>window.jQuery || document.write('<script src="/resources/js/jquery-1.11.0.min.js"><\/script>')</script>
+    <script type="text/javascript" src="/resources/js/verify.js" ></script>
     <script type="text/javascript">
         $(function(){
             if($.cookie("login")=="true"){
@@ -193,29 +199,58 @@
             }
             return true;
         }
-        function login(){
+        function login() {
             debugger;
             var name = $("#username").val();
             var password = $("#password").val();
-            var json = {"username":name,"password":password};
+            var json = {"username": name, "password": password};
             $.ajax({
-                type:"post",
-                url:"/myspringboot/login.do",
-                data:json,
-                datatype:"json",
-                async:false,
+                type: "post",
+                url: "/myspringboot/login.do",
+                data: json,
+                datatype: "json",
+                async: false,
                 //contentTyle:"application/json; charset=utf-8",
-                success:function(data){
-                    if("00" == data.rspCode){
+                success: function (data) {
+                    if ("00" == data.rspCode) {
                         save();
                         window.location.href = "main.html";
-                    }else{
+                    } else {
                         alert(data.rspMessage);
                         window.location.href = "login.html";
                     }
                 }
             });
         }
+
+        $('#mpanel4').slideVerify({
+            type : 2,		//类型
+            vOffset : 5,	//误差量，根据需求自行调整
+            vSpace : 5,	//间隔
+            imgName : ['1.jpg', '2.jpg'],
+            imgSize : {
+                width: '400px',
+                height: '200px',
+            },
+            blockSize : {
+                width: '40px',
+                height: '40px',
+            },
+            barSize : {
+                width : '400px',
+                height : '40px',
+            },
+            ready : function() {
+            },
+            success : function() {
+                alert('验证成功，添加你自己的代码！');
+                //......后续操作
+            },
+            error : function() {
+                //		        	alert('验证失败！');
+            }
+
+        });
     </script>
 </head>
 <body style="min-width: 470px;">
@@ -240,6 +275,12 @@
                             <input type="password" class="form-control" name="password" id="password" placeholder="密　码">
                             <i class="fa fa-lock"></i>
                             <a href="#" class="fa fa-question-circle"></a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-4">
+                                <p style="margin-top:50px;">拖动方块到空白处完成验证</p>
+                                <div id="mpanel4" ></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="main-checkbox">
