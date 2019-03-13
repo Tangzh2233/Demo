@@ -220,7 +220,7 @@ public class LoginServiceImpl implements ILoginService{
         try {
             String json = RedisUtil.get(user_session_key + ":" + token);
             if(StringUtils.isBlank(json)){
-                return ResultData.isFail("01","session已过期");
+                return ResultData.isSuccess("01","session已过期");
             }
             RedisUtil.del(user_session_key + ":" + token);
             return ResultData.defaultSuccess();

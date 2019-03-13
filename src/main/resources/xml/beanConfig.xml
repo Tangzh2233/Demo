@@ -73,25 +73,36 @@
     </aop:config>
 
 
-    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-        <constructor-arg name="host" value="${jedis.host}" />
-        <constructor-arg name="port" value="${jedis.port}" />
-    </bean>
-    <bean id="JedisClient" class="com.edu.util.redisUtil.impl.JedisClientSingleImpl" />
+    <!--<bean id="jedisPool" class="redis.clients.jedis.JedisPool">-->
+        <!--<constructor-arg name="host" value="${jedis.host}" />-->
+        <!--<constructor-arg name="port" value="${jedis.port}" />-->
+    <!--</bean>-->
+    <!--<bean id="JedisClient" class="com.edu.util.redisUtil.impl.JedisClientSingleImpl" />-->
 
-    <!--初始化javaMailSender-->
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" scope="singleton">
-        <property name="host" value="smtp.163.com" />
-        <property name="port" value="25" />
-        <property name="protocol" value="smtp" />
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="username" value="17010206231@163.com" />
-        <property name="password" value="Tzh123456789" />
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtps.auth">true</prop>
-                <prop key="mail.transport.protocol">smtp</prop>
-            </props>
-        </property>
+    <!--&lt;!&ndash;初始化javaMailSender&ndash;&gt;-->
+    <!--<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" scope="singleton">-->
+        <!--<property name="host" value="smtp.163.com" />-->
+        <!--<property name="port" value="25" />-->
+        <!--<property name="protocol" value="smtp" />-->
+        <!--<property name="defaultEncoding" value="utf-8" />-->
+        <!--<property name="username" value="17010206231@163.com" />-->
+        <!--<property name="password" value="Tzh123456789" />-->
+        <!--<property name="javaMailProperties">-->
+            <!--<props>-->
+                <!--<prop key="mail.smtps.auth">true</prop>-->
+                <!--<prop key="mail.transport.protocol">smtp</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="springEventPublish" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>
+    <bean id="curatorClient" class="com.edu.util.zookeeper.CuratorClient" init-method="init" destroy-method="close">
+        <property name="zkAddress" value="127.0.0.1:2181" />
+        <property name="nameSpace" value="tangzh" />
     </bean>
+    <bean id="drmZookeeperClient" class="com.edu.util.zookeeper.DrmZookeeperClient" init-method="init">
+        <property name="zkAdress" value="127.0.0.1:2181" />
+        <property name="appName" value="Demo" />
+    </bean>
+    <bean id="demoConstantsConfig" class="com.edu.common.DemoConstantsConfig" />
 </beans>

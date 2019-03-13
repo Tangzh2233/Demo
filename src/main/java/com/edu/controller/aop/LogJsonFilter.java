@@ -1,4 +1,4 @@
-package com.edu.controller.filter;
+package com.edu.controller.aop;
 
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
