@@ -19,6 +19,14 @@ import java.util.Properties;
  * @Date: 2019/1/11$ 10:36 AM$
  * 自定义 PropertyPlaceholderConfigurer
  * 增加系统外部文件读取功能
+ *
+ * PropertyPlaceholderConfigurer的作用是:
+ * 使用locations标注的配置文件将实例化的Bean中的${}替换成对应的值
+ * 只用在bean中的${}所以用处有局限性。
+ * 例如分环境的静态常用字段。此时见DemoContextLoaderListener
+ *
+ * 类似pom.xml中的filter标签。详细可见本项目的pom文件
+ *
  **/
 public class DemoPlaceHolder extends PropertyPlaceholderConfigurer {
 

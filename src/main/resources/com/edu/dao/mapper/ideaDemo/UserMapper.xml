@@ -13,7 +13,7 @@
         password
     </sql>
     <select id="getUserByName" resultMap="User">
-        select <include refid="column_list" /> from users where username = #{name}
+        select <include refid="column_list" /> from users where username = #{name} for update wait 1
     </select>
     
     <insert id="insertUserList" parameterType="java.util.List">

@@ -39,11 +39,11 @@ public class ClassReflectTemp {
             //此时的instance可以调用Temp的public方法，如果想调用private 方法
             System.out.println("============调用private方法==========");
             //step:1 获取具体方法实例,("方法名","方法入参类型")
-            Method privateMethodTest = aClass.getDeclaredMethod("write", String.class);
+            Method privateMethodTest = aClass.getDeclaredMethod("write", String.class,String.class);
             //忽略私有修饰符，否则调用失败
             privateMethodTest.setAccessible(true);
             //（"Temp实例","方法的实际入参"）
-            privateMethodTest.invoke(instance,"private Method Test");
+            privateMethodTest.invoke(instance,"private Method Test","tangzhihao");
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -81,8 +81,8 @@ class Temp{
         System.out.println("我是私有无参方法write");
         return "true";
     }
-    private String write(String type){
-        System.out.println("我是私有有参方法write:"+type);
+    private String write(String type,String name){
+        System.out.println("我是私有有参方法write:"+type+name);
         return type;
     }
 }

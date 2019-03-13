@@ -7,6 +7,6 @@ import org.springframework.context.annotation.ImportResource;
  * Created by TangSir on 2017/8/4.
  */
 @Configuration
-@ImportResource(locations = "classpath:xml/beanConfig.xml")
+//@ImportResource(locations = "classpath:xml/beanConfig.xml")
 public class XmlConfig {
 }
