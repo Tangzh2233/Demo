@@ -251,26 +251,8 @@ public class HttpClientUtil2 {
     }
 
     public static void main(String[] args) {
-        try {
-//            Map<String, String> param = new HashMap<>();
-//            "id_card":"511424198705243134","jiedaibao_user_id":"632188584652490477","mobile":"17711220027","name":"兔子二十三",
-//            "product_id":"10153305","token":"ddcde241e21bd37900e80ecf9f90c5bd"
-//            param.put("id_card", "511424198705243134");
-//            param.put("jiedaibao_user_id", "632188584652490477");
-//            param.put("mobile", "17711220027");
-//            param.put("name", "兔子二十三");
-//            param.put("product_id", "10153305");
-//            param.put("token", "ddcde241e21bd37900e80ecf9f90c5bd");
-//
-//            System.out.println(sendTestRequest("http://payapi.jiedaibao.com/decode/decode2"));
-//            String param = "{\"orderNum\": \"25\",\"state\":\"SHIPMENT_NOTIFIED\",\"description\":\"Notification\"}";
-            String param = "{\"body\":{\"authType\":\"CTF\",\"businessType\":\"CTF_DT\"},\"channel\":\"AUTH\"}";
-            System.out.println(httpPost("http://100.73.48.25/channelroute/route/authRoute", param));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
+    }
 
 }
 
