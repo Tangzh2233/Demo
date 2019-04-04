@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.jdktest;
+package com.edu.JavaLearning.IO;
 
 import java.io.*;
 import java.util.zip.*;

@@ -366,6 +366,7 @@ public class MapLearning {
     private static LinkedHashMap linkedHashMap = new LinkedHashMap();
     private static HashSet hashSet = new HashSet();
     private static WeakHashMap weakHashMap = new WeakHashMap();
+    private static TreeMap treeMap = new TreeMap();
     private static ThreadLocal<Map> context = new ThreadLocal<>();
     private static ThreadLocal<String> context1 = new ThreadLocal<>();
     private static ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(8);

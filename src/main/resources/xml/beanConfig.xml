@@ -9,68 +9,68 @@
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <!--开启注解处理器-->
-    <context:annotation-config />
+    <!--<context:annotation-config />-->
     <!--开启组件自动扫描,扫描路径由base-package属性制定-->
-    <context:component-scan base-package="testPagePath"/>
+    <!--<context:component-scan base-package="testPagePath"/>-->
     <!--开启基于@AspectJ切面注解处理器-->
-    <aop:aspectj-autoproxy/>
+    <!--<aop:aspectj-autoproxy/>-->
     <!--使用class属性指定类的默认构造方法创建名称为id属性的类实例。
         当scope设置为singleton或默认时以单例模式生成，
         当scope设置为prototype时则以原型（多例）模式生成。-->
-    <bean id="Bean实例名称" class="Bean类全名" scope="设定Bean实例的生成方式"
-          init-method="对象实例化后调用的初始化方法名" destroy-method="对象销毁时调用的方法名">
-        <property name="bean的属性名称" value="对属性所赋的值" />
-        <property name="bean的属性名称" ref="要引用的bean的名称"/>
-        <property name="bean的属性名称">
-            <!--创建一个内部匿名bean实例赋值给指定属性,该匿名实例无法被外部访问-->
-            <bean class="bean类全名" />
-        </property>
-        <property name="bean中Set类型属性的名称">
-            <set>
-                <value>set中的元素</value>
-                <ref bean="要引用的bean的名称" />
-            </set>
-        </property>
-        <property name="bean中List类型属性的名称">
-            <list>
-                <value>list中的元素</value>
-                <ref bean="要引用的bean的名称" />
-            </list>
-        </property>
-        <property name="bean中Map类型属性的名称">
-            <map>
-                <entry key="map中的key" value="key对应的value"/>
-                <entry key="map中的key">
-                    <ref bean="要引用的bean的名称"/>
-                </entry>
-            </map>
-        </property>
-        <property name="bean中Properties类型属性的名称">
-            <props>
-                <prop key="properties元素的key">properties元素的value</prop>
-            </props>
-        </property>
-        <property name="bean中要初始化为null的属性的名称">
-            <null />
-        </property>
-    </bean>
+    <!--<bean id="Bean实例名称" class="Bean类全名" scope="设定Bean实例的生成方式"-->
+          <!--init-method="对象实例化后调用的初始化方法名" destroy-method="对象销毁时调用的方法名">-->
+        <!--<property name="bean的属性名称" value="对属性所赋的值" />-->
+        <!--<property name="bean的属性名称" ref="要引用的bean的名称"/>-->
+        <!--<property name="bean的属性名称">-->
+            <!--&lt;!&ndash;创建一个内部匿名bean实例赋值给指定属性,该匿名实例无法被外部访问&ndash;&gt;-->
+            <!--<bean class="bean类全名" />-->
+        <!--</property>-->
+        <!--<property name="bean中Set类型属性的名称">-->
+            <!--<set>-->
+                <!--<value>set中的元素</value>-->
+                <!--<ref bean="要引用的bean的名称" />-->
+            <!--</set>-->
+        <!--</property>-->
+        <!--<property name="bean中List类型属性的名称">-->
+            <!--<list>-->
+                <!--<value>list中的元素</value>-->
+                <!--<ref bean="要引用的bean的名称" />-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="bean中Map类型属性的名称">-->
+            <!--<map>-->
+                <!--<entry key="map中的key" value="key对应的value"/>-->
+                <!--<entry key="map中的key">-->
+                    <!--<ref bean="要引用的bean的名称"/>-->
+                <!--</entry>-->
+            <!--</map>-->
+        <!--</property>-->
+        <!--<property name="bean中Properties类型属性的名称">-->
+            <!--<props>-->
+                <!--<prop key="properties元素的key">properties元素的value</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+        <!--<property name="bean中要初始化为null的属性的名称">-->
+            <!--<null />-->
+        <!--</property>-->
+    <!--</bean>-->
 
-    <bean id="Bean实例名称" class="Bean类全名">
-        <constructor-arg index="0(构造方法的第一个参数)" type="构造参数的类型(基本数据类型可以省略)" value="构造参数值"/>
-        <constructor-arg index="1(构造方法的第二个参数)" type="参数类型" ref="要引用的bean的名称" />
-    </bean>
+    <!--<bean id="Bean实例名称" class="Bean类全名">-->
+        <!--<constructor-arg index="0(构造方法的第一个参数)" type="构造参数的类型(基本数据类型可以省略)" value="构造参数值"/>-->
+        <!--<constructor-arg index="1(构造方法的第二个参数)" type="参数类型" ref="要引用的bean的名称" />-->
+    <!--</bean>-->
 
-    <bean id="切面类的实例名称" class="切面类的类全名" />
-    <aop:config>
-        <aop:aspect id="切面ID" ref="要引用的切面实例的名称">
-            <aop:pointcut id="切入点名称" expression="切入点正则表达式(路径)"/>
-            <aop:before pointcut-ref="切入点名称" method="实际逻辑的执行方法名(前置执行)"/>
-            <aop:after-returning pointcut-ref="切入点名称" method="实际逻辑的执行方法名(后置执行)"/>
-            <aop:after-throwing pointcut-ref="切入点名称" method="做异常通知的方法名"/>
-            <aop:after pointcut-ref="切入点名称" method="做最终通知的方法名"/>
-            <aop:around pointcut-ref="切入点名称" method="实际逻辑的执行方法名(环绕执行)"/>
-        </aop:aspect>
-    </aop:config>
+    <!--<bean id="切面类的实例名称" class="切面类的类全名" />-->
+    <!--<aop:config>-->
+        <!--<aop:aspect id="切面ID" ref="要引用的切面实例的名称">-->
+            <!--<aop:pointcut id="切入点名称" expression="切入点正则表达式(路径)"/>-->
+            <!--<aop:before pointcut-ref="切入点名称" method="实际逻辑的执行方法名(前置执行)"/>-->
+            <!--<aop:after-returning pointcut-ref="切入点名称" method="实际逻辑的执行方法名(后置执行)"/>-->
+            <!--<aop:after-throwing pointcut-ref="切入点名称" method="做异常通知的方法名"/>-->
+            <!--<aop:after pointcut-ref="切入点名称" method="做最终通知的方法名"/>-->
+            <!--<aop:around pointcut-ref="切入点名称" method="实际逻辑的执行方法名(环绕执行)"/>-->
+        <!--</aop:aspect>-->
+    <!--</aop:config>-->
 
 
     <!--<bean id="jedisPool" class="redis.clients.jedis.JedisPool">-->
@@ -95,14 +95,15 @@
         <!--</property>-->
     <!--</bean>-->
 
-    <bean id="springEventPublish" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>
-    <bean id="curatorClient" class="com.edu.util.zookeeper.CuratorClient" init-method="init" destroy-method="close">
-        <property name="zkAddress" value="127.0.0.1:2181" />
-        <property name="nameSpace" value="tangzh" />
-    </bean>
-    <bean id="drmZookeeperClient" class="com.edu.util.zookeeper.DrmZookeeperClient" init-method="init">
-        <property name="zkAdress" value="127.0.0.1:2181" />
-        <property name="appName" value="Demo" />
-    </bean>
-    <bean id="demoConstantsConfig" class="com.edu.common.DemoConstantsConfig" />
+    <bean id="springEventListener" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>
+    <bean id="springEvent2Listener" class="com.edu.JavaLearning.spring.SpringEvent2PublishListener"/>
+    <!--<bean id="curatorClient" class="com.edu.util.zookeeper.CuratorClient" init-method="init" destroy-method="close">-->
+        <!--<property name="zkAddress" value="127.0.0.1:2181" />-->
+        <!--<property name="nameSpace" value="tangzh" />-->
+    <!--</bean>-->
+    <!--<bean id="drmZookeeperClient" class="com.edu.util.zookeeper.DrmZookeeperClient" init-method="init">-->
+        <!--<property name="zkAdress" value="127.0.0.1:2181" />-->
+        <!--<property name="appName" value="Demo" />-->
+    <!--</bean>-->
+    <!--<bean id="demoConstantsConfig" class="com.edu.common.DemoConstantsConfig" />-->
 </beans>

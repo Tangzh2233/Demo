@@ -1,5 +1,7 @@
 package com.edu.controller.login;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.edu.common.Constants;
 import com.edu.common.result.ResultData;
 import com.edu.dao.domain.User;
@@ -47,17 +49,19 @@ public class LoginController {
     @ResponseBody
     @RequestMapping(value = "/login.do",method= RequestMethod.POST)
     @CatStatictisAnnotaion()
-    public ResultData login(User usr, HttpServletRequest request, HttpServletResponse response, String username) throws Exception,JedisConnectionException {
+    public ResultData login(@RequestBody Map<String,String> data) throws Exception,JedisConnectionException {
+        String string = JSON.toJSONString(data);
+        JSONObject jsonObject = JSONObject.parseObject(string);
+        User usr = JSON.toJavaObject(jsonObject, User.class);
         logger.info("请求参数: id={},name={}",new Object[]{usr.getId(),usr.getUsername()});
         logger.error("error级别日志测试");
         System.out.println(usr.getUsername()+usr.getPassword());
-        System.out.println("========"+request.getParameter("username"));
-        System.out.println("========"+username);
-        System.out.println("====IP2==="+IpUtil.getRequestClientIp(request));
+//        System.out.println("========"+request.getParameter("username"));
+//        System.out.println("====IP2==="+IpUtil.getRequestClientIp(request));
         System.out.println("===LocalIp==="+ IpUtil.getLocalIpV4Addr());
-//        System.out.println(params.get("username"));
         try {
-            return userService.userLogin(usr.getUsername(),usr.getPassword(),request,response);
+            return ResultData.isSuccess("你成功了",Constants.SUCCESS_CODE);
+//            return userService.userLogin(usr.getUsername(),usr.getPassword(),request,response);
         }catch (Exception e){
             logger.error("Service Exception",e);
             return ResultData.isFail("01", Constants.SYSEXCEPTION);

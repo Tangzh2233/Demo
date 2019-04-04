@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class EnumTest<E> {
-    private static List<InterfaceA> EInterfaceImpl = new ArrayList<>();
+    private static List<EClassImpl> EInterfaceImpl = new ArrayList<>();
 
     public static void main(String[] args) {
         EInterfaceImpl.add(EClassImpl.MemberA);

@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.Learning.JVM.ClassLoader;
+package com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader;
 
 import java.io.*;
 

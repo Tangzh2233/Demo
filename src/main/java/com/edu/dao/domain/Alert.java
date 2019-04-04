@@ -23,7 +23,37 @@ public class Alert {
     private String content;
     //告警指标
     private String metric;
-    //private Date creationDate;
+
+    private User user;
+
+    private boolean check;
+
+    private double amt;
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+
+    public double getAmt() {
+        return amt;
+    }
+
+    public void setAmt(double amt) {
+        this.amt = amt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+//private Date creationDate;
 
     public Long getId() {
         return id;

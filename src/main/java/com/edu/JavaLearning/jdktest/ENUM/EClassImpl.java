@@ -7,19 +7,19 @@ package com.edu.JavaLearning.jdktest.ENUM;
  * 接口用枚举类的方式实现!!!
  */
 
-public enum EClassImpl implements InterfaceA{
+public enum EClassImpl{
 
     MemberA{
-        @Override
         public void execute(Object o) {
 
         }
     },
 
     MemberB{
-        @Override
         public void execute(Object o) {
             System.out.println("Member B");
         }
-    }
+    };
+
+    public void execute(Object o){}
 }

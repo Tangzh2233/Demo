@@ -71,24 +71,59 @@
 <script type="text/javascript">
     $(function(){
         $("#submit").click(function(){
+            debugger;
+            var json = {"username": " tang ","password": "123456"};
+            // var data = json.serializeObject();
             $.ajax({
-                type:"post",
-                url:"/myspringboot/register.do",
-                data:$('#registerForm').serialize(),
-                datatype:"json",
-                async:true,
-                success:function(data){
-                    if("00" == data.status){
-                        alert(data.msg);
+                type: "post",
+                url: "/myspringboot/login.do",
+                data: JSON.stringify(json),
+                contentType:"application/json;charset=utf-8",
+                success: function (data) {
+                    if ("00" == data.rspCode) {
+                        save();
+                        window.location.href = "main.html";
+                    } else {
+                        alert(data.rspMessage);
                         window.location.href = "login.html";
-                    }else{
-                        alert(data.msg);
-                        window.location.href = "register.html";
                     }
                 }
             });
+            // $.ajax({
+            //     type:"post",
+            //     url:"/myspringboot/register.do",
+            //     data:$('#registerForm').serialize(),
+            //     datatype:"json",
+            //     async:true,
+            //     success:function(data){
+            //         if("00" == data.status){
+            //             alert(data.msg);
+            //             window.location.href = "login.html";
+            //         }else{
+            //             alert(data.msg);
+            //             window.location.href = "register.html";
+            //         }
+            //     }
+            // });
         });
     });
+
+    $.fn.serializeObject = function()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
 </script>
 </body>
 </html>

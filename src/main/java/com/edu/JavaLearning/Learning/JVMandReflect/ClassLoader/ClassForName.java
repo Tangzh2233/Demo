@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.Learning.JVM.ClassLoader;
+package com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader;
 
 /**
  * @author Tangzhihao
@@ -27,10 +27,10 @@ class LoaderTest{
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
         System.out.println(loader);
-        Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName");
+        Class.forName("com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader.ClassForName");
         System.out.println("===========");
-        loader.loadClass("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName").newInstance();
+        loader.loadClass("com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader.ClassForName").newInstance();
         System.out.println("===========");
-        Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.ClassForName",false,loader);
+        Class.forName("com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader.ClassForName",false,loader);
     }
 }

@@ -10,9 +10,9 @@ import java.util.concurrent.*;
  *       * corePoolSize:核心线程数
  *       * maximumPoolSize:最大线程数
  *       * keepAlivetime:非核心线程,闲置时长
- *       * TimeUnit:闲置时长单位
+ *       * TimeUnit:闲置时长的单位
  *       * BlockingQueue<>:Task的等待队列
- *       * ThreadFactory:
+ *       * ThreadFactory: 创建线程的方式
  *       * RejectedExecutionHandler:
   *       当一个任务被添加进线程池时，执行策略：
   *      * 1.线程数量未达到corePoolSize，则新建一个线程(核心线程)执行任务
@@ -20,6 +20,19 @@ import java.util.concurrent.*;
   *      * 3.队列已满，新建线程(非核心线程)执行任务
   *      * 4.队列已满，总线程数又达到了maximumPoolSize，就会由(RejectedExecutionHandler)抛出异常
   *
+  *   常用的BlockingQueue
+  *     SynchronousQueue:这个队列接收到任务的时候，会直接提交给线程处理。
+  *     LinkedBlockingQueue:链表队列,无限大。会导致maximumPoolSize失效。
+ *                          此队列按 FIFO（先进先出）排序元素。
+ *                          队列的头部 是在队列中时间最长的元素。
+ *                          队列的尾部 是在队列中时间最短的元素。
+ *                          新元素插入到队列的尾部，并且队列获取操作会获得位于队列头部的元素。
+ *                          链接队列的吞吐量通常要高于基于数组的队列，但是在大多数并发应用程序中，其可预知的性能要低。
+  *     ArrayBlockingQueue: 数组支持的有界阻塞队列,固定大小。
+ *                          通过将公平性 (fairness) 设置为 true 而构造的队列允许按照 FIFO 顺序访问线程。
+ *                          公平性通常会降低吞吐量，但也减少了可变性和避免了“不平衡性”。
+ *      DelayQueue:         延迟执行。
+ *                          Delayed 元素的一个无界阻塞队列，只有在延迟期满时才能从中提取元素。
   *   异常策略，
   *   ThreadPoolExecutor.new AbortPolicy(); 对拒绝的task抛出异常
   *   ThreadPoolExecutor.new DiscardPolicy();直接丢弃被拒绝的task
@@ -31,6 +44,8 @@ public class MyThreadPoolExecutor {
     private static ScheduledThreadPoolExecutor ScheduledThreadPoolExecutor;
     private static ThreadFactory DeFaultThreadFactory;
     private static RejectedExecutionHandler DefaultHandler;
+    private static SynchronousQueue synchronousQueue;
+
 
     static {
         ScheduledThreadPoolExecutor =
@@ -75,12 +90,40 @@ public class MyThreadPoolExecutor {
       * SingleThreadExecutor: corePoolSize=1 && maximumPoolSize=1 && BlockingQueue大小无限制
     **/
     public static void singlePoolExecutor(){
-        Thread thread = new Thread(()-> System.out.println("task1执行ing"));
-        Thread thread1 = new Thread(()-> System.out.println("task2执行ing"));
-        Thread thread2 = new Thread(()-> System.out.println("task3执行ing"));
-        Thread thread3 = new Thread(()-> System.out.println("task4执行ing"));
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                System.out.println("Task1 执行ing");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread thread1 = new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                System.out.println("Task2 执行ing");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread thread2 = new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                System.out.println("Task3 执行ing");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread thread3 = new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                System.out.println("Task4 执行ing");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
         ThreadPoolExecutor singlePoolExecutor = threadPoolFactory(1,1,0L,TimeUnit.MILLISECONDS,
-                new LinkedBlockingDeque<>(1),DeFaultThreadFactory,DefaultHandler);
+                new ArrayBlockingQueue<>(1),DeFaultThreadFactory,DefaultHandler);
         singlePoolExecutor.execute(thread);
         singlePoolExecutor.execute(thread1);
         singlePoolExecutor.execute(thread2);

@@ -25,7 +25,15 @@ public class User implements Serializable{
     private Integer id;
     private String username;
     private String password;
+    private Long num;
 
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
 
     public Integer getId() {
         return id;

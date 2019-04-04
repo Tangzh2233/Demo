@@ -10,6 +10,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Date: 2019/1/22$ 10:47 AM$
  * 自定义事件监听逻辑
  * Spring内置事件描述: https://blog.csdn.net/liyantianmin/article/details/81017960
+ * 遍历所有的监听器，如果该监听器监听的事件为传递的事件或传递事件的父类则表示该监听器支持指定事件
+ * 然后执行监听器的onApplicationEvent(Event)方法
  **/
 public class SpringEventPublishListener implements ApplicationListener {
 
@@ -17,6 +19,8 @@ public class SpringEventPublishListener implements ApplicationListener {
     public void onApplicationEvent(ApplicationEvent event) {
         if(event instanceof UserDefinedEvent){
             System.out.println((((UserDefinedEvent) event).getMessage()));
+        }else {
+            System.out.println("I am SpringEventPublishListener");
         }
     }
 }
@@ -57,4 +61,5 @@ class UserDefinedEvent extends ApplicationEvent{
         this.message = message;
     }
 }
+
 

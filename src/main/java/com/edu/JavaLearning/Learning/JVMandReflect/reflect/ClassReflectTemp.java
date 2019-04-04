@@ -1,6 +1,9 @@
-package com.edu.JavaLearning.Learning.JVM.ClassLoader;
+package com.edu.JavaLearning.Learning.JVMandReflect.reflect;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @Author: tangzh
@@ -10,7 +13,7 @@ public class ClassReflectTemp {
 
     public static void main(String[] args) {
         try {
-            Class<?> aClass = Class.forName("com.edu.JavaLearning.Learning.JVM.ClassLoader.Temp");
+            Class<?> aClass = Class.forName("com.edu.JavaLearning.Learning.JVMandReflect.ClassLoader.Temp");
             //===========获取所有构造方法,并打印每个构造方法的参数================//
             Constructor<?>[] constructors = aClass.getDeclaredConstructors();
             System.out.println("类"+aClass.getName()+"的构造方法有:");

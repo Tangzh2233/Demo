@@ -165,6 +165,7 @@
                 $("#checkbox1").prop("checked",true);
             }
             $("#submit").click(function(){
+                debugger;
                 if(check()){
                     save();
                     login();
@@ -203,14 +204,14 @@
             debugger;
             var name = $("#username").val();
             var password = $("#password").val();
-            var json = {"username": name, "password": password};
+            var json = {"username": ' tang ', "password": '123456'};
             $.ajax({
                 type: "post",
                 url: "/myspringboot/login.do",
-                data: json,
+                data: JSON.stringify(json),
                 datatype: "json",
                 async: false,
-                //contentTyle:"application/json; charset=utf-8",
+                contentTyle:"application/json; charset=utf-8",
                 success: function (data) {
                     if ("00" == data.rspCode) {
                         save();
