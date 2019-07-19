@@ -14,5 +14,7 @@ import java.util.List;
 public interface UserMapper {
     User getUserByName(@Param("name") String name);
 
+    List<String> getAllKeys();
+
     int insertUserList(@Param("pojos") List<User> pojos);
 }

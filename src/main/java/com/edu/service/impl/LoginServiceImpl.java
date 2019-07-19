@@ -11,6 +11,7 @@ import com.edu.JavaLearning.aop.aop.annotation.LogMetricCount;
 import com.edu.JavaLearning.aop.aop.annotation.LogMetricSum;
 import com.edu.JavaLearning.aop.aop.annotation.LogTransaction;
 import com.edu.common.Assert;
+import com.edu.common.Constants;
 import com.edu.common.UUIDUtil;
 import com.edu.common.result.ResultData;
 import com.edu.dao.domain.Dlog;
@@ -24,6 +25,7 @@ import com.edu.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ import java.util.List;
  * Created by Administrator on 2017/9/14.
  */
 @Service
-public class LoginServiceImpl implements ILoginService{
+public class LoginServiceImpl implements ILoginService {
 
     private final static ThreadLocal<mContext> myContext = new ThreadLocal<>();
     private final static Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
@@ -56,13 +58,13 @@ public class LoginServiceImpl implements ILoginService{
 
 
     @Override
-    @LogTransaction(type = "SpringDemo",name = "Recharge")
-    @LogEvent(type="recharge",expectedCodes = "pw000",codeProperty = "code",messageProperty = "message")
+    @LogTransaction(type = "SpringDemo", name = "Recharge")
+    @LogEvent(type = "recharge", expectedCodes = "pw000", codeProperty = "code", messageProperty = "message")
     @LogMetricCount(metricKey = "name")
-    @LogMetricSum(metricKey = "登录",metric = "name")
-    public User login(String name,double amount) {
+    @LogMetricSum(metricKey = "登录", metric = "name")
+    public User login(String name, double amount) {
         createCat();
-        Transaction t = CatUtil.logTransaction("recharge","busicode");
+        Transaction t = CatUtil.logTransaction("recharge", "busicode");
         double account = amount;
         User user = new User();
         try {
@@ -92,18 +94,18 @@ public class LoginServiceImpl implements ILoginService{
             }*/
             Cat.logMetricForCount(name);
             Cat.logMetricForDuration("11", 78L);
-            Cat.logMetricForSum("登录金额",account);
-            if("exception".equals(name)){
+            Cat.logMetricForSum("登录金额", account);
+            if ("exception".equals(name)) {
                 throw new NullPointerException();
             }
             user = userMapper.getUserByName(name);
-        }catch (Exception e){
+        } catch (Exception e) {
             t.setStatus(e);
-        }finally {
+        } finally {
             t.setStatus(Transaction.SUCCESS);
             t.complete();
         }
-        logger.info("返回参数: "+user.toString());
+        logger.info("返回参数: " + user.toString());
         return user;
     }
 
@@ -115,12 +117,12 @@ public class LoginServiceImpl implements ILoginService{
 
     @Override
     public int addDlog(Dlog dlog) {
-        int tableName = (int)Integer.valueOf(dlog.getId());
-        System.out.println("表名: "+tableName%2);
-        return dlogMapper.addDlog(dlog,String.valueOf(tableName%2));
+        int tableName = (int) Integer.valueOf(dlog.getId());
+        System.out.println("表名: " + tableName % 2);
+        return dlogMapper.addDlog(dlog, String.valueOf(tableName % 2));
     }
 
-//    public static void main(String[] args) {
+    //    public static void main(String[] args) {
 //        Transaction t = Cat.getProducer().newTransaction("Cross", "ABC");
 //        Cat.logEvent("Cross","main","0","");
 //        User user = new User();
@@ -135,18 +137,18 @@ public class LoginServiceImpl implements ILoginService{
     /*private void test(){
         LoginServiceImpl loginService = new LoginServiceImpl();
     }*/
-    private mContext getContext(){
+    private mContext getContext() {
         mContext context = myContext.get();
-        if(context==null){
+        if (context == null) {
             context = new mContext();
             myContext.set(context);
         }
         return context;
     }
 
-    private void createCat(){
+    private void createCat() {
         Transaction t = Cat.getProducer().newTransaction("Tang", "a");
-        Cat.logEvent("Tangevent","b");
+        Cat.logEvent("Tangevent", "b");
         ForkedTransaction ft = Cat.getProducer().newForkedTransaction("Forke", "a");
         MyThread myThread = new MyThread(ft);
         new Thread(myThread).start();
@@ -154,64 +156,56 @@ public class LoginServiceImpl implements ILoginService{
         t.complete();
 
     }
-    class MyThread implements Runnable{
+
+    class MyThread implements Runnable {
         private ForkedTransaction forkedTransaction;
 
-        public MyThread(ForkedTransaction f){
+        public MyThread(ForkedTransaction f) {
             this.forkedTransaction = f;
         }
+
         @Override
         public void run() {
             forkedTransaction.fork();
-            Cat.logEvent("forkevent","b");
+            Cat.logEvent("forkevent", "b");
             forkedTransaction.setStatus(Message.SUCCESS);
             forkedTransaction.complete();
         }
     }
 
     @Override
-    public ResultData userLogin(String name, String pwd, HttpServletRequest request, HttpServletResponse response){
-        User user = userMapper.getUserByName(name);
-
-        Transaction t = Cat.getProducer().newTransaction("Demo","登录");
-        try {
-            if(user==null){
-                CatUtil.buildEvent(t,name+"|用户登录","用户不存在","1");
-                return ResultData.isFail("01","用户信息有误!");
-            }
-            if(!DigestUtils.md5DigestAsHex(pwd.getBytes()).equals(user.getPassword())){
-                CatUtil.buildEvent(t,name+"|用户登录","密码错误","1");
-                return ResultData.isFail("01","用户信息有误!");
-            }
-
-            String token = UUIDUtil.getUUID().substring(10);
-            user.setPassword(null);
-            RedisUtil.set(user_session_key+":"+token, JSON.toJSONString(user));
-            RedisUtil.expire(user_session_key+":"+token,key_expire_time);
-            CookieUtils.setCookie(request,response,"USER_TOKEN",token);
-            CatUtil.buildEvent(t,name+"|用户登录","登录成功","0");
-            Cat.logMetricForCount("用户登录");
-            return ResultData.defaultSuccess();
-        } finally {
-            t.setStatus(Transaction.SUCCESS);
-            t.complete();
+    public ResultData userLogin(String name, String pwd, HttpServletRequest request, HttpServletResponse response) {
+        User user1 = userMapper.getUserByName(name);
+        User user = new User(name, pwd);
+        String token = UUIDUtil.getUUID().substring(10);
+        if (user == null) {
+            return ResultData.defaultFail("用户信息有误!");
         }
+        if (!DigestUtils.md5DigestAsHex(pwd.getBytes()).equals(user.getPassword())) {
+            return ResultData.defaultFail("用户信息有误!");
+        }
+        user.setPassword(null);
+        RedisUtil.set(user_session_key + ":" + token, JSON.toJSONString(user));
+        RedisUtil.expire(user_session_key + ":" + token, key_expire_time);
+        CookieUtils.setCookie(request, response, "USER_TOKEN", token);
+
+        return ResultData.defaultSuccess();
     }
 
     @Override
     public ResultData userRegister(User user) {
-        Assert.isEmpty(user.getUsername(),"参数不能为空");
-        Assert.isEmpty(user.getPassword(),"参数不能为空");
+        Assert.isEmpty(user.getUsername(), "参数不能为空");
+        Assert.isEmpty(user.getPassword(), "参数不能为空");
         final User usr = new User();
         usr.setUsername(user.getUsername());
         usr.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         int i = userMapper.insertUserList(new ArrayList<User>() {{
             add(usr);
         }});
-        if(i>0){
-            return ResultData.isSuccess("注册成功!",null);
-        }else {
-            return ResultData.isFail("01","注册失败!");
+        if (i > 0) {
+            return ResultData.defaultSuccess();
+        } else {
+            return ResultData.defaultFail();
         }
     }
 
@@ -219,8 +213,8 @@ public class LoginServiceImpl implements ILoginService{
     public ResultData loginOut(HttpServletRequest request, HttpServletResponse response, String token) {
         try {
             String json = RedisUtil.get(user_session_key + ":" + token);
-            if(StringUtils.isBlank(json)){
-                return ResultData.isSuccess("01","session已过期");
+            if (StringUtils.isBlank(json)) {
+                return ResultData.defaultSuccess("session已过期");
             }
             RedisUtil.del(user_session_key + ":" + token);
             return ResultData.defaultSuccess();
@@ -231,25 +225,25 @@ public class LoginServiceImpl implements ILoginService{
     }
 
     @Override
-    public ResultData checkToken(String token){
+    public ResultData checkToken(String token) {
         String json = null;
         try {
-            json = RedisUtil.get(user_session_key+":"+token);
+            json = RedisUtil.get(user_session_key + ":" + token);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(StringUtils.isBlank(json)){
-            return ResultData.isFail("01","身份已过期");
+        if (StringUtils.isBlank(json)) {
+            return ResultData.defaultFail("身份已过期");
         }
         //更新redis key 时间
-        RedisUtil.expire(user_session_key+":"+token,key_expire_time);
-        return ResultData.isSuccess("",JSON.parseObject(json,User.class));
+        RedisUtil.expire(user_session_key + ":" + token, key_expire_time);
+        return ResultData.defaultSuccess(JSON.parseObject(json, User.class));
     }
 
     @Override
     public int inserListUsers() {
         List<User> datas = new ArrayList<>();
-        for (int i=0;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             User data = new User("tang", String.valueOf(i));
             datas.add(data);
         }

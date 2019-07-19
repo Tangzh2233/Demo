@@ -77,8 +77,7 @@
             $.ajax({
                 type: "post",
                 url: "/myspringboot/login.do",
-                data: JSON.stringify(json),
-                contentType:"application/json;charset=utf-8",
+                data: json,
                 success: function (data) {
                     if ("00" == data.rspCode) {
                         save();

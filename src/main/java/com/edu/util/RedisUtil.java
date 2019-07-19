@@ -78,6 +78,19 @@ public class RedisUtil {
         }
     }
 
+    public static void set(String key,String value,int expire){
+        Assert.isEmpty(key,"key is null");
+        Assert.isEmpty(value,"value is null");
+
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            jedis.setex(key, expire,value);
+        }finally {
+            close(jedis);
+        }
+    }
+
     public static String get(String key){
         Assert.isEmpty(key,"key is null");
         Jedis jedis = null;

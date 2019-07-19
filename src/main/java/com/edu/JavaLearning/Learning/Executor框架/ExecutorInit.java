@@ -1,13 +1,13 @@
 package com.edu.JavaLearning.Learning.Executor框架;
 
 
+import java.text.DecimalFormat;
 import java.util.TimerTask;
 import java.util.concurrent.*;
 
 /**
  * @author Tangzhihao
  * @date 2018/3/1
- *
  * 参考资料：
  * https://mp.weixin.qq.com/s/buR4X94v1xSpkVXA5N9s1g
  * https://www.jianshu.com/p/ae67972d1156
@@ -33,31 +33,36 @@ public class ExecutorInit {
     }
 
     public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException {
-        ExecutorInit init = new ExecutorInit();
-    //    init.initFixedPool();
-
-
-        //--1--运行Callable线程，和获取返回结果
+//        ExecutorInit init = new ExecutorInit();
+//    //    init.initFixedPool();
+//
+//
+//        //--1--运行Callable线程，和获取返回结果
 //        FutureTask<String> task = new FutureTask<>(new MyCallableTask());
 //        new Thread(task).start();
 //        System.out.println(task.isDone());
 //        System.out.println(task.get());
 //
 //        System.out.println(new DecimalFormat("_0000").format(222));
-        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-        executor.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-            }
-        },3600,TimeUnit.SECONDS);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-
-            }
-        };
+//        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+//        executor.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        },3600,TimeUnit.SECONDS);
+//
+//        TimerTask task1 = new TimerTask() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        };
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(1,2,0L,TimeUnit.MICROSECONDS,new ArrayBlockingQueue<>(5));
+        for(int i=0;i<10;i++){
+            executor.execute(new TestThread());
+        }
+        executor.shutdown();
 
     }
 
@@ -82,7 +87,7 @@ public class ExecutorInit {
         fixedPool.shutdown();
     }
 
-    class TestThread implements Runnable{
+    static class TestThread implements Runnable{
 
         @Override
         public void run() {
@@ -90,7 +95,7 @@ public class ExecutorInit {
         //    for (int i=0;i<4;i++){
             System.out.println("我是线程"+Thread.currentThread().getId());
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

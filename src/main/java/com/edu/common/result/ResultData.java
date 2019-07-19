@@ -1,6 +1,5 @@
 package com.edu.common.result;
 
-import com.edu.common.Constants;
 
 import java.io.Serializable;
 
@@ -26,15 +25,24 @@ public class ResultData<T> implements Serializable {
         this.data = data;
     }
 
-    public static <T> ResultData<T> isSuccess(String msg,T data){
-        return new ResultData<T>("00",msg,data);
+    public static ResultData defaultSuccess(Object data){
+        return new ResultData<>(ERspCode.SUCCESS.getCode(),ERspCode.SUCCESS.getMsg(),data);
     }
 
     public static ResultData defaultSuccess(){
-        return new ResultData(Constants.SUCCESS_CODE,"处理成功");
+        return defaultSuccess(null);
     }
-    public static ResultData isFail(String code,String msg){
-        return new ResultData(code,msg);
+
+    public static ResultData defaultFail(Object data){
+        return new ResultData<>(ERspCode.FAIL.getCode(),String.valueOf(data));
+    }
+
+    public static boolean checkSuccess(ResultData result){
+        return ERspCode.SUCCESS.getCode().equals(result.getRspCode());
+    }
+
+    public static ResultData defaultFail(){
+        return defaultFail(null);
     }
 
     public String getRspCode() {

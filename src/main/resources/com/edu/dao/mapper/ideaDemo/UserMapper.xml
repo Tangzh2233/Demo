@@ -15,6 +15,10 @@
     <select id="getUserByName" resultMap="User">
         select <include refid="column_list" /> from users where username = #{name} for update wait 1
     </select>
+
+    <select id="getAllKeys" resultType="java.util.List">
+        select username from users;
+    </select>
     
     <insert id="insertUserList" parameterType="java.util.List">
         insert into users(username,password)

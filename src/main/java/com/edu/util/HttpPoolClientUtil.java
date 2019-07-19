@@ -4,10 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -15,6 +12,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
@@ -66,7 +64,7 @@ public class HttpPoolClientUtil {
         private static CloseableHttpClient httpClient ;
         private final static Object syncLock = new Object();
         static {
-            System.out.println("内部类静态块加载");
+            System.out.println("内部类静态块加载……");
             synchronized (syncLock){
                 if(httpClient==null){
                     httpClient =  HttpClients.custom()
@@ -97,16 +95,16 @@ public class HttpPoolClientUtil {
     /**
       * @description:实例化连接池管理类
     **/
-    public static PoolingHttpClientConnectionManager getClientConnectionManager(){
+    private static PoolingHttpClientConnectionManager getClientConnectionManager(){
         try {
             //支持http/https两种访问协议
             SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(null,new TrustSelfSignedStrategy());
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create().register(
-                    "http", PlainConnectionSocketFactory.getSocketFactory()).register(
-                    "https", sslsf).build();
-
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
+                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                    .register("https", sslsf)
+                    .build();
             manager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             //最大连接数
             manager.setMaxTotal(MaxTotal);
@@ -163,7 +161,31 @@ public class HttpPoolClientUtil {
     }
 
     public static String doPost(String url){
-        return doPost(url,null);
+        return doPost(url, (Map<String, String>) null);
+    }
+
+    public static String doPost(String url,byte[] data){
+        HttpPost post = new HttpPost();
+        CloseableHttpClient httpClient = HttpClientHelper.httpClient;
+        post.setConfig(setRequestConfig(getRequestConfigBuilder()));
+        if(data!=null){
+            ByteArrayEntity entity = new ByteArrayEntity(data);
+            post.setEntity(entity);
+        }
+        CloseableHttpResponse response;
+        InputStream content = null;
+        try {
+            response = httpClient.execute(post);
+            if(response!=null){
+               content = response.getEntity().getContent();
+               return IOUtils.toString(content,DefaultEncoding);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            closeConnect(content,httpClient);
+        }
+        return null;
     }
 
     /**
@@ -177,7 +199,7 @@ public class HttpPoolClientUtil {
         return doGet(builder.build().toString());
     }
 
-    public static String doGet(String url){
+    private static String doGet(String url){
         HttpRequestBase get = new HttpGet(url);
         get.setConfig(setRequestConfig(getRequestConfigBuilder()));
         CloseableHttpClient httpClient = HttpClientHelper.httpClient;
@@ -225,52 +247,43 @@ public class HttpPoolClientUtil {
         return formEntity;
     }
 
-//    public static void main(String[] args) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("username","tang");
-//        params.put("password","123");
-//        Thread thread = new Thread(){
-//            @Override
-//            public void run(){
-//                try {
-//                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        Thread thread1 = new Thread(){
-//            @Override
-//            public void run(){
-//                try {
-//                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        Thread thread2 = new Thread(){
-//            @Override
-//            public void run(){
-//                try {
-//                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        thread.start();
-//        thread1.start();
-//        thread2.start();
-//
-//    }
-
     public static void main(String[] args) {
-        int i = 5,j = 5,q;
-        i = i++;
-        q = i++;
-        ++j;
-        System.out.println(i+""+j+""+q);
-        //System.out.println((i++)+(i++)+(i++)+"==="+(++j)+(++j)+(++j));
+        Map<String, String> params = new HashMap<>();
+        params.put("username","tang");
+        params.put("password","123");
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread thread1 = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread thread2 = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    System.out.println(doGet("http://127.0.0.1:8848/myspringboot/httpPost.do",params));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        thread1.start();
+        thread2.start();
+
     }
 }

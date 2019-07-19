@@ -193,26 +193,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *                      rotateLeft(parentOf(parentOf(e)));  左旋当前节点的祖父节点
  * ==============这一坨操作为啥要这样做,是需要考虑的事情=================
  *
- *
- *
- * 【JDK1.7】=====================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
- *                      implements ConcurrentMap<K,V>, Serializable=======================
- * 与HashTable的锁住这个表相比，1.7的ConcurrentHashMap采用分段锁设计，分段数量即Segment[]对象数组的大小
- * 默认设置简化版数据结构：
- *   class ConcurrentHashMap ...{
- *      Segment[16] segments;
- *      class Segment extends  ReentrantLock ...{
- *          transient int count;
- *          transient int modcount;
- *          transient int threshold;
- *          final float loadFactor;
- *          HashEntry<K,V>[2] table;
- *      }
- *      class HashEntry<K,V>{
- *          final int hash;
- *          final K k;
- *          volatile V v;
- *          volatile HashEntry<K,V> next;
  * 【JDK1.7】=====================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
  *                      implements ConcurrentMap<K,V>, Serializable=======================
  * 与HashTable的锁住这个表相比，1.7的ConcurrentHashMap采用分段锁设计，分段数量即Segment[]对象数组的大小

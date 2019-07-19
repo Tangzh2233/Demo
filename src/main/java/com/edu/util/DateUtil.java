@@ -59,6 +59,13 @@ public class DateUtil {
         return instance;
     }
 
+    /**
+     * @return 获取当前系统时间。单位:秒
+     */
+    public static long unixTime(){
+        return System.currentTimeMillis()/1000L;
+    }
+
 
     public static void main(String[] args) throws ParseException {
 //        System.out.println(getCurDateForDay());

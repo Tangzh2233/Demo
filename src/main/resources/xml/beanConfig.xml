@@ -95,8 +95,7 @@
         <!--</property>-->
     <!--</bean>-->
 
-    <bean id="springEventListener" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>
-    <bean id="springEvent2Listener" class="com.edu.JavaLearning.spring.SpringEvent2PublishListener"/>
+    <bean id="springEventListener" class="com.edu.spring.SpringEventPublishListener"/>
     <!--<bean id="curatorClient" class="com.edu.util.zookeeper.CuratorClient" init-method="init" destroy-method="close">-->
         <!--<property name="zkAddress" value="127.0.0.1:2181" />-->
         <!--<property name="nameSpace" value="tangzh" />-->

@@ -10,7 +10,7 @@ import java.util.*;
  * 读取本地配置文件 功能类似OpenConfig
  **/
 public class PPSUtil {
-    private Map<String,Evalue> propertiesMap = new HashMap<>();
+    private static Map<String,Evalue> propertiesMap = new HashMap<>();
 
     public PPSUtil(String...resourcesName){
         for (String fileName:resourcesName){

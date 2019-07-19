@@ -1,13 +1,11 @@
-package com.edu.JavaLearning.Learning.ProducerAndConsumerAndLockTemp;
+package com.edu.juc.aqs;
 
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -95,6 +93,7 @@ public class MyConditionAQSandCAS {
                         System.out.println("queue 已满！调用await()释放锁,"+Thread.currentThread().getName()+"进入等待队列");
                         //当前线程进入等待队列
                         isP.await();
+                        System.out.println("isP你还在么?");
                     }
                     queue.put(1);
                     isC.signal();//唤醒consumer
@@ -121,6 +120,7 @@ public class MyConditionAQSandCAS {
                     if (queue.isEmpty()){
                         System.out.println("queue 为空! 调用await()释放锁,"+Thread.currentThread().getName()+"进入等待队列");
                         isC.await();
+                        System.out.println("isC你还在么？");
                     }
                     queue.poll();
                     isP.signal();//唤醒producer

@@ -7,32 +7,30 @@ package com.edu.JavaLearning.设计模式.Sington;
 
 public class SingleTest {
 
-    static
-    {
+    static {
         System.out.println("1");
     }
-        public static void main(String[] args)
-        {
-            staticFunction();
-        }
 
-        static SingleTest st = new SingleTest();
+    public static void main(String[] args) {
+        staticFunction();
+    }
 
-        {
-            System.out.println("2");
-        }
+    static SingleTest st = new SingleTest();
 
-    SingleTest()
-        {
-            System.out.println("3");
-            System.out.println("a="+a+",b="+b);
-        }
+    {
+        System.out.println("2");
+    }
 
-        public static void staticFunction(){
-            System.out.println("4");
-            System.out.println(b);
-        }
+    SingleTest() {
+        System.out.println("3");
+        System.out.println("a=" + a + ",b=" + b);
+    }
 
-        int a=110;
-        static int b =112;
+    public static void staticFunction() {
+        System.out.println("4");
+        System.out.println(b);
+    }
+
+    int a = 110;
+    static int b = 112;
 }

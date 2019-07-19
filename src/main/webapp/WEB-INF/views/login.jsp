@@ -167,7 +167,7 @@
             $("#submit").click(function(){
                 debugger;
                 if(check()){
-                    save();
+                    // save();
                     login();
                 }
             });

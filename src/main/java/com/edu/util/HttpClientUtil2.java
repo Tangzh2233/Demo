@@ -251,7 +251,6 @@ public class HttpClientUtil2 {
     }
 
     public static void main(String[] args) {
-
     }
 
 }

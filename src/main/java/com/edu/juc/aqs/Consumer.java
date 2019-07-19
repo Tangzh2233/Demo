@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.Learning.ProducerAndConsumerAndLockTemp;
+package com.edu.juc.aqs;
 
 import java.util.concurrent.BlockingQueue;
 

@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.spring;
+package com.edu.spring;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
