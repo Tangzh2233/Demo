@@ -14,9 +14,10 @@ public class Proxy implements Subject {
         this.realSubject = subject;
     }
     @Override
-    public void sendFlower() {
+    public String sendFlower() {
         System.out.println("静态代理");
         realSubject.sendFlower();
+        return "hahah";
     }
 
     @Override

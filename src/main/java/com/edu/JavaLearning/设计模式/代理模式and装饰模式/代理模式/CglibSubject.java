@@ -44,7 +44,12 @@ class CglibProxy implements MethodInterceptor{
     }
 }
 
-class CglibUniProxy implements MethodInterceptor{
+interface Cglib{
+    void before();
+    void after();
+}
+
+abstract class CglibUniProxy implements MethodInterceptor,Cglib{
 
     public Object getProxyInstance(Class clazz){
         Enhancer en = new Enhancer();
@@ -54,7 +59,23 @@ class CglibUniProxy implements MethodInterceptor{
     }
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        System.out.println("Cglib通用代理");
-        return methodProxy.invokeSuper(o,objects);
+        before();
+        Object invokeSuper = methodProxy.invokeSuper(o, objects);
+        after();
+        return invokeSuper;
+    }
+
+}
+
+class MyProxy extends CglibUniProxy{
+
+    @Override
+    public void before() {
+        System.out.println("前置通知");
+    }
+
+    @Override
+    public void after() {
+        System.out.println("后置通知");
     }
 }

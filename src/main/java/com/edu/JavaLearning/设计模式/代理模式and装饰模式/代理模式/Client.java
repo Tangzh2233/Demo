@@ -11,9 +11,8 @@ public class Client {
         proxy.sendFlower();
 
         //ActiveProxy
-        ActiveProxy activeProxy = new ActiveProxy(new RealSubject());
-        Subject proxyInstace = (Subject)activeProxy.getProxyInstance();
-        proxyInstace.sendDolls();
+        Subject proxyInstace = (Subject)ActiveProxy.getProxyInstance(new RealSubject());
+        proxyInstace.sendFlower();
 
         //CglibProxy
         CglibProxy cglibProxy = new CglibProxy(new CglibSubject());
@@ -21,7 +20,7 @@ public class Client {
         cglibInstance.sendFlower();
 
         //Cglib
-        CglibUniProxy uniProxy = new CglibUniProxy();
+        CglibUniProxy uniProxy = new MyProxy();
         CglibSubject instance = (CglibSubject)uniProxy.getProxyInstance(CglibSubject.class);
         instance.sendFlower();
     }

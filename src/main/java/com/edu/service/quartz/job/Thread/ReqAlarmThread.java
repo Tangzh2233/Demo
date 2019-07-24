@@ -5,11 +5,10 @@ import com.edu.dao.domain.CategoryDto;
 import com.edu.dao.domain.Project;
 import com.edu.dao.mapper.cat.AlertMapper;
 import com.edu.dao.mapper.cat.ProjectMapper;
-import com.edu.service.quartz.http.HttpClientUtil;
+import com.edu.util.HttpClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

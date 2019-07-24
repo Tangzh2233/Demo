@@ -16,7 +16,7 @@
     <dubbo:consumer loadbalance="roundrobin"  filter="traceFilter"/>
 
     <bean id="dubboProviderImpl" class="com.edu.service.impl.DubboProviderImpl" />
-    <bean id="dubboCode" class="com.edu.spring.DubboCode" />
+    <bean id="dubboCode" class="com.edu.JavaLearning.spring.DubboCode" />
     <dubbo:service interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" />
     <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000"/>
 </beans>
