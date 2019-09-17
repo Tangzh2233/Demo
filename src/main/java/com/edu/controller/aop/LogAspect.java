@@ -46,7 +46,6 @@ public class LogAspect {
         Transaction transaction = Cat.newTransaction("Http服务", fullName);
         try {
             result = point.proceed(args);
-            this.sendCatMsg(transaction, fullName, result, null);
         } catch (Exception e) {
             this.sendCatMsg(transaction, fullName, result, e);
             logger.error("请求方法:{} 异常 请求参数{}", fullName, toJSONString(args), e);
@@ -62,6 +61,7 @@ public class LogAspect {
 
     public void sendCatMsg(Transaction transaction, String fullName, Object object, Exception e) {
         String status = Message.SUCCESS, value = "TraceId: " + MDC.get(Constants.TRACE_ID);
+        Cat.sendWarning("sendWarning","sendMsg",30);
         try {
             if (e == null && object instanceof ResultData) {
                 ResultData result = (ResultData) object;

@@ -1,5 +1,7 @@
 package com.edu.JavaLearning.juc.atomic;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -14,8 +16,16 @@ public class Stu_Atomic{
 
     private AtomicInteger atomicInteger = new AtomicInteger();
 
-    public static void main(String[] args) {
+    public static final long ONE_HOUR = 60 * 60 * 1000L;
 
+    public static final long ONE_DAY = 24 * ONE_HOUR;
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
+
+    public static void main(String[] args) {
+        Date date = new Date(1544281000000L);
+        String format = sdf.format(date);
+        System.out.println(format);
     }
 
 }

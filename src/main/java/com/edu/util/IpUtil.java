@@ -73,6 +73,6 @@ public class IpUtil {
         } catch (Exception e) {
             logger.error("IP地址获取失败", e);
         }
-        return "";
+        return "127.0.0.1";
     }
 }

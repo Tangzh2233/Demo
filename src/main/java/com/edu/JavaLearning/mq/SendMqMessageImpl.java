@@ -26,6 +26,7 @@ public class SendMqMessageImpl {
         if(this.producer==null){
             producer= new DefaultMQProducer(this.groupId);
             producer.setNamesrvAddr(this.namesrvaddr);
+            producer.setRetryTimesWhenSendFailed(3);
         }
         try {
             this.producer.start();

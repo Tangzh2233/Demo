@@ -97,6 +97,8 @@
         </encoder>
     </appender>
 
+    <appender name="CatAppender" class="com.edu.common.cat.CatLogbackAppender" />
+
     <!--指定日志的输出点(controller包中)-->
     <logger name="com.edu.controller" level="INFO" additivity="true">
         <appender-ref ref="controller-appender"/>
@@ -125,6 +127,7 @@
 
     <!--appender没设置自己的level时，继承root的level级别，此处表示level>=info，才可以写入一下appender。-->
     <root level="INFO">
+        <appender-ref ref="CatAppender" />
         <appender-ref ref="console-appender" />
         <appender-ref ref="root-appender" />
         <appender-ref ref="ERROR" />

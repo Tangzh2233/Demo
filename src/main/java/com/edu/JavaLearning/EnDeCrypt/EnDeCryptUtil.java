@@ -59,7 +59,7 @@ public class EnDeCryptUtil {
       * 主要就是BASE64Encoder、BASE64Decoder两个类，我们只需要知道使用对应的方法即可。
       * 另，BASE加密后产生的字节位数是8的倍数，如果不够位数以=符号填充。
     **/
-    static class Base64{
+    public static class Base64{
         /**
           * 加密
         **/
@@ -85,7 +85,7 @@ public class EnDeCryptUtil {
       * 通常我们不直接使用上述MD5加密。通常将MD5产生的字节数组交给BASE64再加密一把，得到相应的字符串。
       * or 直接使用的是Spring的Util类。查看源码可知是在原生md5的基础上又做了一层加工
     **/
-    static class MD5{
+    public static class MD5{
         public static String enCode(String str) throws NoSuchAlgorithmException {
             String KEY_MD5 = "MD5";
             MessageDigest md5 = getDigest(KEY_MD5);
@@ -98,7 +98,7 @@ public class EnDeCryptUtil {
       * 被广泛地应用于电子商务等信息安全领域.虽然，SHA与MD5通过碰撞法都被破解了，
       * 但是SHA仍然是公认的安全加密算法，较之MD5更为安全。
      **/
-    static class SHA{
+    public static class SHA{
         public static String enCode(String str) {
             String KEY_SHA = "SHA";
             MessageDigest sha = getDigest(KEY_SHA);
@@ -113,7 +113,7 @@ public class EnDeCryptUtil {
       * 用这个标识鉴别消息的完整性.使用一个密钥生成一个固定大小的小数据块,即MAC,
       * 并将其加入到消息中,然后传输.接收方利用与发送方共享的密钥进行鉴别认证等.
      **/
-    static class HMAC{
+    public static class HMAC{
         /**
          * 初始化密钥
          */
@@ -137,7 +137,7 @@ public class EnDeCryptUtil {
     }
 
     /**DES加解密*/
-    static class DES{
+    public static class DES{
         private static String DES_KEY = "t#5y7^u8i@0knv*x";
         private static String DES = "DES";
         private static String defaultEncoding = "UTF-8";
@@ -169,7 +169,7 @@ public class EnDeCryptUtil {
     }
 
     /**AES 加解密*/
-    static class AES{
+    public static class AES{
         /**密钥*/
         private static String AES_KEY = "S%?3*`7v6005U2s%h!By5H=O4M6J^tp7";
         private static String AES = "AES";
@@ -219,7 +219,7 @@ public class EnDeCryptUtil {
      * 非对称算法一般是用来传送对称加密算法的密钥来使用的，相对于DH算法，RSA算法只需要一方构造密钥，不需要
      * 大费周章的构造各自本地的密钥对了。DH算法只能算法非对称算法的底层实现。而RSA算法算法实现起来较为简单
      */
-    static class RSA{
+    public static class RSA{
         /**非对称算法*/
         private static String RSA = "RSA";
         /**
@@ -228,9 +228,9 @@ public class EnDeCryptUtil {
          * */
         private static int KEY_SIZE = 1024;
         /**公钥*/
-        private static String PUB_KEY = "RSAPublicKey";
+        public static String PUB_KEY = "RSAPublicKey";
         /**私钥*/
-        private static String PRI_KEY = "RSAPrivateKey";
+        public static String PRI_KEY = "RSAPrivateKey";
 
         public static Map<String,byte[]> initKey(){
             try {
@@ -357,7 +357,12 @@ public class EnDeCryptUtil {
             byte[] priKey = keyMap.get(PRI_KEY);
             //AES key
             String aesKey = AES.AES_KEY;
-            String data = "AES加密数据,RSA加密aesKey";
+            HashMap<String, String> mapData = new HashMap<>(8);
+            mapData.put("AesKey","xmy8zcj8xaxvnl80");
+            mapData.put("randomKey","czn0x00x0jkh5ckmcvo8kg0k8vvacx0h");
+            mapData.put("pwdAffineX","a070c50f8807caba26ddc88e1b98df6533e242d3719c91c3f7de669c96904e21");
+            mapData.put("pwdAffineY","e295db078e614fa4d9cb6bc460eb6adbd5f1922195cebfba12e18662574d3473");
+            String data = mapData.toString();
             //实际数据传输密文
             String aesEncodeData = AES.enCode(data,aesKey);
             //公钥

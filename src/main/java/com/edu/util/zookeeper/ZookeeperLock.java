@@ -25,7 +25,7 @@ public class ZookeeperLock {
 
     public boolean tryLock(){
         try {
-            client.createPath(lock_Root,CreateMode.EPHEMERAL,value);
+            client.createPath(lock_Root,CreateMode.EPHEMERAL_SEQUENTIAL,value);
             return true;
         }catch (Exception e){
             return false;
@@ -59,6 +59,8 @@ public class ZookeeperLock {
             return false;
         }
     }
+
+
 
     public CuratorClient getClient() {
         return client;

@@ -19,15 +19,16 @@ import java.util.List;
 public class RedisLock {
 
     //作为锁的key有效时间,即2秒后某线程持有的锁自动释放！
-    private long lockTimeOut = 2*1000;
+    private long lockTimeOut = 2 * 1000;
     //若在1秒内没有获取到锁则认为此次锁获取失败！
     private long acquireTimeOut = 1000;
     private String lockKey = "Redis_Lock_";
     private static JedisPool pool;
 
-    public RedisLock(String key){
+    public RedisLock(String key) {
         this.lockKey += key;
     }
+
     static {
         JedisPoolConfig config = new JedisPoolConfig();
         // 设置最大连接数
@@ -41,22 +42,22 @@ public class RedisLock {
         pool = new JedisPool(config, "127.0.0.1", 6379, 3000);
     }
 
-    public String tryLock(){
+    public String tryLock() {
         String id = "";
         Jedis jedis = pool.getResource();
         String lockValue = UUIDUtil.getUUID();
-        long end = System.currentTimeMillis()+acquireTimeOut;
+        long end = System.currentTimeMillis() + acquireTimeOut;
         try {
             //超出预定时间则认为此次获取锁失败
             //{while中会有很多没拿到锁重试[setnx()]的线程,直到超出设定时间若没有拿到锁则认为此线程获取锁失败}
-            while (System.currentTimeMillis()<end){
-                if(jedis.setnx(lockKey,lockValue)==1){
-                    jedis.expire(lockKey,(int)lockTimeOut/1000);
+            while (System.currentTimeMillis() < end) {
+                if (jedis.setnx(lockKey, lockValue) == 1) {
+                    jedis.expire(lockKey, (int) lockTimeOut / 1000);
                     id = lockValue;
                     return id;
                 }
-                if(jedis.ttl(lockKey)==-1){
-                    jedis.expire(lockKey,(int)lockTimeOut/1000);
+                if (jedis.ttl(lockKey) == -1) {
+                    jedis.expire(lockKey, (int) lockTimeOut / 1000);
                 }
                 try {
                     Thread.sleep(10);
@@ -64,7 +65,7 @@ public class RedisLock {
                     Thread.currentThread().interrupt();
                 }
             }
-        } catch (JedisException e){
+        } catch (JedisException e) {
 
         } finally {
             jedis.close();
@@ -73,22 +74,22 @@ public class RedisLock {
     }
 
     /**
-      * @description:锁的拥有者或者锁到期才能释放锁
-    **/
-    public boolean unLock(String id){
+     * @description:锁的拥有者或者锁到期才能释放锁
+     **/
+    public boolean unLock(String id) {
         boolean unLockFlag = false;
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             return unLockFlag;
         }
         Jedis jedis = pool.getResource();
         try {
-            while (true){
+            while (true) {
                 jedis.watch(lockKey);
-                if(id.equals(jedis.get(lockKey))){
+                if (id.equals(jedis.get(lockKey))) {
                     Transaction transaction = jedis.multi();
                     transaction.del(lockKey);
                     List<Object> result = transaction.exec();
-                    if(result==null){
+                    if (result == null) {
                         continue;
                     }
                     unLockFlag = true;
@@ -104,51 +105,54 @@ public class RedisLock {
         return unLockFlag;
     }
 }
+
 /**
-  * @description测试：500线程争夺5件商品
-**/
-class Test{
+ * @description测试：500线程争夺5件商品
+ **/
+class Test {
 
     public static void main(String[] args) {
         ProductManager service = new ProductManager();
-        for(int i=0;i<500;i++){
+        for (int i = 0; i < 500; i++) {
             new Job(service).start();
         }
     }
 
 }
 
-class ProductManager{
+class ProductManager {
     //商品数量
     private int num = 5;
     private RedisLock lock = new RedisLock("User");
 
-    public void doing(){
+    public void doing() {
         String id = "";
         try {
             id = lock.tryLock();
-            if(num<=0){
+            if (num <= 0) {
                 System.out.println("商品售罄");
                 return;
             }
             //判断是否拿到锁
-            if(StringUtils.isNotBlank(id)){
+            if (StringUtils.isNotBlank(id)) {
                 num--;
-                System.out.println(Thread.currentThread().getName()+"秒杀成功"+num);
-            }else {
-                System.out.println(Thread.currentThread().getName()+"秒杀失败");
+                System.out.println(Thread.currentThread().getName() + "秒杀成功" + num);
+            } else {
+                System.out.println(Thread.currentThread().getName() + "秒杀失败");
             }
         } finally {
             lock.unLock(id);
         }
     }
 }
-class Job extends Thread{
+
+class Job extends Thread {
     private ProductManager manager;
 
-    Job(ProductManager manager){
+    Job(ProductManager manager) {
         this.manager = manager;
     }
+
     @Override
     public void run() {
         manager.doing();
