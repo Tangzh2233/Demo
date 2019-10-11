@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 /**
  * @Author: tangzh
  * @Date: 2019/4/30$ 2:44 PM$
+ * 测试Spring集成dubbo的启动流程
  **/
 public class DubboCode {
     @Resource

@@ -2,8 +2,10 @@ package com.edu.JavaLearning.spring;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author: tangzh
@@ -13,6 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 遍历所有的监听器，如果该监听器监听的事件为传递的事件或传递事件的父类则表示该监听器支持指定事件
  * 然后执行监听器的onApplicationEvent(Event)方法
  **/
+@Component
 public class SpringEventPublishListener implements ApplicationListener {
 
     @Override
@@ -23,6 +26,11 @@ public class SpringEventPublishListener implements ApplicationListener {
             System.out.println("I am SpringEventPublishListener");
         }
     }
+
+    public void print(){
+        System.out.println("SpringEventPublishListener print method");
+    }
+
 }
 
 

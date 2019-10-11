@@ -27,9 +27,9 @@ public class ExecutorInit {
         ExecutorService fixPool = Executors.newFixedThreadPool(10);
         //创建一个单线程的Executor(执行者)
         ExecutorService singlePool = Executors.newSingleThreadExecutor();
-
+        //创建一个无上限的线程池。实际上也是Integer.MAX_VALUE
         ExecutorService cachePool = Executors.newCachedThreadPool();
-
+        //创建延迟执行和周期执行任务的线程池。
         ScheduledExecutorService schedulePool = Executors.newScheduledThreadPool(1);
 
     }
@@ -91,7 +91,7 @@ public class ExecutorInit {
 
     /**
      * Callable使用
-     * 使用ExecutorService提交Callable任务时,结果future.get()若当前任务为完成，会阻塞至任务完成
+     * 使用ExecutorService提交Callable任务时,结果future.get()若当前任务未完成，会阻塞至任务完成
      * 问题：阻塞过程即等待任务完成过程,eg:list便利到task1,但是task1完成,然而task2已经完成了,此时
      * 我们想要的结果应该是返回task2结果，而不是等待task1完成。
      * <p>
