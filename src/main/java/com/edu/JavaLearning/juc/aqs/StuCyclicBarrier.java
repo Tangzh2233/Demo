@@ -1,5 +1,7 @@
 package com.edu.JavaLearning.juc.aqs;
 
+
+
 import java.util.concurrent.*;
 
 /**
@@ -18,6 +20,8 @@ public class StuCyclicBarrier {
 
     public static void main(String[] args) throws InterruptedException {
         StuCyclicBarrier stu = new StuCyclicBarrier();
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println(Integer.MIN_VALUE);
         stu.eg();
     }
 

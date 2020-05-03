@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -141,8 +140,6 @@ public class CatMybatisPlugin implements Interceptor {
             } else {
                 logger.error("---only surpport DruidDataSource:" + dataSource1.getClass().toString());
             }
-        } else if(dataSource instanceof BasicDataSource){
-            return ((BasicDataSource) dataSource).getUrl();
         }
         return null;
     }

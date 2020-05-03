@@ -2,21 +2,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
-						http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
-                        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+						http://code.alibabatech.com/schema/dubbo
+						http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
 
     <dubbo:application name="Demo" logger="slf4j"/>
-    <dubbo:registry protocol="zookeeper" address="127.0.0.1:2181" register="true" timeout="100000"/>
+    <!--注册中心类型-->
+    <dubbo:registry protocol="zookeeper" address="zookeeper://127.0.0.1:2181" register="true" timeout="100000"/>
+    <!--协议类型-->
     <dubbo:protocol name="dubbo" port="20880" />
 
-    <dubbo:provider filter="traceFilter" threadpool="fixed" threads="500" timeout="5000"  accepts="5000" />
+    <dubbo:provider filter="traceFilter" threadpool="fixed" threads="500" timeout="5000" accepts="5000" retries="3" />
     <dubbo:consumer loadbalance="roundrobin"  filter="traceFilter"/>
 
     <bean id="dubboProviderImpl" class="com.edu.service.impl.DubboProviderImpl" />
+    <dubbo:service  interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" delay="1"/>
+    <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000" cluster="failfast" init="true"/>
     <bean id="dubboCode" class="com.edu.JavaLearning.spring.DubboCode" />
-    <dubbo:service interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" />
-    <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000"/>
+    <!--<dubbo:reference id="merchantOperApi" interface="com.jiupai.accquery.api.mmc.MerchantOperApi" cluster="failfast" check="false" timeout="50000" />-->
 </beans>

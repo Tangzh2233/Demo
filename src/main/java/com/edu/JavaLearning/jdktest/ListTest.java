@@ -1,5 +1,7 @@
 package com.edu.JavaLearning.jdktest;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -12,7 +14,6 @@ public class ListTest implements Serializable{
     public static void main(String[] args) {
 
         removeNode();
-
 
         //链表和数组
         ArrayList<String> a1 = new ArrayList<>();
@@ -27,7 +28,7 @@ public class ListTest implements Serializable{
         b.add("D");
         b.add("F");
         b.add("G");
-        System.out.println(a.toString());
+        System.out.println(String.join("|",a));
         ListIterator<String> aIter = a.listIterator();
         ListIterator<String> bIter = b.listIterator();
         //ab合并

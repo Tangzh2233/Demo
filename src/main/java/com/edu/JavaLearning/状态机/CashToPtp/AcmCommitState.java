@@ -1,6 +1,5 @@
 package com.edu.JavaLearning.状态机.CashToPtp;
 
-import com.edu.JavaLearning.状态机.IPayState;
 
 /**
  * @Author: tangzh

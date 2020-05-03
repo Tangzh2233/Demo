@@ -1,38 +1,69 @@
 package com.edu.dao.domain;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
-
+import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.Collator;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2017/8/4.
+ * 注解的意思:Null 不进行json序列化。代表序列化规则
  */
-public class User implements Serializable{
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+public class User implements Serializable,Comparable<User>{
 
     private static final long serialVersionUID = -3677823825852900686L;
 
-    public User(){}
-    public User(int id, String username, String password){
+    public User() {
+    }
+
+    public User(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
-    public User(String username, String password){
+
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
+    public User(String username, String password, String userNo) {
+        this.username = username;
+        this.password = password;
+        this.userNo = userNo;
+    }
+
+    public User(Integer id, String username, String password, LocalDateTime date, String userNo) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.date = date;
+        this.userNo = userNo;
+    }
+
     private Integer id;
+    @NotBlank(message = "用户名不可为空")
     private String username;
     private String password;
     private Long num;
+    private LocalDateTime date;
+    private String userNo;
 
-    public Long getNum() {
-        return num;
-    }
-
-    public void setNum(Long num) {
-        this.num = num;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Integer getId() {
@@ -59,13 +90,90 @@ public class User implements Serializable{
         this.password = password;
     }
 
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
+    /**
+     * 依据姓名拼音排序
+     * @param user
+     * @return
+     */
     @Override
-    public String toString() {
-        return JSON.toJSONString(this);
+    public int compareTo(@NotNull User user) {
+        return Collator.getInstance(Locale.CHINESE).compare(this.getUsername(),user.getUsername());
+    }
+
+    static class Node {
+        private String head;
+        private String tail;
+
+        public String getHead() {
+            return head;
+        }
+
+        public void setHead(String head) {
+            this.head = head;
+        }
+
+        public String getTail() {
+            return tail;
+        }
+
+        public void setTail(String tail) {
+            this.tail = tail;
+        }
     }
 
     public static void main(String[] args) {
-        User user = new User(1,"tang","123");
-        System.out.println(user.toString());
+        List<User> userList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            User user = new User();
+            user.setId(i);
+            user.setUsername("tang");
+            user.setPassword("123");
+            userList.add(user);
+        }
+        for (int i = 5; i < 10; i++) {
+            User user = new User();
+            user.setId(i);
+            user.setUsername("zhang");
+            user.setPassword("qwe");
+            userList.add(user);
+        }
+        List<Integer> collect = userList.stream().filter(user -> "zhang".equals(user.getUsername()))
+                .map(User::getId).collect(Collectors.toList());
+        for(Integer item : collect){
+            System.out.println(item);
+        }
+
+        Matcher matcher = Pattern.compile("(\\d{3})\\d{4}(\\d{4})").matcher("17010206231");
+        while (matcher.find()){
+            System.out.println(matcher.group(0));
+            System.out.println(matcher.group(1));
+            System.out.println(matcher.group(2));
+        }
+        System.out.println("userId".replaceAll("([A-Z]+)","_$1").toLowerCase());
+        System.out.println("17010206231".replaceAll("(\\d{3})\\d{4}(\\d{4})","$2****$1"));
     }
 }

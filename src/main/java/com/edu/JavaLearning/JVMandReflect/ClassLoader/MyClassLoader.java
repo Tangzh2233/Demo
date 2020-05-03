@@ -1,5 +1,6 @@
 package com.edu.JavaLearning.JVMandReflect.ClassLoader;
 
+
 import java.io.*;
 
 /**
@@ -9,6 +10,14 @@ import java.io.*;
  */
 
 public class MyClassLoader extends ClassLoader{
+
+
+    private static ThreadLocal<String> threadContext = new ThreadLocal<>();
+
+    public static void main(String[] args) throws ClassNotFoundException {
+        threadContext.set("hahahha");
+    }
+
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {

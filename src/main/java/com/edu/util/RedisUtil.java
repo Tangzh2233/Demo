@@ -30,7 +30,7 @@ public class RedisUtil {
     static {
         try {
             JedisPoolConfig config = getJedisPoolConfig();
-            pool = new JedisPool(config,HOST,PORT);
+            pool = new JedisPool(config,"127.0.0.1",6379);
         }
         catch (Exception e){
             logger.error("Redis 初始化失败",e);
@@ -117,14 +117,17 @@ public class RedisUtil {
         }
     }
 
-    public static void del(String key){
-        Assert.isEmpty(key,"key is null");
+    public static void del(String... keys){
+        for(String key : keys){
+            Assert.isEmpty(key,"key is null");
+        }
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
-            jedis.del(key);
+            jedis.del(keys);
         } catch (Exception e) {
             logger.error("Redis Exception",e);
+            throw new IllegalStateException();
         } finally {
             close(jedis);
         }
@@ -178,6 +181,41 @@ public class RedisUtil {
     public static void close(Jedis jedis){
         if(jedis!=null){
             jedis.close();
+        }
+    }
+
+    public static Boolean exist(String key){
+        Assert.isEmpty(key,"key must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.exists(key);
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static Long decrBy(String key){
+        Assert.isEmpty(key,"key must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.decrBy(key,1);
+        }finally {
+            close(jedis);
+        }
+    }
+
+    public static long hset(String key,String field,String value){
+        Assert.isEmpty(key,"key must is not null");
+        Assert.isEmpty(field,"key must is not null");
+        Assert.isEmpty(value,"key must is not null");
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hset(key,field,value);
+        }finally {
+            close(jedis);
         }
     }
 

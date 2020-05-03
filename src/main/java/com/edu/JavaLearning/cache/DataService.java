@@ -8,13 +8,12 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
+import org.springframework.dao.DuplicateKeyException;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: tangzh Redis缓存工具类,主要是对网上缓存穿透,击穿,雪崩的解决实现
@@ -27,7 +26,7 @@ import java.util.Random;
  * eg: permitsPerSecond = 1  8:00创建
  * acquire(1) 此时时间 8:005 > 8:00 直接返回                setLastTime = 8:01
  * acquire(1) 此时时间 8:007 < 8:01 计算时间差,阻塞至8:01    setLastTime = 8:02
- * acquire(5) 此时时间 8:03 > 8:02 直接返回                 setLastTime = 8:02+5*permitsPerSecond = 8:07
+ * acquire(5) 此时时间 8:03 > 8:02 直接返回                 setLastTime = 8:02+5/permitsPerSecond = 8:07
  * acquire(10)此时时间 8:04 < 8:07 计算时间差,03阻塞至8:07    setLastTime = 8:07+10=8:17
  * acquire(1) 此时时间 8:10 < 8:17 计算时间差,阻塞至8:17      setLastTime = 8:18
  * @Date: 2019/7/4$ 5:15 PM$
@@ -59,18 +58,19 @@ public class DataService {
      */
     public static void main(String[] args) {
         try {
+            System.out.println("startTime: " + System.nanoTime());
             RateLimiter rateLimiter = RateLimiter.create(1);
             // 8:00
             long nanoTime = System.nanoTime();
             System.out.println("startTime: " + nanoTime);
             //current > 8:00 直接返回 setLastTime = 8:01
-            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(1));
+            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(20));
             //current < 8:01 阻塞至 8:01 setLastTime = 8:02
-            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(1));
+            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(20));
             //休眠,保证currentTime > lastTime
             Thread.sleep(5000);
             //此时currentTime > lastTime 直接返回 setLastTime = 8:07
-            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(5));
+            System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(20));
             //此时currentTime < lastTime 阻塞至8:07 setLastTime = 8:17
             System.out.println("current: " + System.nanoTime() + "waitTime: " + rateLimiter.acquire(10));
             //此时currentTime < lastTime 阻塞至8:17
@@ -78,7 +78,9 @@ public class DataService {
             long endTime = System.nanoTime() - nanoTime;
             System.out.println("耗时:" + endTime);
         } catch (Exception e) {
-
+            if(e instanceof DuplicateKeyException){
+                System.out.println("主键或唯一键冲突异常");
+            }
         }
     }
 
@@ -105,10 +107,10 @@ public class DataService {
     @SuppressWarnings("unchecked")
 //    @PostConstruct
     public void initBloomFilter() {
-        List<String> keys = userMapper.getAllKeys();
-        for (String key : keys) {
-            bloomFilter.put(key);
-        }
+//        List<String> keys = userMapper.getAllKeys();
+//        for (String key : keys) {
+//            bloomFilter.put(key);
+//        }
     }
 
     public static int getRandom() {

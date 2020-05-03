@@ -8,10 +8,12 @@ import java.util.List;
  */
 public class Body {
     List<String> body = new ArrayList<>();
-    public void add(String str){
+
+    public void add(String str) {
         body.add(str);
     }
-    public List<String> getResult(){
+
+    public List<String> getResult() {
         return body;
     }
 }

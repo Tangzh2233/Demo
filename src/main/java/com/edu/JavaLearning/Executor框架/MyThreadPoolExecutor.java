@@ -2,6 +2,7 @@ package com.edu.JavaLearning.Executor框架;
 
 import java.util.Date;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author: tangzh
@@ -50,7 +51,7 @@ public class MyThreadPoolExecutor {
     static {
         ScheduledThreadPoolExecutor =
                 new ScheduledThreadPoolExecutor(2, Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-        DeFaultThreadFactory = Executors.defaultThreadFactory();
+        DeFaultThreadFactory = new DefaultThreadFactory("myThread",true,5);
         DefaultHandler = new ThreadPoolExecutor.DiscardOldestPolicy();
     }
 
@@ -156,5 +157,37 @@ public class MyThreadPoolExecutor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+}
+
+/**
+ * 自定义ThreadFactory
+ */
+class DefaultThreadFactory implements ThreadFactory {
+
+    private final ThreadGroup threadGroup;
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private String namePrefix;
+    private final int priority;
+    private final boolean daemon;
+
+
+    DefaultThreadFactory(String namePrefix,boolean daemon,int priority){
+        SecurityManager manager = System.getSecurityManager();
+        this.threadGroup = (manager != null) ? manager.getThreadGroup() : Thread.currentThread().getThreadGroup();
+        this.namePrefix = namePrefix;
+        this.priority = priority;
+        this.daemon = daemon;
+    }
+
+
+    @Override
+    public Thread newThread(Runnable r) {
+        Thread thread = new Thread(threadGroup, r, namePrefix + threadNumber.getAndIncrement());
+        thread.setDaemon(daemon);
+        thread.setPriority(priority);
+        thread.setContextClassLoader(getClass().getClassLoader());
+        return thread;
     }
 }

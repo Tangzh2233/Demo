@@ -1,18 +1,13 @@
 package com.edu.controller.login;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.edu.common.Constants;
 import com.edu.common.result.ResultData;
 import com.edu.dao.domain.User;
 
 import com.edu.service.ILoginService;
 import com.edu.util.IpUtil;
-import com.jiupai.cornerstone.monitor.cat.springaop.CatStatictisAnnotaion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,7 +43,6 @@ public class LoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
-    @CatStatictisAnnotaion()
     public ResultData login(User usr, HttpServletRequest request, HttpServletResponse response) throws Exception, JedisConnectionException {
 //        String string = JSON.toJSONString(user.toString());
 //        JSONObject jsonObject = JSONObject.parseObject(string);
@@ -65,7 +59,6 @@ public class LoginController {
 
     @ResponseBody
     @RequestMapping(value = "/register.do", method = RequestMethod.POST)
-    @CatStatictisAnnotaion()
     public ResultData regisger(User usr) throws Exception {
         logger.info("请求参数: " + usr.toString());
         try {

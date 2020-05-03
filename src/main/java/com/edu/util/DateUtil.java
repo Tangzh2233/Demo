@@ -68,6 +68,13 @@ public class DateUtil {
 
 
     public static void main(String[] args) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(1574928625000L);
+        String format = sdf.format(date);
+        Date date1 = new Date(1576656625000L);
+        String format1 = sdf.format(date1);
+        System.out.println(format + format1);
+
 //        System.out.println(getCurDateForDay());
 //        System.out.println(getCurDateForHour());
         System.out.println(new Date());

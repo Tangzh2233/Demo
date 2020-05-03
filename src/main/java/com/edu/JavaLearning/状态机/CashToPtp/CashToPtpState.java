@@ -10,7 +10,7 @@ public abstract class CashToPtpState implements IPayState {
 
     public CashToPtpContext context;
 
-    public CashToPtpState(CashToPtpContext context){
+    protected CashToPtpState(CashToPtpContext context){
         this.context = context;
     }
 }

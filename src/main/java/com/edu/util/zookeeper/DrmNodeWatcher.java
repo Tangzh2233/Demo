@@ -1,6 +1,6 @@
 package com.edu.util.zookeeper;
 
-import com.jiupai.cornerstone.util.ReflectionUtils;
+import com.edu.util.ReflectionUtils;
 import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;

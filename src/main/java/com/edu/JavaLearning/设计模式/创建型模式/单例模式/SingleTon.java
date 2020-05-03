@@ -1,4 +1,6 @@
-package com.edu.JavaLearning.设计模式.Sington;
+package com.edu.JavaLearning.设计模式.创建型模式.单例模式;
+
+
 
 /**
  * @author Tangzhihao
@@ -10,9 +12,6 @@ package com.edu.JavaLearning.设计模式.Sington;
 public class SingleTon {
     private static SingleTon singleTon = new SingleTon();
 
-    private SingleTon(){
-
-    }
     public static SingleTon getInstance(){
         return singleTon;
     }
@@ -22,7 +21,7 @@ public class SingleTon {
      * @date: 2018/4/24
      * @description:静态内部类的方式构建，解决饿汉式的缺点，并且线程安全
      */
-    private static class SingleTonHelper{
+    public static class SingleTonHelper{
         static SingleTon singleTonC = new SingleTon();
     }
     public static SingleTon getInstanceC(){

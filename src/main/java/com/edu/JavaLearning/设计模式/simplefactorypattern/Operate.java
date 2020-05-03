@@ -7,9 +7,9 @@ public class Operate {
     private double number_A = 0;
     private double number_B = 0;
 
-    public double getResult(){
+    public double getResult() {
         double result = 0;
-        return  result;
+        return result;
     }
 
     public double getNumber_A() {

@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.scope.Scope;
 
 /**
  * @Author: tangzh

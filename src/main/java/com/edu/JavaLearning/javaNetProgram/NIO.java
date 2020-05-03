@@ -1,4 +1,5 @@
-package com.edu.JavaLearning.IO;
+package com.edu.JavaLearning.javaNetProgram;
+
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -23,9 +24,9 @@ public class NIO {
         SocketChannel socketChannel = SocketChannel.open();
         SocketChannel socketChannel1 = SocketChannel.open();
         SocketChannel socketChannel2 = SocketChannel.open();
-        socketChannel.connect(new InetSocketAddress("127.0.0.1",8080));
-        socketChannel1.connect(new InetSocketAddress("127.0.0.1",8080));
-        socketChannel2.connect(new InetSocketAddress("127.0.0.1",8080));
+        socketChannel.connect(new InetSocketAddress("127.0.0.1",9999));
+        socketChannel1.connect(new InetSocketAddress("127.0.0.1",9999));
+        socketChannel2.connect(new InetSocketAddress("127.0.0.1",9999));
         ByteBuffer byteBuffer = ByteBuffer.wrap("服务端你好,我是Client".getBytes());
         ByteBuffer byteBuffer1 = ByteBuffer.wrap("服务端你好,我是Client1".getBytes());
         ByteBuffer byteBuffer2 = ByteBuffer.wrap("服务端你好,我是Client2".getBytes());
@@ -253,12 +254,15 @@ class Attachment {
  * 同步非阻塞型IO + Selector(NIO)
  */
 class SelectorSocketServer{
+
+    private static Attachment attachment;
+
     public static void main(String[] args) throws IOException {
         //获取selector实例
         Selector selector = Selector.open();
         //创建serverSocketChannel并监听8080端口
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(8080));
+        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
         //将其注册到Selector中,设置非阻塞,监听OP_ACCEPT事件
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -277,8 +281,9 @@ class SelectorSocketServer{
                     // 有新的连接并不代表这个通道就有数据，
                     // 这里将这个新的 SocketChannel 注册到 Selector，监听 OP_READ 事件，等待数据
                     socketChannel.configureBlocking(false);
-                    socketChannel.register(selector, SelectionKey.OP_READ);
+                    socketChannel.register(selector, SelectionKey.OP_READ,attachment);
                 }else if(key.isReadable()){
+                    System.out.println(key.attachment());
                     SocketChannel channel = (SocketChannel)key.channel();
                     ByteBuffer buffer = ByteBuffer.allocate(1024);
                     int read = channel.read(buffer);

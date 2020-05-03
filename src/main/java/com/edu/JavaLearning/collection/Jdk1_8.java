@@ -1,8 +1,21 @@
 package com.edu.JavaLearning.collection;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.unidal.helper.Files;
+import org.unidal.helper.Urls;
+
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.Collator;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
@@ -11,11 +24,65 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2019/9/25 5:29 PM
  **/
-public class Jdk1_8 {
+public class Jdk1_8 implements Serializable {
+
+    public static final long serialVersionUID = -3739457594546398735L;
+    private static int maxSize = 128;
+    private static ConcurrentHashMap<String,Class> classCache = new ConcurrentHashMap<>(16);
+
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
+
+        ArrayList<Object> list = Lists.newArrayList();
+            list.clear();
+            list.forEach(item ->{
+                System.out.println("hahha");
+            });
+
+        String memberId = "memberId";
+
+        String member = "get"+memberId.substring(0,1).toUpperCase()+ memberId.substring(1);
+        System.out.println(member);
+
         List<Order> orders = initData();
+        ArrayList<String> fieldList = Lists.newArrayList("name", "price");
+
+        List<Order> orderList = getFieldList("com.edu.JavaLearning.collection.Order", fieldList, orders);
+        System.out.println(JSON.toJSONString(orderList));
+
+
+        System.out.println((int) 2*0.75);
+
+        String url = "http://cat.huidu.jiupaipay.com/cat/s/router?domain=personalServer&ip=100.109.79.170&op=json";
+        try {
+            InputStream inputStream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
+            String content = Files.forIO().readFrom(inputStream, "utf-8");
+            System.out.println(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> listData = new ArrayList(){
+            {
+                add("1");add("1");add("2");add("2");
+                add("3");add("3");add("3");add("4");
+            }
+        };
+        listData = Lists.newArrayList(Sets.newHashSet(listData));
+        listData.forEach(System.out::println);
+        Set<String> data = new HashSet(){
+            {
+                add("a");
+                add("b");
+                add("c");
+            }
+        };
+
+        StringBuilder replaceSql = new StringBuilder();
+        data.forEach(item -> replaceSql.append(item).append(","));
+        System.out.println("012345".substring(0,4));
+
 
 
         List<Order> collect = orders.stream()
@@ -45,9 +112,31 @@ public class Jdk1_8 {
 //                .collect(Collectors.toMap(Order::getName,Order::getPrice));
 //                .forEach(System.out::println);
 
+        //Lambda表达式+函数式接口
+        MyLambda myLambda = param -> {
+            Integer integer = Integer.valueOf(param);
+            System.out.println(integer+10);
+        };
+        myLambda.test("11");
+        myLambda.test1();
 
+        new Thread(() -> System.out.println("函数式接口")).start();
 
+        //方法的引用
+        //构造器引用
+        System.out.println(MyLambda.create(MyLambdaImpl::new));
+        //静态方法引用
+        MyLambda lambda = MyLambda.create(MyLambdaImpl::new);
+        List<MyLambda> lambdas = Arrays.asList(lambda);
+        lambdas.forEach(MyLambda::staticMethod);
     }
+
+    public static void collectors(){
+        List<Order> orders = initData();
+        Double collect = orders.stream().collect(Collectors.averagingDouble(Order::getSeq));
+        System.out.println(collect);
+    }
+
 
     public static List<Order> initData(){
         Order order = new Order("2017", "主板", "1333", "S",1);
@@ -73,6 +162,84 @@ public class Jdk1_8 {
         return orderList;
     }
 
+    @SuppressWarnings("unchecked")
+    public static  <T> List<T> getFieldList(String className, List<String> fieldList, List<T> data) {
+        List<T> returnData = new ArrayList<>();
+        try {
+            Class<T> tClass = (Class<T>) classCache.get(className);
+            if (tClass == null) {
+                tClass = (Class<T>) Class.forName(className);
+                if (classCache.size() <= maxSize) {
+                    classCache.putIfAbsent(className, tClass);
+                }
+            }
+            for (T t : data) {
+                T t1 = tClass.newInstance();
+                for (String field : fieldList) {
+                    String getMethodName = "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
+                    String setMethodName = "set" + field.substring(0, 1).toUpperCase() + field.substring(1);
+                    Method getMethod = tClass.getMethod(getMethodName);
+                    Method setMethod = tClass.getMethod(setMethodName, getMethod.getReturnType());
+                    setMethod.invoke(t1, getMethod.invoke(t));
+                }
+                returnData.add(t1);
+            }
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+            return data;
+        }
+        return returnData;
+    }
+
+}
+
+/**
+ * 默认方法和静态方法不会破坏函数式接口的语义
+ *
+ * 接口正常只能定义变量和抽象方法
+ * 但是1.8的Default关键字可以让接口添加具体的实现方法
+ * 及静态方法,可以重写也可以不重写,但是抽象方法必须重写
+ *
+ * ️函数接口指的是 ⚠️只有一个函数的接口⚠️，这样的接口可以隐式转换为Lambda表达式。
+ * java.lang.Runnable和java.util.concurrent.Callable是函数式接口的最佳例子。
+ * 在实践中，函数式接口非常脆弱：只要某个开发者在该接口中添加一个函数，则该接口就不再是函数式接口进而导致编译失败。
+ * 为了克服这种代码层面的脆弱性，并显式说明某个接口是函数式接口，Java 8 提供了一个特殊的注解@FunctionalInterface
+ * （Java 库中的所有相关接口都已经带有这个注解了）
+ */
+@FunctionalInterface
+interface MyLambda {
+
+    void test(String param);
+
+    default void test1(){
+        System.out.println("I am Default Method");
+    }
+
+    static MyLambda create(final Supplier<MyLambda> supplier){
+        return supplier.get();
+    }
+
+    static String staticMethod(final MyLambda lambda){
+        return "I am StaticMethod";
+    }
+
+}
+
+class MyLambdaImpl implements MyLambda{
+
+    private Integer seq;
+
+    @Override
+    public void test(String param) {
+
+    }
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
+    }
 }
 
 class Order implements Comparable<Order>{
@@ -82,13 +249,19 @@ class Order implements Comparable<Order>{
     private String price;
     private String status;
 
-    public Order(String date, String name, String price, String status,Integer seq) {
+    public String getPrice() {
+        return price;
+    }
+
+    public Order(String date, String name, String price, String status, Integer seq) {
         this.date = date;
         this.name = name;
         this.price = price;
         this.status = status;
         this.seq = seq;
     }
+
+    public Order(){}
 
     public String getDate() {
         return date;
@@ -104,10 +277,6 @@ class Order implements Comparable<Order>{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
     }
 
     public void setPrice(String price) {
@@ -141,8 +310,13 @@ class Order implements Comparable<Order>{
                 '}';
     }
 
+    /**
+     * 依据汉语拼音排序
+     * @param o
+     * @return
+     */
     @Override
-    public int compareTo(Order o) {
-        return Integer.valueOf(o.getPrice()) - Integer.valueOf(this.getPrice());
+    public int compareTo(@NotNull Order o) {
+        return Collator.getInstance(Locale.CHINESE).compare(this.getName(),o.getName());
     }
 }

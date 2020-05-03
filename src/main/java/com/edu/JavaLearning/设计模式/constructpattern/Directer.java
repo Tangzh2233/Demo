@@ -8,7 +8,8 @@ import java.util.List;
 public class Directer {
     //建造者模式中中的指挥者
     public Body body = null;
-    public List<String> construct(Builder builder){
+
+    public List<String> construct(Builder builder) {
         body = new Body();
         body.body.add(builder.createArm());
         body.body.add(builder.createHead());

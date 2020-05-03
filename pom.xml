@@ -55,14 +55,18 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>4.3.9.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
             <version>1.10.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
         </dependency>
 
         <!--<dependency>
@@ -172,9 +176,41 @@
             <artifactId>guava</artifactId>
             <version>27.0.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>com.rrx</groupId>
+            <artifactId>rrx-core</artifactId>
+            <version>2.0.42</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-
-
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>2.2.4</version>
+        </dependency>
         <!-- ==============数据储存相关包 ====================-->
         <!--<dependency>
             <groupId>redis.clients</groupId>
@@ -206,6 +242,11 @@
             <groupId>com.alibaba.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
             <version>${rocketmq_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>
@@ -253,6 +294,19 @@
             <version>3.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jiupai.accquery</groupId>
+            <artifactId>accquery-api</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hprose</groupId>
+            <artifactId>hprose-java</artifactId>
+            <version>2.0.32</version>
+        </dependency>
+
+
 
         <!--=============单元测试包  log日志包=================-->
         <dependency>
@@ -265,6 +319,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>1.5.2.RELEASE</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>accessors-smart</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -299,33 +363,44 @@
             <artifactId>curator-recipes</artifactId>
             <version>2.12.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/asm/asm-all -->
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-all</artifactId>
+            <version>3.2</version>
+        </dependency>
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.ow2.asm/asm-all &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.ow2.asm</groupId>-->
+            <!--<artifactId>asm-all</artifactId>-->
+            <!--<version>5.0.4</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+        <!--<dependency>-->
+            <!--<groupId>org.ow2.asm</groupId>-->
+            <!--<artifactId>asm</artifactId>-->
+            <!--<version>5.0.4</version>-->
+        <!--</dependency>-->
+
+
+
+
+
 
         <!--===================CAT相关包====================-->
 
         <dependency>
-            <groupId>com.jiupai.cornerstone</groupId>
-            <artifactId>cornerstone-monitor</artifactId>
-            <version>1.1.4-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.jiupai.cornerstone</groupId>
-                    <artifactId>cornerstone-log</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>log4j-over-slf4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.dianping.cat</groupId>
-                    <artifactId>cat-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>com.dianping.cat</groupId>
             <artifactId>cat-client</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -338,6 +413,17 @@
             <artifactId>portlet-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jiupai.cornerstone</groupId>
+            <artifactId>cornerstone-zk</artifactId>
+            <version>1.1.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.6.SEC03</version>
         </dependency>
 
 
@@ -355,23 +441,23 @@
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.10</version>
-                <configuration>
-                    <complianceLevel>1.8</complianceLevel>
-                    <source>1.8</source>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <!--<goal>test-compile</goal>-->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>aspectj-maven-plugin</artifactId>-->
+                <!--<version>1.10</version>-->
+                <!--<configuration>-->
+                    <!--<complianceLevel>1.8</complianceLevel>-->
+                    <!--<source>1.8</source>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                            <!--&lt;!&ndash;<goal>test-compile</goal>&ndash;&gt;-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <!--<plugin>-->
             <!--<groupId>org.apache.maven.plugins</groupId>-->
             <!--<artifactId>maven-compiler-plugin</artifactId>-->
@@ -394,48 +480,48 @@
 
         <!--定义一个路径，此路径下的键值用来替换开启<filtering>true</filtering>文件中的${}-->
         <!--<filters>-->
-        <!--<filter>src/main/resources/profiles/${app.env}</filter>-->
+            <!--<filter>src/main/resources/profiles/${app.env}</filter>-->
         <!--</filters>-->
         <!--<resources>-->
-        <!--&lt;!&ndash; 1.读取resources下的所有配置文件。除了profiles文件夹下的&ndash;&gt;-->
-        <!--<resource>-->
-        <!--<directory>src/main/resources</directory>-->
-        <!--<excludes>-->
-        <!--<exclude>profiles/**/*.*</exclude>-->
-        <!--</excludes>-->
-        <!--&lt;!&ndash; 3.读取文件中的${}用 filter中设置路径下的相应值替换&ndash;&gt;-->
-        <!--<filtering>true</filtering>-->
-        <!--</resource>-->
-        <!--&lt;!&ndash; 2.读取profiles/${app.env}文件夹下的配置文件&ndash;&gt;-->
-        <!--<resource>-->
-        <!--<directory>src/main/resources/profiles/${app.env}</directory>-->
-        <!--</resource>-->
+            <!--&lt;!&ndash; 1.读取resources下的所有配置文件。除了profiles文件夹下的&ndash;&gt;-->
+            <!--<resource>-->
+                <!--<directory>src/main/resources</directory>-->
+                <!--<excludes>-->
+                    <!--<exclude>profiles/**/*.*</exclude>-->
+                <!--</excludes>-->
+                <!--&lt;!&ndash; 3.读取文件中的${}用 filter中设置路径下的相应值替换&ndash;&gt;-->
+                <!--<filtering>true</filtering>-->
+            <!--</resource>-->
+            <!--&lt;!&ndash; 2.读取profiles/${app.env}文件夹下的配置文件&ndash;&gt;-->
+            <!--<resource>-->
+                <!--<directory>src/main/resources/profiles/${app.env}</directory>-->
+            <!--</resource>-->
         <!--</resources>-->
 
     </build>
     <!--<profiles>-->
-    <!--<profile>-->
-    <!--<id>dev</id>-->
-    <!--<properties>-->
-    <!--<app.env>dev</app.env>-->
-    <!--</properties>-->
-    <!--&lt;!&ndash;默认环境  activeByDefault默认为false&ndash;&gt;-->
-    <!--<activation>-->
-    <!--<activeByDefault>true</activeByDefault>-->
-    <!--</activation>-->
-    <!--</profile>-->
-    <!--<profile>-->
-    <!--<id>test</id>-->
-    <!--<properties>-->
-    <!--<app.env>test</app.env>-->
-    <!--</properties>-->
-    <!--</profile>-->
-    <!--<profile>-->
-    <!--<id>online</id>-->
-    <!--<properties>-->
-    <!--<app.env>online</app.env>-->
-    <!--</properties>-->
-    <!--</profile>-->
+        <!--<profile>-->
+            <!--<id>dev</id>-->
+            <!--<properties>-->
+                <!--<app.env>dev</app.env>-->
+            <!--</properties>-->
+            <!--&lt;!&ndash;默认环境  activeByDefault默认为false&ndash;&gt;-->
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+        <!--</profile>-->
+        <!--<profile>-->
+            <!--<id>test</id>-->
+            <!--<properties>-->
+                <!--<app.env>test</app.env>-->
+            <!--</properties>-->
+        <!--</profile>-->
+        <!--<profile>-->
+            <!--<id>online</id>-->
+            <!--<properties>-->
+                <!--<app.env>online</app.env>-->
+            <!--</properties>-->
+        <!--</profile>-->
     <!--</profiles>-->
 
 </project>

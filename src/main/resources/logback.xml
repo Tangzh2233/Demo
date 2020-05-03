@@ -97,7 +97,9 @@
         </encoder>
     </appender>
 
-    <appender name="CatAppender" class="com.edu.common.cat.CatLogbackAppender" />
+    <appender name="CatAppender" class="com.dianping.cat.filter.logback.CatLogbackAppender">
+        <traceId>trace_id</traceId>
+    </appender>
 
     <!--指定日志的输出点(controller包中)-->
     <logger name="com.edu.controller" level="INFO" additivity="true">
@@ -108,25 +110,25 @@
         <appender-ref ref="service-appender"/>
     </logger>
     <!--dao层日志-->
-    <logger name="com.edu.dao" level="INFO" additivity="false">
-        <appender-ref ref="dao-appender"/>
+    <logger name="com.edu.dao" level="DEBUG" additivity="false">
+        <appender-ref ref="console-appender"/>
     </logger>
 
     <logger name="java.sql" level="DEBUG" additivity="false">
-        <appender-ref ref="dao-appender"/>
+        <appender-ref ref="console-appender"/>
     </logger>
     <logger name="org.springframework" level="WARN">
         <appender-ref ref="dao-appender"/>
     </logger>
     <logger name="java.sql.Connection" level="DEBUG">
-        <appender-ref ref="dao-appender"/>
+        <appender-ref ref="console-appender"/>
     </logger>
-    <logger name="java.sql.ResultSet" level="INFO">
-        <appender-ref ref="dao-appender"/>
+    <logger name="java.sql.ResultSet" level="DEBUG">
+        <appender-ref ref="console-appender"/>
     </logger>
 
     <!--appender没设置自己的level时，继承root的level级别，此处表示level>=info，才可以写入一下appender。-->
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="CatAppender" />
         <appender-ref ref="console-appender" />
         <appender-ref ref="root-appender" />

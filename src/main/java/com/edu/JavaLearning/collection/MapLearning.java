@@ -1,5 +1,6 @@
 package com.edu.JavaLearning.collection;
 
+import org.aspectj.apache.bcel.util.ClassLoaderRepository;
 import sun.misc.Unsafe;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.SoftReference;
@@ -8,6 +9,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * [HashMap,HashTable,LinkedHashMap,WeakHashMap,ConcurrentHashMap,HashSet,TreeMap]
@@ -81,7 +84,11 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * ================LinkedHashMap extends HashMap<K,V>
  *                               implements Map<K,V> ===================
- *【JDK1.8】LinkedHashMap
+ *【JDK1.8】
+ * LinkedHashMap extends HashMap<K,V> implement Map<K,V>{
+ *     LinkedHashMap.Entry<K,V> head;
+ *     LinkedHashMap.Entry<K,V> tail;
+ * }
  * Entry<K,V> extends HashMap.Node<K,V>{
  *     final int hash;
  *     final K key;
@@ -111,12 +118,12 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * ==================WeakHashMap extends AbstractMap<K,V>
  *                               implements Map<K,V>==========================
- *  1.特点:HashMap.put("id","001"); WeakHashMap.put("id","001");在Sys.gc()后,HashMap不变,
- *        WeakHashMap.size()==0,其中元素将被gc。若想让元素不被gc,key即"id"需被显示引用。eg:
- *        String key="id",WeakHashMap(key,"001")。如此不会被gc。
+ *  1.特点:HashMap.put("id","001"); WeakHashMap.put(new String("id1"),"001");在Sys.gc()后,HashMap不变,
+ *        WeakHashMap.size()==0,其中元素将被gc。若想让元素不被gc,key即"id1"需被显示引用。eg:
+ *        String key="id1",WeakHashMap(key,"001")。如此不会被gc。
  *
- *  2.实现原理:"WeakHashMap的key为弱引用,当key被gc后，将放进队列queue中(垃圾回收的一种通知机制),
- *            下次操作WeakHashMao之前都会遍历一下queue,若存在相关的key,则poll,然后删除Map中的相关key-value"。
+ *  2.实现原理:"WeakHashMap的key为弱引用,当key被gc后，将放进队列queue中(垃圾回收的一种通知机制),Reference中的ReferenceHandler线程类干的活,将过期键enqueue
+ *            下次操作WeakHashMap之前都会遍历一下queue,若存在相关的key,则poll,然后删除Map中的相关key-value"。
  *  3.HashIterator 迭代器的实现可以看下，涉及遍历过程中key被gc的一个情况。
  *
  * =======================ThreadLocal<T>.ThreadLocalMap========================
@@ -141,6 +148,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *  }注:为数组，不存在链表结构，出现table[i]!=null的时后i+1以此类推。具体参看ThreadLocal.ThreadMap.set(..)+nextIndex(..)方法。
  *  每一个线程拥有一个类型为ThreadLocal.ThreadLocalMap的threadLocals变量。
  *  ThreadLocal.set(V v)就是往当前线程的threadLocals变量中添加key=this,value=v的数据。
+ *  key为当前ThreadLocal的实例
  *
  * *********使用ThreadLocal时要注意内存溢出问题**********
  *
@@ -335,6 +343,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *  【jdk1.8】===================ConcurrentHashMap<K,V> extends AbstractMap<K,V>
  *                         implements ConcurrentMap<K,V>====================================
  *
+ * ===========================ConcurrentSkipListMap==========================
+ * 跳表实现
  *
  * @Author: tangzh
  * @Date: 2018/11/16$ 下午5:18$
@@ -350,13 +360,20 @@ public class MapLearning {
     private static ThreadLocal<Map> context = new ThreadLocal<>();
     private static ThreadLocal<String> context1 = new ThreadLocal<>();
     private static ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap(8);
+    private static ConcurrentSkipListMap concurrentSkipListMap = new ConcurrentSkipListMap();
 
     @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws NoSuchFieldException {
+    public static void main(String[] args) throws InterruptedException {
+        concurrentSkipListMap.put("id","001");
+        concurrentSkipListMap.put("name","dog");
+        concurrentSkipListMap.put("age","24");
+
+
         hashMap.put(null,null);hashMap.put("id","5201314");
         hashMap.put("di","ah2345");hashMap.put("name","hahahah");
         hashMap.put("pwd","1234");hashMap.put("ordNo","a132123");
         hashMap.put("amt","32.12");
+        hashMap.putIfAbsent("name","tangzh");
 //      ==================================
         hashtable.put("id","001");hashtable.put("name","tang");
         hashtable.put("pwd","qwer1234");hashtable.put("age",18);
@@ -364,14 +381,16 @@ public class MapLearning {
         linkedHashMap.put("id",002);linkedHashMap.put("name","zhi");
         linkedHashMap.put("pwd","qwer1234");linkedHashMap.put("age",18);
 //      ===================================
-        weakHashMap.put("id",003);weakHashMap.put("name","1234");
-//      ===================================
-        context.set(hashMap);context1.set("ThreadLocal");
+        context.set(hashMap);
+        context.set(hashtable);
+        context1.set("ThreadLocal");
+        context1.set("ThreadLocal2");
 //      ==============WeakHashMap测试区===================
         LocalContextCache<String,String> cache = new LocalContextCache<>(100);
         cache.put(new String("key1"),"value1");
         cache.put("key2","value2");
         cache.put("key3","value3");
+        hashMap.put(new String("key4"),"value4");
         System.out.println(cache.size());
         System.gc();
         System.out.println(cache.size());
@@ -383,7 +402,11 @@ public class MapLearning {
         treeMap.put("7","3");treeMap.put("8","2");treeMap.put("9","1");
 //      ================ConcurrentHashMap===================
         concurrentHashMap.put("id","001");
-
+        concurrentHashMap.size();
+        concurrentHashMap.put("name","狗子");
+        concurrentHashMap.size();
+        concurrentHashMap.put("age","24");
+        concurrentHashMap.size();
 //      ====================================================
         System.out.println(context.get());
         Iterator iterator2 = linkedHashMap.keySet().iterator();

@@ -82,7 +82,7 @@
             data:{token:token,callback:"callJsonP"},
             datatype:"jsonp",
             success:function(data){
-                alert("Jsonp Test");
+                alert("Jsonp CatGrepFileForJava");
             }
         });
     }

@@ -17,4 +17,10 @@
     <!--</bean>-->
 
     <!--<bean id="springEventListener" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>-->
+    <!--Spring Bean 注入中的autowire="byName" or autowire="byType" 当不使用@Resource @Autowired时-->
+    <!--实际上是用public的 set方法来确定具体注入哪些bean-->
+    <bean id="highConcurrencyControl" class="com.edu.JavaLearning.算法.HighConcurrencyControl" autowire="byName" />
+    <bean id="distributedConsistency" class="com.edu.JavaLearning.算法.DistributedConsistency"/>
+
+    <bean id="springTransaction" class="com.edu.JavaLearning.spring.SpringTransaction" autowire="byType"/>
 </beans>

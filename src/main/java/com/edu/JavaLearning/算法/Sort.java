@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.simpleAlgorithm;
+package com.edu.JavaLearning.算法;
 
 import java.util.Stack;
 

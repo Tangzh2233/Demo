@@ -1,7 +1,5 @@
 package com.edu.JavaLearning.设计模式.代理模式and装饰模式.代理模式;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
@@ -20,15 +18,12 @@ public class ActiveProxy {
         return Proxy.newProxyInstance(
                 targetProxy.getClass().getClassLoader(),
                 targetProxy.getClass().getInterfaces(),
-                new InvocationHandler() {
-                    @Override
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        System.out.println("动态代理");
-                        System.out.println(System.nanoTime());
-                        Object object = method.invoke(targetProxy, args);
-                        System.out.println(System.nanoTime());
-                        return object;
-                    }
+                (proxy, method, args) -> {
+                    System.out.println("动态代理");
+                    System.out.println(System.nanoTime());
+                    Object object = method.invoke(targetProxy, args);
+                    System.out.println(System.nanoTime());
+                    return object;
                 });
     }
 

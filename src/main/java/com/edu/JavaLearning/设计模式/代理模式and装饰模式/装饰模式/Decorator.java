@@ -8,15 +8,17 @@ package com.edu.JavaLearning.设计模式.代理模式and装饰模式.装饰模�
  * 而装饰模式中，装饰类对代理对象没有控制权，只能为其增加一层装饰，
  * 以加强被装饰对象的功能，仅此而已。
  */
-public class Decorator extends Person{
+public class Decorator extends Person {
     protected Person component;
+
     //装扮
-    public void decorator(Person component){
+    public void decorator(Person component) {
         this.component = component;
     }
+
     @Override
-    public void show(){
-        if(component!=null){
+    public void show() {
+        if (component != null) {
             component.show();
         }
     }

@@ -1,7 +1,5 @@
 package com.edu.JavaLearning.jdktest.LockAndCollection;
 
-import java.io.Serializable;
-import java.lang.ref.PhantomReference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.net.Inet4Address;

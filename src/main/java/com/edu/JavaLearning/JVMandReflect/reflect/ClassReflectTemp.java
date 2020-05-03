@@ -46,7 +46,7 @@ public class ClassReflectTemp {
             //忽略私有修饰符，否则调用失败
             privateMethodTest.setAccessible(true);
             //（"Temp实例","方法的实际入参"）
-            privateMethodTest.invoke(instance,"private Method Test","tangzhihao");
+            privateMethodTest.invoke(instance,"private Method CatGrepFileForJava","tangzhihao");
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

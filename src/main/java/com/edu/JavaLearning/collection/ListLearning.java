@@ -1,11 +1,13 @@
 package com.edu.JavaLearning.collection;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import javax.management.relation.RoleList;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * =====【ArrayList+Vector+CopyOnWriteArrayList+LinkedList+Stack+RoleList】
@@ -51,6 +53,41 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *            return obj;
  *            //返回Object[]数组最后一个元素,并从Object[]中删除此元素;
  *         }
+ * ArrayBlockingQueue:阻塞队列,数组实现
+ *   {
+ *     //单锁实现
+ *     final ReentrantLock lock;
+ *     private final Condition notEmpty;
+ *     private final Condition notFull;
+ *
+ *     int putIndex;
+ *     int takeIndex;
+ *     int count;
+ *     Object[] items;
+ *   }
+ *   LinkedBlockingQueue:阻塞队列,链表实现。阻塞
+ *     FIFO（先进先出) 初始化时head=last=new Node(null)
+ *     读写锁分离,双锁实现。
+ *     LinkedBlockingQueue:单向链表 Node(head)-> Node ->Node(last)
+ *       Node<E>{
+ *           E item;
+ *           Node<E> next;
+ *       }
+ *
+ *   LinkedBlockingDeque:阻塞双向队列
+ *     FIFO(先进先出)
+ *     读写共用一把锁,同ArraryBlockingQueue,单锁实现
+ *     用ReentrantLock保证线程安全。至于多线程的删除和添加操作延迟等待，则使用Condition实现
+ *     LinkedBlockingDeque:双向链表 Node(first) <-> Node <-> Node <-> Node(last)
+ *       Node<E>{
+ *            E e;
+ *            Node<E> prev;
+ *            Node<E> next;
+ *        }
+ *     类似LinkedBlockingQueue 因为是双向链表，所以多了对队首队尾的操作
+ *   注意：这里涉及一个单锁和双锁的区别。单锁读写共用一把锁,无法做到真正的读写分离,相比双锁效率要低。
+ *        要有一个区别,若为单锁count属性则不需要使用AtomicInteger类型,仅需要保证count的访问被单锁控制线程安全即可。
+ *        当为双锁时,count的访问无法通过单锁的方式控制,此时得使用AtomicInteger保证线程安全
  * ========================RoleList extends ArrayList<Object>===================
  *
  * @Author: tangzh
@@ -65,9 +102,28 @@ public class ListLearning {
     private LinkedList linkedList = new LinkedList();
     private RoleList roleList = new RoleList();
     private Stack stack = new Stack();
+    private ArrayBlockingQueue arrayBlockingQueue;
+    private LinkedBlockingQueue linkedBlockingQueue;
+    private LinkedBlockingDeque linkedBlockingDeque;
 
     @SuppressWarnings("uncheck")
     public static void main(String[] args) {
+        List<String> pattern = Lists.newArrayList("996755132228038664", "1002905238622957569", "1002909068160921601", "661904711424802685", "974329837449637895");
+
+        List<String> strings = pattern.subList(1, 2);
+        List<String> strings1 = pattern.subList(3, 5);
+        System.out.println(strings.toString() + strings1.toString());
+
+        List<List<String>> partition = Lists.partition(pattern, 200);
+
+
+        for(List<String> item : partition){
+            for(String str : item){
+                System.out.println(str);
+            }
+        }
+
+
         datasC = new Vector(2){{
             add(1);add(2);add(3);add(4);
         }};
@@ -135,6 +191,23 @@ public class ListLearning {
             spliterator.forEachRemaining(o-> System.out.println(Thread.currentThread().getName()+"遍历："+o));
         }
     }
+
+    /**
+     * 哦吼 假泛型?? 参考JVM一书的泛型擦除中所认为的 java的泛型认为是假泛型
+     * @see 编译完成的代码
+     * @param params
+     */
+    public void methodA(List<String> params){
+        List<String> list = Arrays.asList("1","2","3");
+        String s = list.get(0);
+        System.out.println(s);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("泛型","泛型测试");
+        String str = map.get("泛型");
+        System.out.println(str);
+    }
+
 }
 
 

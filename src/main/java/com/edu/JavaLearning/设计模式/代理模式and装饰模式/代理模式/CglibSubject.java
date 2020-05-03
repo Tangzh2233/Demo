@@ -1,8 +1,6 @@
 package com.edu.JavaLearning.设计模式.代理模式and装饰模式.代理模式;
 
-import org.springframework.cglib.proxy.Enhancer;
-import org.springframework.cglib.proxy.MethodInterceptor;
-import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.cglib.proxy.*;
 
 import java.lang.reflect.Method;
 
@@ -20,19 +18,22 @@ import java.lang.reflect.Method;
 public class CglibSubject {
     public void sendFlower(){
         System.out.println("送花");
+        sendGift();
+    }
+
+    public void sendGift(){
+        System.out.println("送礼物");
     }
 }
 
 class CglibProxy implements MethodInterceptor{
     private Object targetProxy;
-    public CglibProxy(Object object){
-        this.targetProxy = object;
-    }
 
-    public Object getTargetProxyInstance(){
+    public Object getTargetProxyInstance(Class clazz) throws IllegalAccessException, InstantiationException {
         //工具类
         Enhancer en = new Enhancer();
-        en.setSuperclass(targetProxy.getClass());//需要创建子类的类
+        en.setSuperclass(clazz);//需要创建子类的类
+        targetProxy = clazz.newInstance();
         en.setCallback(this);
         return en.create();//通过字节码技术动态创建子类实例
     }
@@ -49,7 +50,17 @@ interface Cglib{
     void after();
 }
 
-abstract class CglibUniProxy implements MethodInterceptor,Cglib{
+/**
+ * CGLIB解析
+ * wiki:https://www.cnblogs.com/loveer/p/11588126.html
+ */
+abstract class CglibUniProxy implements
+        MethodInterceptor,
+        InvocationHandler,
+        NoOp,
+        LazyLoader,
+        Dispatcher,
+        Cglib {
 
     public Object getProxyInstance(Class clazz){
         Enhancer en = new Enhancer();
@@ -57,12 +68,53 @@ abstract class CglibUniProxy implements MethodInterceptor,Cglib{
         en.setCallback(this);
         return en.create();
     }
+
+    /**
+     * Method.invoke() 直接原方法调用
+     * @see CglibSubject#sendFlower() 只会输出1个"Cglib代理" 内部sendGift()直接走本地方法。
+     * MethodProxy.invokeSuper() 代理方法调用
+     * @see CglibSubject#sendFlower() 会输出2个"Cglib代理" 内部sendGift()走sendGift()代理方法,又会输出一个"Cglib代理"
+     *
+     * @param o
+     * @param method
+     * @param objects
+     * @param methodProxy
+     * @return
+     * @throws Throwable
+     * @see MethodInterceptor
+     * 类似around-advice他和InvocationHandler区别是,参数中对了MethodProxy,可以拿到代理方法
+     */
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        before();
-        Object invokeSuper = methodProxy.invokeSuper(o, objects);
-        after();
-        return invokeSuper;
+        System.out.println("Cglib代理");
+        return methodProxy.invokeSuper(o, objects);
+    }
+
+    /**
+     * @param o
+     * @param method
+     * @param objects
+     * @return
+     * @throws Throwable
+     * @see InvocationHandler
+     * 它的使用方式和MethodInterceptor差不多。
+     * 需要注意的一点是，所有对invoke()方法的参数proxy对象的方法调用都会被委托给同一个InvocationHandler，
+     * 所以可能会导致无限循环。
+     */
+    @Override
+    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+        return null;
+    }
+
+    /**
+     * @return
+     * @throws Exception
+     * @see LazyLoader
+     * @see Dispatcher
+     */
+    @Override
+    public Object loadObject() throws Exception {
+        return null;
     }
 
 }

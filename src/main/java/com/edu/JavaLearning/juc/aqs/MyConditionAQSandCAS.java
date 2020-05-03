@@ -6,9 +6,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.locks.*;
+import java.util.function.LongBinaryOperator;
 
 /**
  * @author Tangzhihao
@@ -49,8 +49,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * 5.重新获取value值，因为变量value被volatile修饰，所以其它线程对它的修改，线程A总是能够看到，
  *   线程A继续执行compareAndSwapInt进行比较替换，直到成功。
  *
- * ========================AQS========================
- *
+ * ========================LongAdder========================
+ * value = Base + sum(cell[size])
+ * 其中cell[]大小的初始值为2 最大为当前服务器的cpu核数
+ * cell[]的初始化发生在 对base cas失败的情况
+ * cell[]的扩容发生在 两次对cell节点cas失败时发生
+ *     @see LongAdder#add(long) 第90行cell节点cas设置值失败
+ *     @see LongAdder#longAccumulate(long, LongBinaryOperator, boolean)  Striped64的第251行
  */
 
 public class MyConditionAQSandCAS {
@@ -61,6 +66,9 @@ public class MyConditionAQSandCAS {
     private static Condition isP = lock.newCondition();
     private static Condition isC = lock.newCondition();
     private static AtomicInteger atomicInteger = new AtomicInteger();
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    //类似AtomicInteger,将对一个节点的cas分配到多个节点。降低冲突
+    private static LongAdder longAdder = new LongAdder();
 
     public static void main(String[] args) throws InterruptedException{
         MyConditionAQSandCAS condition = new MyConditionAQSandCAS();

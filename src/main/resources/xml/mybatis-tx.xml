@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <mybatis:scan base-package="com.edu.dao.mapper.ideaDemo" />
+	<!-- druid连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/ideademo"/>
+        <property name="username" value="root"/>
+        <property name="password" value="12345678"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+    </bean>
+
+    <!--事务相关-->
+    <bean id="jdbTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="jdbTransactionManager" />
+        <property name="isolationLevelName" value="ISOLATION_DEFAULT"/>
+    </bean>
+
+    <!--jdbc链接-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="com.edu.dao.domain.*"/>
+        <!--创建MapperProxyFactory实例-->
+        <property name="mapperLocations" value="classpath*:com/edu/dao/mapper/ideaDemo/**.xml"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>

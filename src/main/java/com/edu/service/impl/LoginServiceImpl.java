@@ -6,6 +6,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.edu.JavaLearning.RMI.RmiClient;
 import com.edu.JavaLearning.aop.aop.annotation.LogEvent;
 import com.edu.JavaLearning.aop.aop.annotation.LogMetricCount;
 import com.edu.JavaLearning.aop.aop.annotation.LogMetricSum;
@@ -22,6 +23,7 @@ import com.edu.service.ILoginService;
 import com.edu.util.CatUtil;
 import com.edu.util.CookieUtils;
 import com.edu.util.RedisUtil;
+import com.jiupai.accquery.api.mmc.MerchantOperApi;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +70,7 @@ public class LoginServiceImpl implements ILoginService {
         double account = amount;
         User user = new User();
         try {
-            /*if("liu".equals(name)){
+            if("liu".equals(name)){
                 t = Cat.getProducer().newTransaction("PigeonService", "method1");
                 t.setStatus(Transaction.SUCCESS);
                 Cat.logEvent("login事件","失败", "1","11111");
@@ -91,7 +93,7 @@ public class LoginServiceImpl implements ILoginService {
                 Event event = Cat.newEvent("Cache.Server", "127.0.0.1");
                 event.setStatus("1");
                 t.addChild(event);
-            }*/
+            }
             Cat.logMetricForCount(name);
             Cat.logMetricForDuration("11", 78L);
             Cat.logMetricForSum("登录金额", account);

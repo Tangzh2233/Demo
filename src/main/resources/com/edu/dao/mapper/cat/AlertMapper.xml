@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.dao.mapper.cat.AlertMapper">
+    <cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"/>
     <resultMap id="alert" type="com.edu.dao.domain.Alert">
         <id property="id" column="id"/>
         <result property="domain" column="domain"/>

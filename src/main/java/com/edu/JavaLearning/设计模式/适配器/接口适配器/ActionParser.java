@@ -15,6 +15,7 @@ import java.util.List;
 public interface ActionParser {
 
     void mehtodA(String str);
+
     //泛型的使用
     <E> List<E> query();
 }

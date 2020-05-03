@@ -1,6 +1,8 @@
 package com.edu.util;
 
-import com.jiupai.cornerstone.util.SysoutLogUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -12,6 +14,8 @@ import java.lang.reflect.Method;
  * @Date: 2019/1/21$ 8:12 PM$
  **/
 public class ReflectionUtils {
+
+    private final static Logger log = LoggerFactory.getLogger(ReflectionUtils.class);
 
     public static Method getDeclaredMethod(Object object, String methodName, Class... parameterTypes) {
         Method method = null;
@@ -84,7 +88,7 @@ public class ReflectionUtils {
         try {
             return field.get(object);
         } catch (Exception var4) {
-            SysoutLogUtil.error(var4.getMessage(), var4);
+            log.error(var4.getMessage(), var4);
             return null;
         }
     }
@@ -97,10 +101,10 @@ public class ReflectionUtils {
                 PropertyDescriptor pd = new PropertyDescriptor(field.getName(), tClass);
                 Method method = pd.getWriteMethod();
                 method.invoke(obj, value);
-                SysoutLogUtil.debug("field:" + field.getName() + "---getValue:" + value);
+                log.debug("field:" + field.getName() + "---getValue:" + value);
             }
         } catch (Exception var7) {
-            SysoutLogUtil.error("set field[" + fieldName + "] error", var7);
+            log.error("set field[" + fieldName + "] error", var7);
         }
 
     }
@@ -113,13 +117,13 @@ public class ReflectionUtils {
                 Method method = tClass.getDeclaredMethod("set" + uppercaseFirstCharacter(fieldName), String.class);
                 if (method != null) {
                     method.invoke(obj, value);
-                    SysoutLogUtil.debug("field:" + field.getName() + "---getValue:" + value);
+                    log.debug("field:" + field.getName() + "---getValue:" + value);
                 } else {
                     writeField(fieldName, obj, value);
                 }
             }
         } catch (Exception var6) {
-            SysoutLogUtil.error("set field[" + fieldName + "] error", var6);
+            log.error("set field[" + fieldName + "] error", var6);
         }
 
     }

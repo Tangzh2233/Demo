@@ -6,6 +6,8 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.*;
 
 /**
@@ -21,6 +23,18 @@ public class ExecutorInit {
     private ExecutorService executorService;
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private ThreadPoolExecutor threadPoolExecutor;
+    private static Timer timer;
+
+    static {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("哈哈哈,我是timer");
+            }
+        }, 2000, 5000);
+    }
+
 
     public void initExecutors() {
         //创建固定大小的线程池
@@ -31,6 +45,8 @@ public class ExecutorInit {
         ExecutorService cachePool = Executors.newCachedThreadPool();
         //创建延迟执行和周期执行任务的线程池。
         ScheduledExecutorService schedulePool = Executors.newScheduledThreadPool(1);
+        //创建一个
+        ExecutorService stealingPool = Executors.newWorkStealingPool();
 
     }
 
@@ -65,7 +81,12 @@ public class ExecutorInit {
 //            executor.execute(new TestThread());
 //        }
 //        executor.shutdown();
-        executorCompletionServiceTest();
+//        executorCompletionServiceTest();
+        ExecutorInit init = new ExecutorInit();
+        ExecutorInit init1 = new ExecutorInit();
+        ExecutorInit init2 = new ExecutorInit();
+        System.out.println("timer 几个");
+        Thread.sleep(1000 * 30);
     }
 
     /**
@@ -172,7 +193,7 @@ public class ExecutorInit {
      * 4.队列已满，总线程数又达到了maximumPoolSize，就会由(RejectedExecutionHandler)抛出异常
      **/
     public static ThreadPoolExecutor myThreadPoolExecutor() {
-        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Test-Pool-%d").build();
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("CatGrepFileForJava-Pool-%d").build();
         return new ThreadPoolExecutor(
                 5,
                 10,
