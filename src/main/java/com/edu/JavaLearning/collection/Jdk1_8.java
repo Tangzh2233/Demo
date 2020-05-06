@@ -54,7 +54,7 @@ public class Jdk1_8 implements Serializable {
 
         System.out.println((int) 2*0.75);
 
-        String url = "http://cat.huidu.jiupaipay.com/cat/s/router?domain=personalServer&ip=100.109.79.170&op=json";
+        String url = "";
         try {
             InputStream inputStream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
             String content = Files.forIO().readFrom(inputStream, "utf-8");
