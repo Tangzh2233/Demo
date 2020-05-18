@@ -1,9 +1,8 @@
-package com.edu.JavaLearning.算法;
+package com.edu.JavaLearning.算法.leetcode;
 
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tangzh
@@ -17,7 +16,7 @@ public class LeetCode {
 //        int[] data = new int[]{1,3,5,7,9,44,51,78,87,89};
 //        int[] param = new int[]{2,5,9,44,67,90,100};
 //        System.out.println(JSON.toJSONString(mergeData(data,param)));
-//        System.out.println(getMaxLength("abcabcdefg"));
+        System.out.println(getMaxLength("abcabcdefg"));
 //        turnListNodeDiGui(initListNodeData())
         int[] data = new int[]{1, 8, 6, 2, 5, 4, 8, 3, 10};
         System.out.println(maxArea(data));
@@ -47,6 +46,27 @@ public class LeetCode {
     }
 
     public static int[] sumForMap(int[] data, int target) {
+        int[] result = new int[2];
+        Map<Integer, Integer> mapData = new HashMap<>();
+        for (int i = 0; i < data.length; i++) {
+            int temp = target - data[i];
+            if (mapData.containsKey(temp)) {
+                result[0] = i;
+                result[1] = mapData.get(temp);
+                return result;
+            }
+            mapData.put(data[i], i);
+        }
+        return result;
+    }
+
+    /**
+     * data[i] + data[k] + data[j] + .... = target
+     * @param data
+     * @param target
+     * @return
+     */
+    public static int[] sumForMaps(int[] data, int target) {
         int[] result = new int[2];
         Map<Integer, Integer> mapData = new HashMap<>();
         for (int i = 0; i < data.length; i++) {
@@ -126,6 +146,9 @@ public class LeetCode {
     /**
      * 反转链表
      * 保留前置节点,将当前节点的next节点设置为pre节点
+     * 1 -> 2 -> 3 -> 4 -> 5
+     * =>
+     * 5 -> 4 -> 4 -> 2 ->1
      *
      * @param node
      * @return
@@ -134,7 +157,8 @@ public class LeetCode {
         if (node == null || node.next == null) {
             return node;
         }
-        //保留前置节点
+
+        //保留前置节点和当前节点。改变当前和前置节点的值
         ListNode pre = null;
         ListNode current = node;
         while (current != null) {
@@ -190,7 +214,6 @@ public class LeetCode {
         }
         return area;
     }
-
 
     @Data
     static class ListNode<E> {

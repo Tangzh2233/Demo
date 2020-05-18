@@ -1,7 +1,5 @@
 package com.edu.JavaLearning.算法;
 
-import com.edu.JavaLearning.juc.aqs.Produer;
-
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
@@ -179,18 +177,20 @@ public class BoundedBlockingQueue<E> {
         @Override
         public void run() {
             Random random = new Random();
+            int i = 1;
 
-            while (true) {
+            while (i <= 100) {
                 try {
-                    int i = random.nextInt(10);
-                    queue.enqueue(i);
+                    queue.enqueue(i++);
                     System.out.println(Thread.currentThread() + "生产: " + i + "size: " + queue.size());
+                    Thread.sleep(random.nextInt(200));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
 
     static class consumer implements Runnable {
 

@@ -33,7 +33,6 @@ public class Jdk1_8 implements Serializable {
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
-
         ArrayList<Object> list = Lists.newArrayList();
             list.clear();
             list.forEach(item ->{

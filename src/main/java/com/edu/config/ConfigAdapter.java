@@ -1,6 +1,6 @@
 package com.edu.config;
 
-import com.edu.controller.interceptor.LoginIntercepotr;
+import com.edu.controller.interceptor.LoginInterceptor;
 import com.edu.controller.interceptor.TraceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +17,8 @@ public class ConfigAdapter extends WebMvcConfigurerAdapter{
 
 
     @Bean
-    LoginIntercepotr loginIntercepotr(){
-        return new LoginIntercepotr();
+    LoginInterceptor loginIntercepotr(){
+        return new LoginInterceptor();
     }
     @Bean
     TraceInterceptor traceInterceptor(){

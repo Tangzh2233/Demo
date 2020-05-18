@@ -119,8 +119,8 @@ class LRUCacheForLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         this.size = size;
     }
 
+    @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > size;
+        return this.size() > size;
     }
-
 }

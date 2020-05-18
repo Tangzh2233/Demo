@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.dao.mapper.ideaDemo.UserMapper">
-    <!--<cache type="com.edu.JavaLearning.算法.RedisCache" eviction="LRU" flushInterval="60000" size="1024" />-->
+    <cache type="com.edu.JavaLearning.算法.RedisCache" eviction="LRU" flushInterval="60000" size="1024" />
     <resultMap id="User" type="com.edu.dao.domain.User">
         <result property="id" column="id"></result>
         <result property="username" column="username"></result>

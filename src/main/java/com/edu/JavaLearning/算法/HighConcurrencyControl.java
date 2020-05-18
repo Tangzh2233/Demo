@@ -111,7 +111,7 @@ public class HighConcurrencyControl {
 
     public boolean acquire(String id) {
         //限流。1s请求未成功置为失败
-        if(rateLimiter.tryAcquire(2000, TimeUnit.MILLISECONDS)){
+        if (rateLimiter.tryAcquire(2000, TimeUnit.MILLISECONDS)) {
             String num = RedisUtil.get(id);
             if (StringUtils.isNotBlank(num) && Integer.valueOf(num) > 0) {
                 if (flag) {
@@ -132,7 +132,7 @@ public class HighConcurrencyControl {
                 if (Integer.valueOf(num) <= 0 && flag) {
                     synchronized (this) {
                         if (flag) {
-                            distributedConsistency.updateByUserNo(id,0);
+                            distributedConsistency.updateByUserNo(id, 0);
                             flag = false;
                         }
                     }

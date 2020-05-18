@@ -40,16 +40,16 @@ public class ZookeeperLock {
         }
     }
 
-    private final Object lockLock = new Object();
+    private final static Object lockLock = new Object();
     /**
      * 线程变量及对应path保存
      */
-    private ConcurrentMap<Thread, String> threadData = new ConcurrentHashMap<>();
+    private static ConcurrentMap<Thread, String> threadData = new ConcurrentHashMap<>();
 
     /**
      * 事件监听
      */
-    private IZkDataListener listener = new IZkDataListener() {
+    private static IZkDataListener listener = new IZkDataListener() {
 
         @Override
         public void handleDataChange(String s, Object o) throws Exception {
@@ -119,6 +119,7 @@ public class ZookeeperLock {
         }
         return false;
     }
+
 
     private void unLock() {
         String path = threadData.get(Thread.currentThread());

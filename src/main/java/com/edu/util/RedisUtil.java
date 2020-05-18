@@ -8,6 +8,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * @author Tangzhihao
@@ -215,6 +216,16 @@ public class RedisUtil {
             jedis = pool.getResource();
             return jedis.hset(key,field,value);
         }finally {
+            close(jedis);
+        }
+    }
+
+    public static List<String> lrange(String key, int from) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lrange(key, from, jedis.llen(key));
+        } finally {
             close(jedis);
         }
     }

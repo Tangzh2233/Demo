@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletResponse;
  * @date: 2018/5/24 14:19 //拦截器中注入bean为null的解决方法
  * @description:https://blog.csdn.net/qq_33206732/article/details/78422157
  */
-public class LoginIntercepotr implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
-    private final static Logger logger = LoggerFactory.getLogger(LoginIntercepotr.class);
+    private final static Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
     @Resource
     private ILoginService loginService;
     @Value("${redis_key_expire_time}")

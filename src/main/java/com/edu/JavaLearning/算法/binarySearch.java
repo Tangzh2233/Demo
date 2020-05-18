@@ -22,8 +22,8 @@ public class binarySearch {
 
 //        System.out.println(binary(data,52));
 //        System.out.println(getMaxMin(1680,640));
-        System.out.println(feBo(10) + " N = " + N);
-        System.out.println(feBo2(1, 1, 10) + " N2 = " + N2);
+        System.out.println(feBo(6) + " N = " + N);
+        System.out.println(feBo2(1, 1, 3) + " N2 = " + N2);
         System.out.println(recursiveSum(dataA));
     }
 
@@ -91,7 +91,7 @@ public class binarySearch {
 
     /**
      * 斐波拉切 - 尾递归
-     *
+     * f1 = 1 f2=1 f3=2 f4=3 f5=5 f6=8
      * @return f(n) = f(n-1) + f(n-2)
      * 时间复杂度 O(n)
      */
@@ -146,6 +146,17 @@ public class binarySearch {
             data[high] = data[low];
         }
         return null;
+    }
+
+    /**
+     * data 中是否存在 sum = data[i] + data[j] + data[k]
+     *
+     * @param data
+     * @param sum
+     * @return
+     */
+    private static int serarchSum(int[] data, int sum) {
+        return 0;
     }
 
 }

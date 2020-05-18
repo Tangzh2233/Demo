@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.javaNetProgram;
+package com.edu.JavaLearning.io.nio;
 
 
 import org.apache.commons.io.IOUtils;

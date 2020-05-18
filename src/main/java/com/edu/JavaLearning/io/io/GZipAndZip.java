@@ -1,4 +1,4 @@
-package com.edu.JavaLearning.javaNetProgram;
+package com.edu.JavaLearning.io.io;
 
 import java.io.*;
 import java.util.zip.*;

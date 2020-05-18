@@ -197,7 +197,7 @@ public class SortList {
      * 快速排序
      * 最佳|平均时间复杂度: O(n log n)
      * 最差:O(n^2)
-     * 空间复杂度: 最佳O(log n) 最差O(n)
+     * 空间复杂度: 最佳O(log n) 最差O(n^2)
      *
      * @param data
      */
@@ -281,6 +281,43 @@ public class SortList {
     }
 
     private static void swap(int[] data, int from, int to) {
+        int temp = data[from];
+        data[from] = data[to];
+        data[to] = temp;
+    }
+
+
+    public static int main(int[] data){
+        int length = data.length;
+        if(length < 3){
+            return 0;
+        }
+        for(int i = length/2-1;i>=0;i--){
+            heap(data,i,length);
+        }
+        for(int j=length-1;j>0;j--){
+            swap2(data,0,j);
+            heap(data,0,j);
+        }
+        return data[2];
+    }
+    public static void heap(int[] data,int index,int length){
+        int root = data[index];
+        for(int i = 2*index + 1;i<length;i=2*i+1){
+            if(i+1< length && data[i+1] > data[i]){
+                i++;
+            }
+            if(data[i] > root){
+                data[index] = data[i];
+                index = i;
+            }else{
+                break;
+            }
+        }
+        data[index] = root;
+    }
+
+    public static void swap2(int[] data,int from,int to){
         int temp = data[from];
         data[from] = data[to];
         data[to] = temp;
