@@ -20,6 +20,6 @@
     <bean id="dubboProviderImpl" class="com.edu.service.impl.DubboProviderImpl" />
     <dubbo:service  interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" delay="1"/>
     <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000" cluster="failfast" init="true"/>
-    <bean id="dubboCode" class="com.edu.JavaLearning.spring.DubboCode" />
+    <!--<bean id="dubboCode" class="com.edu.JavaLearning.spring.DubboCode" />-->
     <!--<dubbo:reference id="merchantOperApi" interface="com.jiupai.accquery.api.mmc.MerchantOperApi" cluster="failfast" check="false" timeout="50000" />-->
 </beans>

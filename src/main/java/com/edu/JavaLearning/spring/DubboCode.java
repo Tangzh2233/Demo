@@ -1,6 +1,13 @@
 package com.edu.JavaLearning.spring;
 
+import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.MethodConfig;
+import com.alibaba.dubbo.config.ReferenceConfig;
+import com.alibaba.dubbo.registry.Registry;
+import com.alibaba.dubbo.registry.dubbo.DubboRegistryFactory;
 import com.edu.Api.DubboProviderApi;
+import com.google.common.collect.Lists;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.annotation.Resource;
@@ -22,10 +29,32 @@ public class DubboCode {
         client.invoke();
     }
 
+    /**
+     * 代码dubbo调用
+     */
+    public void dubboInvoke(){
+        ApplicationConfig config = new ApplicationConfig();
+        config.setName("app");
+
+        ReferenceConfig<DubboProviderApi> rf = new ReferenceConfig<>();
+        rf.setInterface(DubboProviderApi.class);
+        rf.setUrl("dubbo://127.0.0.1:20880/com.edu.Api.DubboProviderApi");
+        rf.setApplication(config);
+        rf.setVersion("1.0.0");
+
+        MethodConfig methodConfig = new MethodConfig();
+        methodConfig.setAsync(false);
+        methodConfig.setName("myProvider");
+
+        rf.setMethods(Lists.newArrayList(methodConfig));
+        rf.get().myProvider();
+    }
+
     public void invoke(){
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/xml/dubbo.xml");
         DubboProviderApi bean = (DubboProviderApi)context.getBean("dubboProviderApi");
         bean.myProvider();
-//        dubboProviderApi.myProvider();
+
+        dubboInvoke();
     }
 }
