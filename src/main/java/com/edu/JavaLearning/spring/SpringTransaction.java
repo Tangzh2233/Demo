@@ -6,6 +6,10 @@ import com.edu.dao.mapper.ideaDemo.UserMapper;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.Resource;
 import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.sql.*;
@@ -53,7 +58,7 @@ import java.util.Set;
  *   扫描<mybatis:scan />中base-package路径下的Mapper.class,构建BeanDefinition 并对这些Mapper.clss进行加工
  *   @see org.mybatis.spring.mapper.ClassPathMapperScanner#doScan(String...)           构建BeanDefinitionHolder
  *   @see org.mybatis.spring.mapper.ClassPathMapperScanner#processBeanDefinitions(Set) 加工BeanDefinition。
- *                                                       设置BeanDefinition的BeanClass为MapperFactory,autowireMode为byType
+ *                                                       设置BeanDefinition的BeanClass为MapperFactoryBean,autowireMode为byType
  * 3.创建SqlSessionFactoryBean。初始化解析基本配置和 *.xml。全部封装在Configuration中
  *   @see SqlSessionFactoryBean#buildSqlSessionFactory() SqlSessionFactoryBean创建,
  *   解析mapperLocations属性中的Mapper.xml文件。
@@ -72,11 +77,15 @@ import java.util.Set;
  *
  *
  **/
+@Aspect
 public class SpringTransaction {
 
     private final static Logger log = LoggerFactory.getLogger(SpringTransaction.class);
 
     private UserMapper userMapper;
+
+    @Resource
+    private TransactionTemplate transactionTemplate;
 
     /**
      * @see Introspector#getBeanInfo()
@@ -110,14 +119,29 @@ public class SpringTransaction {
         //todo execute sql
     }
 
-    @Transactional
     public void updateDataMethodB(){
-        //todo execute sql
+        updateDataMethodC();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateDataMethodC(){
-        //todo execute sql
+        List<User> dataBaseData = new ArrayList<>();
+        dataBaseData.add(new User("糖糖","1q2w3e4r","100000001"));
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    User user = userMapper.queryUserByUserNo("1001");
+                    System.out.println(user.toString());
+                    userMapper.insertUserList(dataBaseData);
+                    int i = 1 / 0;
+                } catch (Exception e) {
+                    status.setRollbackOnly();
+                    System.out.println("异常了");
+                }
+            }
+        });
+        System.out.println("事务回滚？？");
     }
 
     public static void main(String[] args) {
@@ -128,6 +152,10 @@ public class SpringTransaction {
     public static void executeSpringTx(){
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/xml/mybatis-tx.xml","/xml/springBean.xml");
         SpringTransaction instance = context.getBean(SpringTransaction.class);
+
+        //内部方法调用事务不会生效
+        instance.updateDataMethodB();
+
         List<User> tang = instance.userMapper.getUserByName2("tangzh");
         System.out.println(tang);
         List<User> dataBaseData = new ArrayList<>();

@@ -18,6 +18,8 @@ import java.util.concurrent.Future;
 /**
  * @Author: tangzh
  * @Date: 2019/3/21$ 10:01 AM$
+ *
+ * https://blog.csdn.net/historyasamirror/article/details/5778378
  **/
 public class NIO {
     public static void main(String[] args) throws IOException {
@@ -251,7 +253,7 @@ class Attachment {
 
 
 /**
- * 同步非阻塞型IO + Selector(NIO)
+ * 异步阻塞型IO + Selector(NIO)
  */
 class SelectorSocketServer{
 
@@ -313,6 +315,10 @@ class SelectorSocketServer{
  *      首先，accept() 是一个阻塞操作，当 accept() 返回的时候，代表有一个连接可以使用了，
  *      我们这里是马上就新建线程来处理这个 SocketChannel 了，但是，但是这里不代表对方就将数据传输过来了。
  *      所以，SocketChannel#read 方法将阻塞，等待数据，明显这个等待是不值得的。同理，write 方法也需要等待通道可写才能执行写入操作，这边的阻塞等待也是不值得的。
+ *
+ * BIO主要阻塞点 Server.accept() 即等待数据,内核态等待网卡数据
+ *             SocketChannel.read() 操作系统将内核态数据拷贝至用户态
+ * 这两部都是阻塞的
  */
 class SocketServer{
 
@@ -324,6 +330,7 @@ class SocketServer{
         while (true){
             //获取客户端Socket连接
             SocketChannel socketChannel = serverSocketChannel.accept();
+            socketChannel.configureBlocking(false);
             //新建一个线程处理Socket连接
             SocketHandler socketHandler = new SocketHandler(socketChannel);
             new Thread(socketHandler).start();

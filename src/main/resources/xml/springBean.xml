@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <context:component-scan base-package="com.edu.JavaLearning.spring"/>
+
+    <aop:aspectj-autoproxy />
 
     <!--<bean id="springBean" class="com.edu.JavaLearning.spring.SpringBean"-->
           <!--init-method="init"-->
@@ -23,4 +27,6 @@
     <bean id="distributedConsistency" class="com.edu.JavaLearning.算法.DistributedConsistency"/>
 
     <bean id="springTransaction" class="com.edu.JavaLearning.spring.SpringTransaction" autowire="byType"/>
+
+    <bean id="springAop" class="com.edu.JavaLearning.spring.SpringAop" />
 </beans>

@@ -92,6 +92,7 @@ public class ConcurrentInvoke {
             } catch (Exception e) {
                 //1s未获取数据则移除任务
                 futureList.remove(future);
+                future.cancel(true);
             }
         }
 

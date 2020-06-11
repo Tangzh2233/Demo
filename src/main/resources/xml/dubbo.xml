@@ -14,12 +14,34 @@
     <!--协议类型-->
     <dubbo:protocol name="dubbo" port="20880" />
 
-    <dubbo:provider filter="traceFilter" threadpool="fixed" threads="500" timeout="5000" accepts="5000" retries="3" />
-    <dubbo:consumer loadbalance="roundrobin"  filter="traceFilter"/>
+    <!--
+        queues:阻塞队列
+        accepts:服务方最大可接受的连接数
+        iothreads:io线程池大小(固定大小) NCpu + 1
+        threads:业务线程池业务线程池大小(固定大小)200
+        executes:服务提供者每服务每方法最大可并行执行请求数
+    -->
+    <dubbo:provider filter="traceFilter" threadpool="fixed" threads="500" timeout="5000" iothreads="5" executes="200" accepts="5000" retries="3" queues="10"/>
+
+    <!--
+        LoadBalance:消费者负载均衡策略,
+                    RoundRobin轮询;
+                    Random随机;
+                    LeastActive最少活跃调用数慢的收到更少的请求
+                    ConsistentHash:一致性Hash,相同参数的请求总是落在同一台机器上
+        actives:每服务消费者每服务每方法最大并发调用数
+        connections:对每个提供者的最大连接数，rmi、http、hessian等短连接协议表示限制连接数，dubbo等长连接协表示建立的长连接个数
+    -->
+    <dubbo:consumer loadbalance="roundrobin"  filter="traceFilter" actives="200" connections="10" />
 
     <bean id="dubboProviderImpl" class="com.edu.service.impl.DubboProviderImpl" />
-    <dubbo:service  interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" delay="1"/>
-    <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000" cluster="failfast" init="true"/>
+    <dubbo:service  interface="com.edu.Api.DubboProviderApi" ref="dubboProviderImpl" register="true" version="1.0.0" timeout="20000" delay="1">
+        <dubbo:method name="myProvider" executes="200" />
+    </dubbo:service>
+
+    <dubbo:reference id="dubboProviderApi" interface="com.edu.Api.DubboProviderApi" check="false" version="1.0.0" timeout="10000" cluster="failfast" init="true">
+        <dubbo:method name="myProvider" actives="200"/>
+    </dubbo:reference>
     <!--<bean id="dubboCode" class="com.edu.JavaLearning.spring.DubboCode" />-->
     <!--<dubbo:reference id="merchantOperApi" interface="com.jiupai.accquery.api.mmc.MerchantOperApi" cluster="failfast" check="false" timeout="50000" />-->
 </beans>

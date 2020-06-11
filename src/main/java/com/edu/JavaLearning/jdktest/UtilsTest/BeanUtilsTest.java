@@ -2,6 +2,7 @@ package com.edu.JavaLearning.jdktest.UtilsTest;
 
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 
 import java.util.UUID;
 
@@ -21,10 +22,9 @@ public class BeanUtilsTest {
 
         ModelMapper modelMapper = new ModelMapper();
         Student2 stu2 = modelMapper.map(stu, Student2.class);
-        /*
-        Student2 stu2 = new Student2();
-        BeanUtils.copyProperties(stu,stu2);
-        */
+
+//        Student2 stu2 = new Student2();
+//        BeanUtils.copyProperties(stu,stu2);
 
         System.out.println(stu2.toString());
         UUID uid = UUID.randomUUID();
