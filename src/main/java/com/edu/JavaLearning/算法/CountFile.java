@@ -6,6 +6,7 @@ import org.springframework.cglib.transform.AbstractClassFilterTransformer;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +35,15 @@ public class CountFile {
     public static void main(String[] args) throws InterruptedException {
 
         int nCpu = Runtime.getRuntime().availableProcessors();
-        executorService = Executors.newFixedThreadPool(nCpu * 2);
+        executorService = Executors.newFixedThreadPool(nCpu * 2, new ThreadFactory() {
+
+            private AtomicInteger index = new AtomicInteger(0);
+
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r,"FileReadTask_" + this.index.incrementAndGet());
+            }
+        });
 
         File file = new File("/Users/tangzh/git-space/Demo/src/main/java/com/edu/JavaLearning");
 
@@ -123,6 +132,8 @@ class FileReadTask implements Callable<Map<String, Integer>> {
     public Map<String, Integer> call() throws Exception {
         Map<String, Integer> returnData = new HashMap<>();
         int a = 0, n = 0, s = 0;
+
+        System.out.println(Thread.currentThread().getName() + "读取: " + fileName);
 
         FileReader reader = new FileReader(fileName);
         BufferedReader buffer = new BufferedReader(reader);
