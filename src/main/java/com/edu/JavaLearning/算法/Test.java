@@ -10,25 +10,31 @@ import java.util.concurrent.Executors;
  **/
 public class Test {
 
+    private static int a = 200;
+    private static Object LOCK = new Object();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+    }
+
+    public static void scan() {
         Scanner in = new Scanner(System.in);
         String param = String.valueOf(in.nextLine());
         String[] strData = param.split(",");
         int[] data = new int[strData.length];
-        for(int k = 0;k<strData.length;k++){
+        for (int k = 0; k < strData.length; k++) {
             data[k] = Integer.valueOf(strData[k]);
         }
         int length = data.length;
-        if(length < 3){
+        if (length < 3) {
             return;
         }
-        for(int i = length/2-1;i>=0;i--){
-            heap(data,i,length);
+        for (int i = length / 2 - 1; i >= 0; i--) {
+            heap(data, i, length);
         }
-        for(int j=length-1;j>0;j--){
-            swap(data,0,j);
-            heap(data,0,j);
+        for (int j = length - 1; j > 0; j--) {
+            swap(data, 0, j);
+            heap(data, 0, j);
         }
         System.out.println(data[2]);
     }

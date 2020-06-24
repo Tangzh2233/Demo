@@ -256,6 +256,7 @@ public class InOutPutStream {
      * NIO2方式读取文件
      * 磁盘 -> 内核缓冲区 -> native堆 -> java堆(ByteBuffer)
      * 直接inChannel -> outChannel 一次性write
+     * 零拷贝
      *
      * @throws IOException
      */

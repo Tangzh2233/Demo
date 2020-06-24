@@ -1,6 +1,5 @@
 package com.edu.JavaLearning.collection;
 
-import org.aspectj.apache.bcel.util.ClassLoaderRepository;
 import sun.misc.Unsafe;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.SoftReference;
@@ -10,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * [HashMap,HashTable,LinkedHashMap,WeakHashMap,ConcurrentHashMap,HashSet,TreeMap]
@@ -395,7 +393,7 @@ public class MapLearning {
         System.gc();
         System.out.println(cache.size());
 //      ===================TreeMap===================
-        ValueCompator<String, String> valueCompator = new ValueCompator<String, String>(treeMap);
+        ValueCompactor<String, String> valueCompactor = new ValueCompactor<String, String>(treeMap);
         treeMap.put("1","9");treeMap.put("2","8");
         treeMap.put("3","7");
         treeMap.put("4","6");treeMap.put("5","5");treeMap.put("6","4");
@@ -509,11 +507,11 @@ class LocalContextCache<K,V>{
     }
 
 }
-class ValueCompator<K,V> implements Comparator<K>{
+class ValueCompactor<K,V> implements Comparator<K>{
 
     private Map<K,V> map;
 
-    ValueCompator(Map<K,V> map){
+    ValueCompactor(Map<K,V> map){
         this.map = map;
     }
 

@@ -2,6 +2,7 @@ package com.edu.JavaLearning.设计模式.创建型模式.原型模式;
 
 import lombok.Data;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import java.util.Map;
  *
  * 浅clone及深clone
  * https://blog.csdn.net/qpzkobe/article/details/81007463
+ * 浅拷贝只拷贝基本数据类型
+ * 属性是对象的只做引用拷贝.所以当一个clone对象对属性对象修改时,其他clone也会感知这个修改
  **/
 public interface PrototypeInterFace extends Cloneable{
     void disPlay();
@@ -40,11 +43,17 @@ abstract class PrototypeManager{
 }
 
 @Data
-class PrototypeInstanceA implements PrototypeInterFace {
+class PrototypeInstanceA implements PrototypeInterFace,Serializable {
 
     public static String key = PrototypeInstanceA.class.getName();
 
     private String id;
+
+    private PrototypeInstanceB prototypeInterFace;
+
+    private static transient byte[] objectInput;
+
+    private static transient volatile boolean isInit = false;
 
     static {
         //加入管理器
@@ -54,8 +63,9 @@ class PrototypeInstanceA implements PrototypeInterFace {
     private PrototypeInstanceA() {
     }
 
-    public PrototypeInstanceA(String id) {
+    public PrototypeInstanceA(String id,PrototypeInstanceB prototypeInterFace) {
         this.id = id;
+        this.prototypeInterFace = prototypeInterFace;
     }
 
     @Override
@@ -72,14 +82,58 @@ class PrototypeInstanceA implements PrototypeInterFace {
         return null;
     }
 
+    /**
+     * 深clone实现,file对象文件
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public PrototypeInterFace deepClone() throws IOException, ClassNotFoundException {
+        FileOutputStream outputStream = new FileOutputStream("/data/" + this.getClass().getSimpleName());
+        ObjectOutputStream stream = new ObjectOutputStream(outputStream);
+        stream.writeObject(this);
+
+        FileInputStream inputStream = new FileInputStream("/data/" + this.getClass().getSimpleName());
+        ObjectInputStream stream1 = new ObjectInputStream(inputStream);
+        return (PrototypeInterFace)stream1.readObject();
+    }
+
+    /**
+     * 深clone实现,byte数组
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public PrototypeInterFace deepClone2() throws IOException, ClassNotFoundException {
+        if(!isInit){
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
+            ObjectOutputStream stream = new ObjectOutputStream(outputStream);
+            stream.writeObject(this);
+            objectInput = outputStream.toByteArray();
+            isInit = true;
+        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(objectInput);
+        ObjectInputStream stream1 = new ObjectInputStream(inputStream);
+        return (PrototypeInterFace)stream1.readObject();
+    }
+
+    public PrototypeInstanceB getPrototypeInterFace() {
+        return prototypeInterFace;
+    }
+
+    public void setPrototypeInterFace(PrototypeInstanceB prototypeInterFace) {
+        this.prototypeInterFace = prototypeInterFace;
+    }
 }
 
 @Data
-class PrototypeInstanceB implements PrototypeInterFace{
+class PrototypeInstanceB implements PrototypeInterFace,Serializable{
 
     public static String key = PrototypeInstanceB.class.getName();
 
     private String name;
+
+    private PrototypeInstanceB prototypeInterFace;
 
     static {
         //加入管理器
@@ -91,6 +145,14 @@ class PrototypeInstanceB implements PrototypeInterFace{
 
     public PrototypeInstanceB(String name) {
         this.name = name;
+    }
+
+    public PrototypeInstanceB getPrototypeInterFace() {
+        return prototypeInterFace;
+    }
+
+    public void setPrototypeInterFace(PrototypeInstanceB prototypeInterFace) {
+        this.prototypeInterFace = prototypeInterFace;
     }
 
     @Override
@@ -107,15 +169,28 @@ class PrototypeInstanceB implements PrototypeInterFace{
         }
         return null;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 
 class main {
 
-    public static void main(String[] args) {
-        PrototypeInstanceA prototype = new PrototypeInstanceA("1号");
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         PrototypeInstanceB instanceB = new PrototypeInstanceB("原型");
+        PrototypeInstanceA prototype = new PrototypeInstanceA("1号",instanceB);
 
-        PrototypeInterFace clone = prototype.clone();
+        PrototypeInstanceA clone = (PrototypeInstanceA)prototype.deepClone2();
+        PrototypeInstanceA clone2 = (PrototypeInstanceA)prototype.deepClone2();
+        prototype.getPrototypeInterFace().disPlay();
+        clone.getPrototypeInterFace().setName("哈哈哈");
+        clone2.getPrototypeInterFace().setName("啧啧啧");
+        prototype.getPrototypeInterFace().disPlay();
         clone.disPlay();
 
         PrototypeInterFace cloneInstance = PrototypeManager.getCloneInstance(PrototypeInstanceA.key);

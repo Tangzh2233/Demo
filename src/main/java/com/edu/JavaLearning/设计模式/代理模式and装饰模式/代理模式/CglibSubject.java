@@ -52,7 +52,7 @@ interface Cglib{
 
 /**
  * CGLIB解析
- * wiki:https://www.cnblogs.com/loveer/p/11588126.html
+ * https://www.cnblogs.com/loveer/p/11588126.html
  */
 abstract class CglibUniProxy implements
         MethodInterceptor,

@@ -13,10 +13,18 @@ public class Test {
     private static Jedis jedis = new Jedis();
     private Object lock = new Object();
     private volatile boolean flag = false;
+    private volatile static int a = 202;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        while (true){
+            System.out.println(test());
+            Thread.sleep(4000);
+        }
+    }
 
+    public static String test(){
+        return a + "hahahah";
     }
 
     public boolean get(String id){

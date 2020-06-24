@@ -8,8 +8,8 @@
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!--开启注解处理器-->
-    <!--<context:annotation-config />-->
+    开启注解处理器
+    <context:annotation-config />
     <!--开启组件自动扫描,扫描路径由base-package属性制定-->
     <!--<context:component-scan base-package="testPagePath"/>-->
     <!--开启基于@AspectJ切面注解处理器-->
