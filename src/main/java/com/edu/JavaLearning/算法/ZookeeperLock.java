@@ -44,7 +44,7 @@ public class ZookeeperLock {
     /**
      * 线程变量及对应path保存
      */
-    private static ConcurrentMap<Thread, String> threadData = new ConcurrentHashMap<>();
+    private static ConcurrentMap<Thread, String> threadData = new ConcurrentHashMap<>(256);
 
     /**
      * 事件监听

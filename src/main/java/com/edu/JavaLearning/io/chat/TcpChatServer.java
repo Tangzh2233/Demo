@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketAddress;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author tangzh
@@ -58,6 +60,25 @@ public class TcpChatServer {
     private void openServer(int port) {
         ServerBootstrap bootstrap = new ServerBootstrap();
         int nCpu = Runtime.getRuntime().availableProcessors();
+        if(useEpool()){
+            boss = new EpollEventLoopGroup(1, new ThreadFactory() {
+                private AtomicInteger threadIndex = new AtomicInteger(0);
+
+                @Override
+                public Thread newThread(Runnable r) {
+                    return new Thread("TcpChatBossEPoolThread-" + this.threadIndex.incrementAndGet());
+                }
+            });
+        } else {
+            boss = new NioEventLoopGroup(1, new ThreadFactory() {
+                private AtomicInteger threadIndex = new AtomicInteger(0);
+
+                @Override
+                public Thread newThread(Runnable r) {
+                    return new Thread("TcpChatBossNIOThread-" + this.threadIndex.incrementAndGet());
+                }
+            });
+        }
         boss = useEpool() ? new EpollEventLoopGroup(1) : new NioEventLoopGroup(1);
         worker = useEpool() ? new EpollEventLoopGroup(nCpu) : new NioEventLoopGroup(nCpu);
         bootstrap.group(boss, worker)
