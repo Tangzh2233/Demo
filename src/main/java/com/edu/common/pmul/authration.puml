@@ -1,0 +1,42 @@
+@startuml
+App -> drugStore:提交审核
+drugStore --> drugStore:DB数据保存
+drugStore -> platform: ocrReq(imgUrl)
+platform --> drugStore: ocrResp(idNo)
+
+alt ocrSuccess
+    drugStore --> drugStore: DB数据更新IdNo
+    drugStore -> platform: 发起电信3要素比对(accountId,mobile)
+    platform --> drugStore: telecomResp
+
+    alt telecomRespSuccess
+       drugStore -> platform: 手机验证码校验
+       platform --> drugStore: resp
+       alt checkPhoneSuccess
+          drugStore --> App: 提交审核完成
+       end checkPhoneFail
+          drugStore -> platform: 发起人脸识别
+          platform --> drugStore: 人脸识别地址返回
+          drugStore --> App: 人脸识别地址返回
+          App -> Esign: 提交人脸视频
+          Esign -> drugStore: 回调通知识别结果
+          drugStore --> drugStore:保存人脸识别结果
+    else fail
+       drugStore -> platform: 发起人脸识别
+       platform --> drugStore: 人脸识别地址返回
+       drugStore --> App: 人脸识别地址返回
+       App -> Esign: 提交人脸视频
+       Esign -> drugStore: 回调通知识别结果
+       drugStore --> drugStore:保存人脸识别结果
+    end
+else ocrFail
+    drugStore -> platform: 发起人脸识别
+    platform --> drugStore: 人脸识别地址返回
+    drugStore --> App: 人脸识别地址返回
+    App -> Esign: 提交人脸视频
+    Esign -> drugStore: 回调通知识别结果
+    drugStore --> drugStore:保存人脸识别结果
+end
+
+
+@enduml

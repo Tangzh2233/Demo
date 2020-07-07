@@ -2,12 +2,14 @@ package com.edu.util;
 
 import com.alibaba.fastjson.JSON;
 import com.edu.dao.domain.User;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -42,6 +44,11 @@ public class ParamsCheckUtil {
         user.setId(1001);
         user.setPassword("23232333");
         System.out.println(user.toString());
-        ParamsCheckUtil.check(user);
+//        ParamsCheckUtil.check(user);
+        paramsCheck("");
+    }
+
+    public static void paramsCheck(@NotBlank(message = "userId不可为空") String userId){
+        ParamsCheckUtil.check(userId);
     }
 }

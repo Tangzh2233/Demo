@@ -6,10 +6,23 @@
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
 
-    <mybatis:scan base-package="com.edu.dao.mapper.ideaDemo" />
+<!--    <mybatis:scan base-package="com.edu.dao.mapper" />-->
+
+    <!--使用Tk框架的切入点,即mybatis的MapperScannerConfigurer修改为tk.mybatis的MapperScannerConfigurer-->
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.edu.dao.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="properties">
+            <value>
+                wrapKeyword=`{0}`
+                enumAsSimpleType=true
+            </value>
+        </property>
+    </bean>
+
 	<!-- druid连接池 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/ideademo"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/ideademo?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false"/>
         <property name="username" value="root"/>
         <property name="password" value="12345678"/>
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />

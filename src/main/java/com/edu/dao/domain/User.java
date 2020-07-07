@@ -177,5 +177,4 @@ public class User implements Serializable,Comparable<User>{
         System.out.println("17010206231".replaceAll("(\\d{3})\\d{4}(\\d{4})","$2****$1"));
     }
 
-
 }

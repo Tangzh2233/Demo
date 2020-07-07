@@ -70,6 +70,7 @@ public class HttpClientUtil2 {
         connectionManager.setDefaultMaxPerRoute(MAX_ROUTE_CONNECTIONS);
         client = HttpClients.custom().setConnectionManager(connectionManager)
                 .setDefaultRequestConfig(defaultRequestConfig).build();
+
     }
 
 
