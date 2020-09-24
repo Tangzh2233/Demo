@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * [HashMap,HashTable,LinkedHashMap,WeakHashMap,ConcurrentHashMap,HashSet,TreeMap]
@@ -348,7 +350,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @Date: 2018/11/16$ 下午5:18$
  **/
 public class MapLearning {
-    private static HashMap hashMap = new HashMap(19) ;
+    private static HashMap<String,String> hashMap = new HashMap<>(19) ;
     private HashMap unsafeMap = new HashMap();
     private static Hashtable hashtable = new Hashtable();
     private static LinkedHashMap linkedHashMap = new LinkedHashMap();
@@ -362,6 +364,7 @@ public class MapLearning {
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws InterruptedException {
+
         concurrentSkipListMap.put("id","001");
         concurrentSkipListMap.put("name","dog");
         concurrentSkipListMap.put("age","24");

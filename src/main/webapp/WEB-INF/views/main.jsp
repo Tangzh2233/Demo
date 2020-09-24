@@ -100,6 +100,27 @@
     }
 
 </script>
+<script type="text/javascript">
+    var socket = new WebSocket('ws://127.0.0.1:8888/demo/websocket');
+
+    socket.onopen = function(event){
+        console.log(event);
+        socket.send('websocket client connect test');
+    }
+
+    socket.onclose = function(event){
+        console.log(event);
+    }
+
+    socket.onerror = function(event){
+        console.log(event);
+    }
+
+    socket.onmessage = function(event){
+        console.log(event)
+        div.innerHTML += (' @_@ ' + event.data + ' ~_~ ');
+    }
+</script>
 <div class="Tag-body"style="width: 100%;">
     <div class="Tag-container" style="width: 95%;border: 1px solid black;">
         <!-- 网站公告提示 -->

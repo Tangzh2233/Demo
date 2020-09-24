@@ -5,6 +5,7 @@ import com.edu.dao.domain.Dlog;
 import com.edu.dao.domain.User;
 import com.edu.dao.mapper.ideaDemo.UserMapper;
 import com.edu.service.ILoginService;
+import com.edu.service.message.WebSocketHandler;
 import com.edu.service.quartz.DailyJob;
 import com.edu.util.DateUtil;
 import com.edu.util.ZipFileUtil;
@@ -14,25 +15,21 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tools.zip.ZipUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * @author Tangzhihao
  * @date 2018/3/13
  */
 @Controller
-@RequestMapping("/myspringboot/test")
+@RequestMapping("/test")
 public class TestController {
 
     @Resource
@@ -42,6 +39,8 @@ public class TestController {
     @Resource
     private UserMapper userMapper;
     public String userId;
+    @Resource
+    private WebSocketHandler webSocketHandler;
 
 
     @RequestMapping("/upFile.html")
@@ -153,6 +152,11 @@ public class TestController {
         os.flush();
         os.close();
         ZipFileUtil.deleteDir(new File("/data/merchant/cache"));
+    }
+
+    @RequestMapping("/pushMessage")
+    public void pushMessage(){
+        webSocketHandler.pushMessage("10001","啦啦啦啦");
     }
 
 }

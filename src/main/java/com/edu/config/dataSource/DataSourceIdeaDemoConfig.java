@@ -5,8 +5,8 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -19,8 +19,8 @@ import javax.sql.DataSource;
  * @author Tangzhihao
  * @date 2018/3/23
  */
-@Configuration
-@MapperScan(basePackages = "com.edu.dao.mapper.ideaDemo",sqlSessionTemplateRef = "ideaDemoSqlSessionTemplate")
+//@Configuration
+//@MapperScan(basePackages = "com.edu.dao.mapper.ideaDemo",sqlSessionTemplateRef = "ideaDemoSqlSessionTemplate")
 //给dao层指定mapper注入sqlSessionTemplate
 public class DataSourceIdeaDemoConfig {
 

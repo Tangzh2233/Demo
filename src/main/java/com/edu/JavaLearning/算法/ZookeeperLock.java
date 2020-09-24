@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  * @date 2020/4/7 10:10 PM
  * zookeeper 分布式锁实现。wait()与notify()重新认知
  **/
-@Component
+//@Component
 public class ZookeeperLock {
 
     private final static Logger log = LoggerFactory.getLogger(ZookeeperLock.class);

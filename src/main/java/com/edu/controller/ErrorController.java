@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import com.edu.util.annotation.PermissionLimit;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-public class ErrorController implements org.springframework.boot.autoconfigure.web.ErrorController{
+public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
 
     private static final String ERROR_PATH = "/error";
 
     @RequestMapping(value=ERROR_PATH)
+    @PermissionLimit(limit = false)
     public String handleError(){
         return "404";
     }

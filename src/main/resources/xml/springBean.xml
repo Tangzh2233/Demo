@@ -9,24 +9,22 @@
 
     <context:component-scan base-package="com.edu.JavaLearning.spring"/>
 
-    <aop:aspectj-autoproxy />
-
-    <!--<bean id="springBean" class="com.edu.JavaLearning.spring.SpringBean"-->
-          <!--init-method="init"-->
-          <!--destroy-method="destroy"-->
-          <!--scope="singleton">-->
-        <!--<property name="beanId" value="1314" />-->
-        <!--<property name="beanName" value="springBean"/>-->
-        <!--<property name="data" value="SpringBean生命周期学习"/>-->
-    <!--</bean>-->
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
 
     <!--<bean id="springEventListener" class="com.edu.JavaLearning.spring.SpringEventPublishListener"/>-->
     <!--Spring Bean 注入中的autowire="byName" or autowire="byType" 当不使用@Resource @Autowired时-->
     <!--实际上是用public的 set方法来确定具体注入哪些bean-->
     <bean id="highConcurrencyControl" class="com.edu.JavaLearning.算法.HighConcurrencyControl" autowire="byName" />
     <bean id="distributedConsistency" class="com.edu.JavaLearning.算法.DistributedConsistency"/>
-
     <bean id="springTransaction" class="com.edu.JavaLearning.spring.SpringTransaction" autowire="byType"/>
-
     <bean id="springAop" class="com.edu.JavaLearning.spring.SpringAop" />
+
+    <!--
+     方法级别数据校验
+        1.添加MethodValidationPostProcessor
+        2.在需要的校验的Bean上添加@Validated注解
+        3.方法添加相应参数添加相应@NotNull @NotBlank等
+    -->
+    <bean id="methodValidationPostProcessor" class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor" />
+
 </beans>

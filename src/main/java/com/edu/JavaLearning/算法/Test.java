@@ -14,7 +14,11 @@ public class Test {
     private static Object LOCK = new Object();
 
     public static void main(String[] args) throws InterruptedException {
-
+        while (true){
+            Thread thread = Thread.currentThread();
+            System.out.println(thread.getName() + " print: " + a);
+            Thread.sleep(5000);
+        }
     }
 
     public static void scan() {

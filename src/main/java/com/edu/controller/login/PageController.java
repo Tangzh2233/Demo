@@ -1,5 +1,6 @@
 package com.edu.controller.login;
 
+import com.edu.util.annotation.PermissionLimit;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -8,15 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2018/5/17
  */
 @Controller
-@RequestMapping("/page")
 public class PageController {
 
     @RequestMapping("/login.html")
+    @PermissionLimit(limit = false)
     public String gologin(){
         return "login";
     }
 
     @RequestMapping("/register.html")
+    @PermissionLimit(limit = false)
     public String goregister(){
         return "register";
     }

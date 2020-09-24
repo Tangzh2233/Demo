@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    username: root
+    password: 12345678
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  key:
+    expire:
+      time: 3000
+  session:
+    key: sessionKey
+  subscribe:
+    channel: demo_websocket_channel
+
+demo:
+  jdbchost: 127.0.0.1:3306/ideademo
+
+
+
+

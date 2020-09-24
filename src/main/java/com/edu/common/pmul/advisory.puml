@@ -1,0 +1,42 @@
+@startuml
+C端 -> monomer: req 提交创建支付订单
+monomer --> monomer: 数据校验,药品检查
+alt 有处方药
+    monomer -> DrugStore: req 药品检查
+        alt 检查通过
+            monomer --> C端: resp 提示存在处方药品，展示问诊信息添加组件
+            C端 -> monomer: req 用药人信息保存｜页面初始化获取用药人信息
+            monomer --> C端: resp 问诊信息数据初始化
+            C端 -> monomer: req 用药人新增
+            monomer -> DrugStore: req 用药人信息保存
+            DrugStore --> monomer: resp clientPatientId
+            C端 -> monomer:req 订单提交
+            monomer --> monomer: rpc创建订单
+            monomer -> DrugStore: req 药品+用药人+申请人创建咨询单
+            DrugStore --> monomer: resp advisoryId+imGroupId
+            monomer --> monomer: 数据组装
+            monomer --> C端: resp advisoryId+imGroupId
+            C端 -> IMServer: req 发起会话
+            loop
+                IMServer -> DrugStore: 问诊环节
+                DrugStore --> IMServer: 问诊环节
+            end
+            DrugStore --> DrugStore: 医生审核通过｜失败
+            DrugStore --> DrugStore: 订单变化推送mq
+            DrugStore --> monomer: http invoke 咨询单Id
+            monomer -> DrugStore: 咨询单数据查询
+            DrugStore --> monomer: 获取咨询单状态及信息
+            monomer --> monomer: 更新支付订单状态
+
+            C端 -> monomer: 确认支付
+            monomer --> monomer: do pay Service
+            monomer -> C端: 支付成功
+        else 检查未通过
+            monomer --> C端: resp下单失败
+
+else 无处方药
+    monomer --> monomer: 执行正常下单支付流程
+    monomer --> C端: resp
+
+end
+@enduml

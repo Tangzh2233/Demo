@@ -12,12 +12,36 @@ import java.util.List;
  * Created by Administrator on 2017/9/14.
  */
 public interface ILoginService {
-    User login(String name,double amout);
+    /**
+     * login
+     * @param name
+     * @param pwd
+     * @param request
+     * @param response
+     * @return
+     */
     ResultData userLogin(String name, String pwd, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * register
+     * @param user
+     * @return
+     */
     ResultData userRegister(User user);
+
+    /**
+     * loginOut
+     * @param request
+     * @param response
+     * @param token
+     * @return
+     */
     ResultData loginOut(HttpServletRequest request,HttpServletResponse response,String token);
-    <T> T select(T t);
-    int addDlog(Dlog dlog);
+
+    /**
+     * check
+     * @param token
+     * @return
+     */
     ResultData checkToken(String token);
-    int inserListUsers();
 }

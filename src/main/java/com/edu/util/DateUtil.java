@@ -4,8 +4,11 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by tangzh on 2018/8/3.
@@ -17,6 +20,9 @@ public class DateUtil {
     private final static String YYYYMMDD = "yyyyMMdd";
     private final static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
     private final static String YYYYMMDDHHSS = "yyyy-MM-dd:HH:mm:ss";
+    private final static String DEFAULT_DATE = "1970-01-01:00:00:00";
+
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(YYYYMMDDHHSS);
 
 
     public static String getCurDateForDay(){
@@ -36,6 +42,13 @@ public class DateUtil {
         Date parse = sdf.parse(date);
         System.out.println(parse);
         return parse.getTime();
+    }
+
+    public static String format(LocalDateTime localDateTime){
+        if(Objects.isNull(localDateTime)){
+            return DEFAULT_DATE;
+        }
+        return localDateTime.format(dateTimeFormatter);
     }
 
     /**

@@ -1,0 +1,23 @@
+@startuml
+
+DrugStore --> DrugStore: 咨询单状态变更
+DrugStore --> DrugStore: 是否发送mq
+DrugStore -> OpenPlatform: send mq
+OpenPlatform --> OpenPlatform: mq 数据解析
+OpenPlatform -> DrugStore: rpc 获取咨询单｜处方单信息
+DrugStore --> OpenPlatform: rpc resp
+OpenPlatform --> OpenPlatform: 判断是否为三方订单
+OpenPlatform --> DrugStore: rpc storeId -> company
+OpenPlatform --> OpenPlatform: 获取accessKey
+OpenPlatform --> OpenPlatform: 获取第三方配置信息
+OpenPlatform --> OpenPlatform: 组装调用信息
+OpenPlatform -> 第三方: http Req
+第三方 --> OpenPlatform: http Resp
+
+alt invokeSuccess
+    OpenPlatform --> OpenPlatform: db save callback_log is_over=1
+else invokeFail
+    OpenPlatform --> OpenPlatform: db save callback_log is_over=0
+    OpenPlatform --> OpenPlatform: 分布式定时任务 补偿调用回调失败信息 maxTry=10
+end
+@enduml

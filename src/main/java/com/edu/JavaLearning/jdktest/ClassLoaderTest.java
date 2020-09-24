@@ -1,6 +1,8 @@
 package com.edu.JavaLearning.jdktest;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Tangzhihao
@@ -10,11 +12,15 @@ import java.net.URL;
 public class ClassLoaderTest {
 
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class<?> forName = Class.forName("com.edu.JavaLearning.jdktest.ClassLoaderTest");
-        Object instance = forName.newInstance();
-        new ClassLoaderTest().getClassLoader();
-        ClassLoader loader = ClassLoaderTest.class.getClassLoader();
-        System.out.println("/tang".substring(1));
+//        Class<?> forName = Class.forName("com.edu.JavaLearning.jdktest.ClassLoaderTest");
+//        Object instance = forName.newInstance();
+//        new ClassLoaderTest().getClassLoader();
+//        ClassLoader loader = ClassLoaderTest.class.getClassLoader();
+//        System.out.println("/tang".substring(1));
+
+        Map<String,String> map = new HashMap<>();
+        map.put("name","tangzh");
+        System.out.println(map.toString());
     }
 
     public ClassLoader getClassLoader(){

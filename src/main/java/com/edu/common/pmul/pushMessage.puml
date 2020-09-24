@@ -1,0 +1,23 @@
+@startuml
+
+
+
+商家 -> saasMonomer:1.用户登陆
+商家 -> saasMonomer:webSocket连接,storeId->userId,userId2
+saasMonomer --> saasMonomer: 2.webSocket数据保存
+
+用户 -> saasMonomer: req提交支付订单
+saasMonomer --> saasMonomer: 问诊、支付流程
+saasMonomer --> saasMonomer: 订单已支付待商家接单
+saasMonomer --> saasMonomer: 推送规则判断
+saasMonomer --> saasMonomer: invoke messagePush
+saasMonomer --> saasMonomer: Redis.hget(storeId,userId)
+saasMonomer --> saasMonomer: getOrderStatus -> MessageService#pushMessage
+saasMonomer --> 商家: pushMessage
+alt 推送失败
+     saasMonomer --> saasMonomer: 失败消息保存orderId,storeId
+     saasMonomer --> saasMonomer: 定时任务补偿推送，查询订单状态
+else 推送成功
+    商家 --> 商家: 语音转化输出
+end
+@enduml

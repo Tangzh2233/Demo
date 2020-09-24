@@ -1,6 +1,9 @@
 package com.edu.JavaLearning.spring;
 
 import com.edu.JavaLearning.算法.HighConcurrencyControl;
+import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,16 +18,21 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author tangzh
  * @version 1.0
  * @date 2019/9/17 5:04 PM
  **/
-@Service("springBean")
+//@Service("springBean")
 public class SpringBean implements InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
+
+    private final static Logger log = LoggerFactory.getLogger(SpringBean.class);
 
     private static ApplicationContext applicationContext;
 
@@ -51,6 +59,7 @@ public class SpringBean implements InitializingBean, DisposableBean, Application
     public SpringBean() {
         System.out.println("无参构造方法执行ing");
     }
+
     public SpringBean(String beanId, String beanName, String data) {
         this.beanId = beanId;
         this.beanName = beanName;
@@ -58,17 +67,16 @@ public class SpringBean implements InitializingBean, DisposableBean, Application
     }
 
 
-    public void init(){
+    public void init() {
         System.out.println("init-method 执行ing");
     }
 
     @Override
-    public void destroy(){
+    public void destroy() {
         System.out.println("destroy-method 执行ing");
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
-    public void print(){
+    public void print() {
         //依赖测试
         publishListener.print();
         System.out.println("类实例成功,print方法执行");
@@ -100,9 +108,14 @@ public class SpringBean implements InitializingBean, DisposableBean, Application
 
 
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/xml/springBean.xml","xml/mybatis-tx.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/xml/springBean.xml", "xml/mybatis-tx.xml");
+        SpringTransaction springTransaction = context.getBean(SpringTransaction.class);
+        System.out.println(springTransaction.hashCode());
         SpringBean bean = context.getBean(SpringBean.class);
         bean.print();
+        bean.doTransaction();
+        SpringTransaction transaction = context.getBean(SpringTransaction.class);
+        transaction.checkTestMethod("啊哈哈");
         //实例化自定义Event
         UserDefinedEvent event = new UserDefinedEvent("hello", "UserDefinedEventPublish");
         //事件发布,注意Listener是否监听到并做出逻辑输出
@@ -122,5 +135,10 @@ public class SpringBean implements InitializingBean, DisposableBean, Application
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
+    }
+
+    @Transactional
+    public void doTransaction(){
+        System.out.println("do Transaction");
     }
 }

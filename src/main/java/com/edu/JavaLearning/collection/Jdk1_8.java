@@ -15,8 +15,10 @@ import java.lang.reflect.Method;
 import java.text.Collator;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 /**
@@ -130,10 +132,30 @@ public class Jdk1_8 implements Serializable {
         lambdas.forEach(MyLambda::staticMethod);
     }
 
+
+    public static void func(String input, Function<Integer,String> intToStrFuc){
+        String apply = intToStrFuc.apply(2123);
+        System.out.println(input + apply);
+    }
+
+    public static void test(){
+        func("aaa", Object::toString);
+    }
+
     public static void collectors(){
         List<Order> orders = initData();
         Double collect = orders.stream().collect(Collectors.averagingDouble(Order::getSeq));
         System.out.println(collect);
+    }
+
+    public static List<Order> crate(int range) {
+        return IntStream.range(0, range)
+                .mapToObj(index -> {
+                    Order order = new Order();
+                    order.setSeq(index);
+                    return order;
+                })
+                .collect(Collectors.toList());
     }
 
 

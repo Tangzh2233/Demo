@@ -4,6 +4,7 @@ import com.edu.common.Constants;
 import com.edu.common.UUIDUtil;
 import com.edu.util.DateUtil;
 import org.slf4j.MDC;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Author: tangzh
  * @Date: 2018/9/30$ 上午10:25$
  **/
+@Component
 public class TraceInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {

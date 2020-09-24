@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 分布式一致性代码实现
  * 此处的补偿可以换成发送MQ的方式自产自销
  **/
-@Component
+//@Component
 public class DistributedConsistency {
 
     private static AtomicInteger atomicInteger = new AtomicInteger(0);

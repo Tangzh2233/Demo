@@ -11,4 +11,6 @@ public class Constants {
     public final static String REQ_URL = "reqUrl";
     public final static String TRACE_ID = "traceId";
     public final static String SYSEXCEPTION = "系统异常";
+
+    public static String USER_TOKEN = "USER_TOKEN";
 }

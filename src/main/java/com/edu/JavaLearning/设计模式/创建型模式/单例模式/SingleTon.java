@@ -12,6 +12,10 @@ package com.edu.JavaLearning.设计模式.创建型模式.单例模式;
 public class SingleTon {
     private static SingleTon singleTon = new SingleTon();
 
+    public SingleTon() {
+        System.out.println("new singleTon");
+    }
+
     public static SingleTon getInstance(){
         return singleTon;
     }
@@ -21,7 +25,7 @@ public class SingleTon {
      * @date: 2018/4/24
      * @description:静态内部类的方式构建，解决饿汉式的缺点，并且线程安全
      */
-    public static class SingleTonHelper{
+    static class SingleTonHelper{
         static SingleTon singleTonC = new SingleTon();
     }
     public static SingleTon getInstanceC(){

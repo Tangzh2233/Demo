@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 /**
  * @Author: tangzh
  * @Date: 2019/4/26$ 7:44 PM$
- * @SPI Dubbo SPI接口标识
+ * @SPI dubbo SPI接口标识
  **/
 @SPI
 public interface JavaSpi {

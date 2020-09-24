@@ -3,11 +3,9 @@ package com.edu.util.httpInvoke;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.edu.common.result.ResultData;
-import com.edu.dao.domain.User;
 import com.edu.util.DateUtil;
 import com.edu.util.HttpClientUtil2;
-import com.google.gson.JsonObject;
-import com.rrx.util.Md5Util;
+import com.edu.util.Md5Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

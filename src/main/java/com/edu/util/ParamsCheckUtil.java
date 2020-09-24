@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -28,13 +29,35 @@ public class ParamsCheckUtil {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
+    /**
+     * object中的所有注解生效
+     * @param object
+     * @param groups
+     * @param <T>
+     */
     public static <T> void check(T object,Class<?>... groups){
         Set<ConstraintViolation<T>> validate = validator.validate(object, groups);
-        if(validate.isEmpty()){
+        collectException(validate);
+    }
+
+    /**
+     * 单独校验 object中的某个paramName
+     * @param object
+     * @param paramName
+     * @param groups
+     * @param <T>
+     */
+    public static <T> void checkParam(T object,String paramName,Class<?>... groups){
+        Set<ConstraintViolation<T>> validate = validator.validateProperty(object,paramName, groups);
+        collectException(validate);
+    }
+
+    private static  <T> void collectException(Set<ConstraintViolation<T>> violationSet){
+        if(violationSet.isEmpty()){
             return;
         }
-        HashMap<String, String> map = new HashMap<>(validate.size());
-        validate.forEach(item -> map.put(item.getPropertyPath().toString(),item.getMessage()));
+        HashMap<String, String> map = new HashMap<>(violationSet.size());
+        violationSet.forEach(item -> map.put(item.getPropertyPath().toString(),item.getMessage()));
         log.error("参数校验失败 {}", JSON.toJSONString(map));
         throw new IllegalArgumentException(JSON.toJSONString(map));
     }
@@ -42,10 +65,10 @@ public class ParamsCheckUtil {
     public static void main(String[] args) {
         User user = new User();
         user.setId(1001);
-        user.setPassword("23232333");
+        user.setPassword("");
         System.out.println(user.toString());
-//        ParamsCheckUtil.check(user);
-        paramsCheck("");
+        ParamsCheckUtil.checkParam(user,"password");
+//        paramsCheck("");
     }
 
     public static void paramsCheck(@NotBlank(message = "userId不可为空") String userId){

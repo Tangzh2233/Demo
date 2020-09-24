@@ -24,12 +24,12 @@ public class DailyJob {
      * @description:
      * @springboot定时任务[真鸡儿简单!]
      */
-  //@Scheduled(cron = "0 0/2 * * * ?")
-    public void execute(){
+    @Scheduled(cron = "0 0/2 * * * ?")
+    public void execute() {
         logger.info("开始日报发送任务");
         try {
             dailyJobService.dailJobExecute();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info("日报发送异常");
         }
 

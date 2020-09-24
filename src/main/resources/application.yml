@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: demo
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  profiles:
+    active: @profile.env@
+  datasource:
+    url: jdbc:mysql://${demo.jdbchost}?characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=CONVERT_TO_NULL&transformedBitIsBoolean=true&allowMultiQueries=true&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    #数据库连接池
+    hikari:
+      driver-class-name: com.mysql.jdbc.Driver
+      pool-name: ProductHikari
+      auto-commit: true
+      minimum-idle: 40
+      maximum-pool-size: 160
+      idle-timeout: 300000
+      max-lifetime: 600000
+      connection-timeout: 5000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+logging:
+  file:
+    path: /Users/tangzh/data/logs/mmp
+  level:
+    root: info
+
+server:
+  servlet:
+    context-path: /demo
+  port: 8888
+

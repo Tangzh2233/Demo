@@ -1,5 +1,7 @@
 package com.edu.JavaLearning.Executor框架;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,15 +44,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * **/
 
 public class MyThreadPoolExecutor {
-    private static ScheduledThreadPoolExecutor ScheduledThreadPoolExecutor;
+    private static ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private static ThreadFactory DeFaultThreadFactory;
     private static RejectedExecutionHandler DefaultHandler;
     private static SynchronousQueue synchronousQueue;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd:HH:mm:ss");
+
 
 
     static {
-        ScheduledThreadPoolExecutor =
-                new ScheduledThreadPoolExecutor(2, Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        scheduledThreadPoolExecutor =
+                new ScheduledThreadPoolExecutor(1, Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         DeFaultThreadFactory = new DefaultThreadFactory("myThread",true,5);
         DefaultHandler = new ThreadPoolExecutor.DiscardOldestPolicy();
     }
@@ -79,7 +83,62 @@ public class MyThreadPoolExecutor {
             System.out.println("延迟3秒执行");
         });
         System.out.println("开始时间："+new Date());
-        ScheduledThreadPoolExecutor.schedule(thread,3000,TimeUnit.MILLISECONDS);
+        scheduledThreadPoolExecutor.schedule(thread,3000,TimeUnit.MILLISECONDS);
+    }
+
+    public static void main(String[] args) {
+//        scheduleAtFixDelay();
+//        scheduleAtFixRate();
+//        schedule();
+        System.out.println(System.currentTimeMillis());
+    }
+
+    /**
+     * @see ScheduledExecutorService#scheduleAtFixedRate(Runnable, long, long, TimeUnit)
+     * 当任务耗时大于period时间时,上一个任务结束,后一个任务立即执行
+     * 不会像scheduleWithFixedDelay会再等待delay的时间
+     */
+    public static void scheduleAtFixRate(){
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("启动：" + now.format(formatter));
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(LocalDateTime.now().format(formatter));
+//                try {
+//                    Thread.sleep(6000);
+//                } catch (InterruptedException e) {
+//                }
+            }
+        },2000,2000,TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * @see ScheduledExecutorService#scheduleWithFixedDelay(Runnable, long, long, TimeUnit)
+     * 3s后启动,任务执行了6s+delay5s,所以下次执行是11s后。
+     * 即 总是在之前的任务执行结束后的delay时间后执行
+     */
+    public static void scheduleAtFixDelay(){
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("启动：" + now.format(formatter));
+        scheduledThreadPoolExecutor.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(LocalDateTime.now().format(formatter));
+                throw new IllegalArgumentException("参数异常");
+            }
+        },1000,2000,TimeUnit.MILLISECONDS);
+    }
+
+    public static void schedule(){
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("启动：" + now.format(formatter));
+        scheduledThreadPoolExecutor.schedule(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(LocalDateTime.now().format(formatter));
+            }
+        },2000,TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -126,7 +185,7 @@ public class MyThreadPoolExecutor {
         ThreadPoolExecutor singlePoolExecutor = threadPoolFactory(1,1,0L,TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(1),DeFaultThreadFactory,DefaultHandler);
         singlePoolExecutor.execute(thread);
-        singlePoolExecutor.execute(thread1);
+        singlePoolExecutor.submit(thread1);
         singlePoolExecutor.execute(thread2);
         singlePoolExecutor.execute(thread3);
     }
@@ -148,15 +207,6 @@ public class MyThreadPoolExecutor {
     public static void cachedPoolExecutor(){
         ThreadPoolExecutor cachedPoolExecutor = threadPoolFactory(0,Integer.MAX_VALUE,60L,TimeUnit.SECONDS,
                 new SynchronousQueue<>(),DeFaultThreadFactory,DefaultHandler);
-    }
-
-    public static void main(String[] args) {
-        try {
-            System.out.println("singlePoolExecutor execute");
-            singlePoolExecutor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

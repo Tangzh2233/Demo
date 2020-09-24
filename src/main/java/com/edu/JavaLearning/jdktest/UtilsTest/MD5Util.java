@@ -1,7 +1,7 @@
 package com.edu.JavaLearning.jdktest.UtilsTest;
 
 import com.edu.dao.domain.User;
-import com.rrx.util.Md5Util;
+//import com.rrx.util.Md5Util;
 
 import java.util.*;
 
@@ -43,7 +43,7 @@ public class MD5Util {
         map.put("returnType","2");
         map.put("_ts",ts);
 
-        String md5 = Md5Util.md5(map, "jdbfriend20151224");
-        System.out.println("ts = "+ts + "MD5={}" + md5);
+//        String md5 = Md5Util.md5(map, "jdbfriend20151224");
+//        System.out.println("ts = "+ts + "MD5={}" + md5);
     }
 }

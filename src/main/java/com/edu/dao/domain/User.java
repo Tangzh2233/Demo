@@ -1,15 +1,17 @@
 package com.edu.dao.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.text.Collator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -20,7 +22,6 @@ import java.util.stream.Collectors;
  * Created by Administrator on 2017/8/4.
  * 注解的意思:Null 不进行json序列化。代表序列化规则
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class User implements Serializable,Comparable<User>{
 
@@ -57,10 +58,22 @@ public class User implements Serializable,Comparable<User>{
     private Integer id;
     @NotBlank(message = "用户名不可为空")
     private String username;
+    @NotBlank(message = "password不可为空")
     private String password;
+    @Min(1)
+    @Max(100)
     private Long num;
+    @NotNull
     private LocalDateTime date;
     private String userNo;
+    @AssertTrue
+    private Boolean is_delete;
+    private List<String> idList;
+
+    @Email
+    private String email;
+    @javax.validation.constraints.Pattern(regexp = "^1(3|4|5|7|8)\\d{9}$")
+    private String phoneNum;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

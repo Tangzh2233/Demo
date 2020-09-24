@@ -19,9 +19,12 @@ import java.util.*;
 public class SortList {
 
     public static void main(String[] args) {
-        int[] data = new int[]{100, 3, 7, 88, 2, 9, 102, 5, 4, 10, 66, 99, 45, 23};
-        fastSort(data);
-        System.out.println(JSON.toJSONString(data));
+        int[] data = new int[]{23, 3, 7, 88, 2, 9, 102, 5, 4, 10, 66, 99, 45, 100};
+//        fastSort(data);
+//        System.out.println(JSON.toJSONString(data));
+        for(int i = 0; i<= data.length -1;i++){
+            adjust2(data,i);
+        }
     }
 
     /**
@@ -278,6 +281,22 @@ public class SortList {
             }
         }
         data[index] = temp;
+    }
+
+    /**
+     * 保证第一个为最大的元素
+     * @param data
+     * @param size
+     */
+    private static void adjust2(int[] data,int size){
+        while (size > 0){
+            int k = size >> 1;
+            if(data[k] <= data[size]){
+                break;
+            }
+            swap(data,size,k);
+            size = k;
+        }
     }
 
     private static void swap(int[] data, int from, int to) {

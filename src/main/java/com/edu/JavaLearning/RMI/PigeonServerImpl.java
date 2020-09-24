@@ -1,7 +1,5 @@
 package com.edu.JavaLearning.RMI;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
 import com.edu.dao.domain.User;
 import com.edu.service.impl.mContext;
 
@@ -26,17 +24,6 @@ public class PigeonServerImpl extends UnicastRemoteObject implements PigeonServe
     }
     @Override
     public void login(mContext ctx) {
-        Transaction transaction = null;
-        try {
-            transaction = Cat.getProducer().newTransaction("PigeonService", "method2");
-            Cat.logEvent("PigeonService.app","remote");
-            Cat.logEvent("PigeonService.client","server");
-            Cat.logEvent("PigeonService.local","8888");
-            Cat.logRemoteCallServer(ctx);
-        }finally {
-            transaction.setStatus("0");
-            transaction.complete();
-        }
         System.out.println("login");
     }
 

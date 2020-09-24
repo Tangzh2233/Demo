@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
 
 import javax.swing.*;
 import java.util.List;
@@ -225,6 +226,26 @@ public class RedisUtil {
         try {
             jedis = pool.getResource();
             return jedis.lrange(key, from, jedis.llen(key));
+        } finally {
+            close(jedis);
+        }
+    }
+
+    public static Long publish(String channel,String value){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.publish(channel, value);
+        } finally {
+            close(jedis);
+        }
+    }
+
+    public static void subscribe(String channel, JedisPubSub jedisPubSub) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            jedis.subscribe(jedisPubSub, channel);
         } finally {
             close(jedis);
         }

@@ -43,11 +43,9 @@ public class LogAspect {
         Object[] args = point.getArgs();
         logger.info("请求方法:{} 请求参数:{}", fullName, toJSONString(args));
         Object result = null;
-        Transaction transaction = Cat.newTransaction("Http服务", fullName);
         try {
             result = point.proceed(args);
         } catch (Exception e) {
-            this.sendCatMsg(transaction, fullName, result, e);
             logger.error("请求方法:{} 异常 请求参数{}", fullName, toJSONString(args), e);
             return ResultData.defaultFail("服务异常");
         }

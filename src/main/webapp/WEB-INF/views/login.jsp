@@ -207,7 +207,7 @@
             var json = {"username": ' tang ', "password": '123456'};
             $.ajax({
                 type: "post",
-                url: "/myspringboot/login.do",
+                url: "/demo/login.do",
                 data: JSON.stringify(json),
                 datatype: "json",
                 async: false,
@@ -266,7 +266,7 @@
         <div class="container" style="margin-top: 10px;">
             <div class="row">
                 <div class="col-md-offset-3 col-md-6">
-                    <form class="form-horizontal" id="loginform" action="/myspringboot/login.do" method="post">
+                    <form class="form-horizontal" id="loginform" action="/demo/login.do" method="post">
                         <span class="heading">用户登录</span>
                         <div class="form-group">
                             <input type="text" class="form-control" name="username" id="username" placeholder="用户名">
@@ -289,9 +289,9 @@
                                 <label for="checkbox1"></label>
                             </div>
                             <span class="text">Remember me</span>
-                            <button type="button" class="btn btn-default" id="submit">登录</button>
+                            <button type="submit" class="btn btn-default" id="submit">登录</button>
                             <button type="reset" class="btn btn-default" style="margin-right: 20px;">重置</button>
-                            <button type="button" class="btn btn-default" style="margin-right: 30px;"><a href="/page/register.html">注册</a></button>
+                            <button type="button" class="btn btn-default" style="margin-right: 30px;"><a href="/register.html">注册</a></button>
                         </div>
                     </form>
                 </div>

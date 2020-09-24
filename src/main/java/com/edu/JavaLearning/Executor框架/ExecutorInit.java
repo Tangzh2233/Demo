@@ -1,14 +1,14 @@
 package com.edu.JavaLearning.Executor框架;
 
 
+import com.edu.util.DateUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * @author Tangzhihao
@@ -25,12 +25,17 @@ public class ExecutorInit {
     private ThreadPoolExecutor threadPoolExecutor;
     private static Timer timer;
 
-    static {
+    /**
+     * 延迟2s启动，执行周期3s
+     * @see Timer#schedule(TimerTask, long, long)
+     */
+    public static void timerExecutor() {
         timer = new Timer();
+        System.out.println("启动：" + DateUtil.format(LocalDateTime.now()));
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("哈哈哈,我是timer");
+                System.out.println(DateUtil.format(LocalDateTime.now()));
             }
         }, 2000, 5000);
     }
@@ -47,10 +52,10 @@ public class ExecutorInit {
         ScheduledExecutorService schedulePool = Executors.newScheduledThreadPool(1);
         //创建一个
         ExecutorService stealingPool = Executors.newWorkStealingPool();
-
     }
 
     public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException {
+        timerExecutor();
 //        ExecutorInit init = new ExecutorInit();
 //    //    init.initFixedPool();
 //
@@ -82,11 +87,6 @@ public class ExecutorInit {
 //        }
 //        executor.shutdown();
 //        executorCompletionServiceTest();
-        ExecutorInit init = new ExecutorInit();
-        ExecutorInit init1 = new ExecutorInit();
-        ExecutorInit init2 = new ExecutorInit();
-        System.out.println("timer 几个");
-        Thread.sleep(1000 * 30);
     }
 
     /**

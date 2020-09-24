@@ -33,7 +33,6 @@ public class TokenController {
         //判断是否为jsonp调用
         if(StringUtils.isNotBlank(callback)){
             MappingJacksonValue value = new MappingJacksonValue(callback);
-            value.setJsonpFunction(callback);
             return value;
         }else{
             return result;
