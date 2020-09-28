@@ -36,14 +36,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String userNo = DemoContextHolder.getData().getUserNo();
-        SESSION_CONTEXT.put(userNo, session);
+        String userId = (String) session.getAttributes().get("USER_ID");
+        SESSION_CONTEXT.put(userId, session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        String userNo = DemoContextHolder.getData().getUserNo();
-        SESSION_CONTEXT.remove(userNo);
+        String userId = (String) session.getAttributes().get("USER_ID");
+        SESSION_CONTEXT.remove(userId);
     }
 
 

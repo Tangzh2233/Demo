@@ -15,11 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
-    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/htmleaf-demo.css">
+    <link rel="stylesheet" href="/demo/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/demo/resources/css/htmleaf-demo.css">
     <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/resources/css/htmleaf-demo.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/verify.css">
+    <link rel="stylesheet" type="text/css" href="/demo/resources/css/htmleaf-demo.css">
+    <link rel="stylesheet" type="text/css" href="/demo/resources/css/verify.css">
     <style type="text/css">
         .form-bg{
             background: #00b4ef;
@@ -152,14 +152,14 @@
     <!--[if IE]>
     <script src="http://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="/resources/js/jquery-1.7.2.min.js" ></script>
-    <script type="text/javascript" src="/resources/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/demo/resources/js/jquery-1.7.2.min.js" ></script>
+    <script type="text/javascript" src="/demo/resources/js/jquery.cookie.js"></script>
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
-    <script>window.jQuery || document.write('<script src="/resources/js/jquery-1.11.0.min.js"><\/script>')</script>
-    <script type="text/javascript" src="/resources/js/verify.js" ></script>
+    <script>window.jQuery || document.write('<script src="/demo/resources/js/jquery-1.11.0.min.js"><\/script>')</script>
+    <script type="text/javascript" src="/demo/resources/js/verify.js" ></script>
     <script type="text/javascript">
         $(function(){
-            if($.cookie("login")=="true"){
+            if($.cookie("login")==="true"){
                 $("#username").val($.cookie("username"));
                 $("#password").val($.cookie("password"));
                 $("#checkbox1").prop("checked",true);
@@ -204,22 +204,14 @@
             debugger;
             var name = $("#username").val();
             var password = $("#password").val();
-            var json = {"username": ' tang ', "password": '123456'};
-            $.ajax({
-                type: "post",
-                url: "/demo/login.do",
-                data: JSON.stringify(json),
-                datatype: "json",
-                async: false,
-                contentTyle:"application/json; charset=utf-8",
-                success: function (data) {
-                    if ("00" == data.rspCode) {
-                        save();
-                        window.location.href = "main.html";
-                    } else {
-                        alert(data.rspMessage);
-                        window.location.href = "login.html";
-                    }
+            var json = {"username": name, "password": password};
+            $.post("/demo/login.do", json, function (data) {
+                if ("200" === data.rspCode) {
+                    // save();
+                    window.location.href = "main.html";
+                } else {
+                    alert(data.rspMessage);
+                    window.location.href = "login.html";
                 }
             });
         }
@@ -260,7 +252,7 @@
     <div class="demo form-bg" style="padding: 20px 0;">
         <div style="margin-left: 30px;">
             <a href="http://weibo.com/henuxiehui?topnav=1&wvr=6&topsug=1&is_all=1">
-                <img width="70px" height="70px" src="/resources/img/logo3.jpg" />
+                <img width="70px" height="70px" src="/demo/resources/img/logo3.jpg" />
             </a>
         </div>
         <div class="container" style="margin-top: 10px;">
@@ -269,7 +261,7 @@
                     <form class="form-horizontal" id="loginform" action="/demo/login.do" method="post">
                         <span class="heading">用户登录</span>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="username" id="username" placeholder="用户名">
+                            <input type="text" class="forms-control" name="username" id="username" placeholder="用户名">
                             <i class="fa fa-user"></i>
                         </div>
                         <div class="form-group help">
@@ -289,7 +281,7 @@
                                 <label for="checkbox1"></label>
                             </div>
                             <span class="text">Remember me</span>
-                            <button type="submit" class="btn btn-default" id="submit">登录</button>
+                            <button type="button" class="btn btn-default" onclick="login()">登录</button>
                             <button type="reset" class="btn btn-default" style="margin-right: 20px;">重置</button>
                             <button type="button" class="btn btn-default" style="margin-right: 30px;"><a href="/register.html">注册</a></button>
                         </div>

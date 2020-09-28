@@ -83,12 +83,6 @@ public class TestController {
         return "main";
     }
 
-    @RequestMapping("/addUsers.do")
-    public String addUsers(){
-        loginService.inserListUsers();
-        return "main";
-    }
-
     @ResponseBody
     @RequestMapping("/upFile.do")
     public String getFileFromForm(MultipartFile file) throws Exception {

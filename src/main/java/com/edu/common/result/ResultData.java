@@ -41,6 +41,10 @@ public class ResultData<T> implements Serializable {
         return ERspCode.SUCCESS.getCode().equals(result.getRspCode());
     }
 
+    public boolean isSuccess(){
+        return ERspCode.SUCCESS.getCode().equals(this.rspCode);
+    }
+
     public static ResultData defaultFail(){
         return defaultFail(null);
     }

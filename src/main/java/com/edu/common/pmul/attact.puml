@@ -1,0 +1,21 @@
+@startuml
+web -> drugStore:req 广告位设置
+drugStore --> drugStore: url + ImgUrl
+
+web -> drugStore: 广告点击,storeId + userId
+drugStore --> drugStore:获取用户角色数据。公司负责人
+drugStore -> CRM: rpcQuery companyId,获取该公司新零售协议签订数据
+alt 未开通
+    drugStore --> web: http resp
+    web --> web: redirect,开通页面
+    web -> drugStore: 开通数据提交
+    drugStore -> CRM: rpcInvoke + companyId
+    CRM --> drugStore: rpcInvoke resp 提交成功
+    drugStore --> web: 完成
+else 已开通
+    drugStore --> web:已开通
+end
+
+CRM --> saasMonomer: 药店数据同步
+saasMonomer --> saasMonomer: 数据获取,用户组织同步
+@enduml

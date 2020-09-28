@@ -35,17 +35,21 @@ public final class CookieUtils {
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
         Cookie[] cookieList = request.getCookies();
-        if (cookieList == null || cookieName == null) {
+        return getCookieValue(cookieList,cookieName,isDecoder);
+    }
+
+    public static String getCookieValue(Cookie[] cookies, String cookieName, boolean isDecoder) {
+        if (cookies == null || cookieName == null) {
             return null;
         }
         String retValue = null;
         try {
-            for (int i = 0; i < cookieList.length; i++) {
-                if (cookieList[i].getName().equals(cookieName)) {
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookies[i].getName().equals(cookieName)) {
                     if (isDecoder) {
-                        retValue = URLDecoder.decode(cookieList[i].getValue(), "UTF-8");
+                        retValue = URLDecoder.decode(cookies[i].getValue(), "UTF-8");
                     } else {
-                        retValue = cookieList[i].getValue();
+                        retValue = cookies[i].getValue();
                     }
                     break;
                 }

@@ -8,7 +8,7 @@ spring:
     active: @profile.env@
   datasource:
     url: jdbc:mysql://${demo.jdbchost}?characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=CONVERT_TO_NULL&transformedBitIsBoolean=true&allowMultiQueries=true&useSSL=false
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     #数据库连接池
     hikari:
       driver-class-name: com.mysql.jdbc.Driver
@@ -30,6 +30,7 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+    static-path-pattern: /resources/**
 
 logging:
   file:
@@ -41,4 +42,5 @@ server:
   servlet:
     context-path: /demo
   port: 8888
+
 

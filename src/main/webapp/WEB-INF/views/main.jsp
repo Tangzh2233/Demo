@@ -10,13 +10,13 @@
 <head>
     <meta charset="UTF-8">
     <title>主页</title>
-    <link rel="stylesheet" href="/resources/plugin/layui/css/layui.css" />
-    <link rel="stylesheet" href="/resources/css/main.css" />
-    <link rel="stylesheet" href="/resources/plugin/font-awesome/css/font-awesome.min.css" />
-    <script type="text/javascript" src="/resources/plugin/layui/layui.js" ></script>
-    <script type="text/javascript" src="/resources/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="/resources/js/canvas.js" ></script>
-    <script type="text/javascript" src="/resources/js/main.js"></script>
+    <link rel="stylesheet" href="/demo/resources/plugin/layui/css/layui.css" />
+    <link rel="stylesheet" href="/demo/resources/css/main.css" />
+    <link rel="stylesheet" href="/demo/resources/plugin/font-awesome/css/font-awesome.min.css" />
+    <script type="text/javascript" src="/demo/resources/plugin/layui/layui.js" ></script>
+    <script type="text/javascript" src="/demo/resources/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/demo/resources/js/canvas.js" ></script>
+    <script type="text/javascript" src="/demo/resources/js/main.js"></script>
 
 </head>
 <body style="background: #EEEEEE;">
@@ -137,7 +137,7 @@
             <div class="body-left" style="border: 1px solid blueviolet;flex: 5;">
                 <div class="article" style="height: 120px;background: white;padding: 15px;">
                     <div class="article-img" style="width: 25%;float: left;">
-                        <img src="/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
+                        <img src="/demo/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
                     </div>
                     <div style="width: 500px;float: left;margin-left: 20px;">
                         <div>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="article" style="height: 120px;background: white;padding: 15px;">
                     <div class="article-img" style="width: 25%;float: left;">
-                        <img src="/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
+                        <img src="/demo/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
                     </div>
                     <div style="width: 500px;float: left;margin-left: 20px;">
                         <div>
@@ -179,7 +179,7 @@
                 </div>
                 <div class="article" style="height: 120px;background: white;padding: 15px;">
                     <div class="article-img" style="width: 25%;float: left;">
-                        <img src="/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
+                        <img src="/demo/resources/img/201703181909057125.jpg" alt="示例图片" style="width: 100%;"/>
                     </div>
                     <div style="width: 500px;float: left;margin-left: 20px;">
                         <div>
@@ -203,7 +203,7 @@
             <div class="body-right" style="width: 20%;border: 1px solid gold;margin-left: 20px;">
                 <div class="body-right-info">
                     <div class="blogerinfo-figure" style="width: 100px;height: 100px;border-radius: 50%;overflow: hidden;margin: auto;margin-top: 20px;">
-                        <img src="/resources/img/tu7460_14.jpg" alt="Tag" style="width: 100px;height: 100px;"  />
+                        <img src="/demo/resources/img/tu7460_14.jpg" alt="Tag" style="width: 100px;height: 100px;"  />
                     </div>
                     <p class="tag-name" style="font-size: 28px;font-weight: bold;">螳-tang</p>
                     <p class="tag-introduce" style="font-size: 18px;margin-top: 10px;">一枚90后程序员，JAVA开发工程师</p>

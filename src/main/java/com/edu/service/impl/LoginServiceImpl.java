@@ -15,7 +15,6 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -34,8 +33,6 @@ public class LoginServiceImpl implements ILoginService {
 
     @Resource
     private UserMapper userMapper;
-    @Resource
-    private DlogMapper dlogMapper;
 
     @Value("${redis.key.expire.time}")
     private Integer key_expire_time;
