@@ -15,7 +15,7 @@ public class NetInOutPutStream {
     private static int buffer_size = 512;
 
     public static void main(String[] args) throws Exception {
-        String url = "https://static.91jkys.com/upload/202006/30/11f0f0641d544d149c0d5bc1043660e7.jpg";
+        String url = "";
         long start = System.currentTimeMillis();
         byte[] bytes = readNetInputStream(url);
         System.out.println( "耗时" + (System.currentTimeMillis() - start) + "ms");
